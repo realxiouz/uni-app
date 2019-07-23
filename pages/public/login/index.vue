@@ -1,7 +1,7 @@
 <template>
 	<view>
 		<view class="cu-card case">
-			<form>
+			<form class="cu-item">
 				<view class="cu-form-group">
 					<view class="title">手机号码</view>
 					<input placeholder="11位手机号码" type="number" :maxlength="11" v-model="formBean.mobile"/>
