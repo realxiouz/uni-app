@@ -1,0 +1,68 @@
+{
+	"pages": [
+		{
+			"path": "pages/customer/index/index",
+			"style": {}
+		},
+		{
+			"path": "pages/message/index/index"
+		},
+		{
+			"path": "pages/work/index/index"
+		},  {
+			"path": "pages/ucenter/index/index",
+			"style": {}
+		}, {
+			"path": "pages/public/login/index",
+			"style": {}
+		}, {
+			"path": "pages/contact/index/index",
+			"style": {}
+		},
+		{
+			"path": "pages/attendance/signin/index",
+			"style": {}
+		}
+	],
+	"tabBar": {
+		"color": "#000000",
+		"selectedColor": "#2F85FC",
+		"backgroundColor": "#FFFFFF",
+		"borderStyle": "black",
+		"list": [{
+				"pagePath": "pages/customer/index/index",
+				"iconPath": "static/home.png",
+				"selectedIconPath": "static/home-active.png",
+				"text": "客户"
+			}, {
+				"pagePath": "pages/message/index/index",
+				"iconPath": "static/home.png",
+				"selectedIconPath": "static/home-active.png",
+				"text": "消息"
+			}, {
+				"pagePath": "pages/work/index/index",
+				"iconPath": "static/home.png",
+				"selectedIconPath": "static/home-active.png",
+				"text": "工作"
+			},
+			{
+				"pagePath": "pages/contact/index/index",
+				"iconPath": "static/home.png",
+				"selectedIconPath": "static/home-active.png",
+				"text": "通讯录"
+			},
+			{
+				"pagePath": "pages/ucenter/index/index",
+				"iconPath": "static/center.png",
+				"selectedIconPath": "static/center-active.png",
+				"text": "我的"
+			}
+		]
+	},
+	"globalStyle": {
+		"navigationBarTextStyle": "white",
+		"navigationBarTitleText": "房销客",
+		"navigationBarBackgroundColor": "#2F85FC",
+		"backgroundColor": "#FFFFFF"
+	}
+}
