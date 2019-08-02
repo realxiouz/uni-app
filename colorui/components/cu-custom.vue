@@ -60,6 +60,9 @@
 					delta: 1
 				});
 			}
+		},
+		mounted() {
+			console.log(this.bgColor, 11111111111111111111111);
 		}
 	}
 </script>

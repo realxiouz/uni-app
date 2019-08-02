@@ -3,8 +3,8 @@
 	export default {
 		onLaunch: function () {
 			this.$http('auth/user').then(r => {
-				this.login(r)
-			})
+				this.login(r);
+			});
 		},
 		onShow: function () {
 			
@@ -19,6 +19,9 @@
 </script>
 
 <style>
-@import "colorui/main.css";
-@import "colorui/icon.css";
+	@import "colorui/main.css";
+	@import "colorui/icon.css";
+	.padding-25 {
+		padding: 25rpx;
+	}
 </style>

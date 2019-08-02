@@ -1,0 +1,157 @@
+
+@function rpx($value){
+  @return $value * 1rpx;
+}
+
+
+@mixin bg($bgval){
+  background:url("#{$bgurl}#{$bgval}");
+}
+
+//横向弹性盒子
+@mixin box-x {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+@mixin flex-x($bl) {
+  -webkit-box-flex: $bl;
+  -webkit-flex: $bl;
+  -ms-flex: $bl;
+  flex: $bl;
+  -webkit-flex-basis: 0;
+  -ms-flex-preferred-size: 0;
+}
+
+//end
+//圆角
+@mixin boderradius($bk) {
+  -webkit-border-radius: $bk !important;
+  -moz-border-radius: $bk !important;
+  -ms-border-radius: $bk !important;
+  -o-border-radius: $bk !important;
+  border-radius: $bk !important;
+}
+@mixin boxradius-top($bk) {
+  border-top-left-radius: $bk;
+  border-top-right-radius: $bk;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+//居中
+@mixin center($iscenter,$vaue...) {
+  position: absolute;
+  @if ($iscenter==center) {
+    top: 50%;
+    left: 50%;
+    transform: translate($vaue) !important;
+  }
+  @if ($iscenter==centerY) {
+    top: 50%;
+    transform: translateY($vaue) !important;
+  }
+  @if ($iscenter==centerX) {
+    left: 50%;
+    transform: translateX($vaue) !important;
+  }
+}
+@mixin relativecenter($iscenter,$vaue...) {
+  position: relative;
+  @if ($iscenter==center) {
+    top: 50%;
+    left: 50%;
+    transform: translate($vaue) !important;
+  }
+  @if ($iscenter==centerY) {
+    top: 50%;
+    transform: translateY($vaue) !important;
+  }
+  @if ($iscenter==centerX) {
+    left: 50%;
+    transform: translateX($vaue) !important;
+  }
+}
+@mixin img100{
+  image {
+    display: block !important;
+    width: 100% !important;
+    height: 100% !important;
+  }
+}
+@mixin imgauto{
+  image{
+    display: block! important;
+    max-width: 100%! important;
+    max-height: 100%! important;
+  }
+}
+@mixin shadowout($val,$cl,$opt){
+  //box-shadow: 0 1px 10px 0 rgba($cl,$val);
+  -webkit-box-shadow: $val rgba($cl,$opt) !important;
+  -moz-box-shadow: $val rgba($cl,$opt) !important;
+  -ms-box-shadow: $val rgba($cl,$opt) !important;
+  -o-box-shadow: $val rgba($cl,$opt) !important;
+  box-shadow: $val rgba($cl,$opt) !important;
+}
+
+@mixin transition($transition...) {
+      transition: $transition-base;
+    }
+
+//纵向弹性盒子
+@mixin box-y {
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-direction: column;
+  flex-direction: column;
+}
+
+@mixin flex-y($bl) {
+  -webkit-box-flex: $bl;
+  -webkit-flex: $bl;
+  -ms-flex: $bl;
+  flex: $bl;
+  -webkit-flex-basis: 0;
+  -ms-flex-preferred-size: 0;
+}
+
+//end
+
+//宽度
+//@include widthlist(rpx(10),3,rpx(20));
+@mixin widthlist($val,$num,$mgbt) {
+  float: left;
+  width: calc((100% - #{$val} * #{$num - 1}) / #{$num});
+  margin-right: $val;
+  &:nth-child(#{$num}n) {
+    margin-right: 0;
+  }
+  margin-bottom:$mgbt;
+  margin-top:$mgbt;
+}
+//清除浮动
+@mixin clear {
+  &:after {
+    content: "";
+    display: block;
+    clear: both;
+  }
+}
+//三角形
+@mixin sjxup($bk1,$bk2,$cl) {
+  width: 0;
+  height: 0;
+  border-left: $bk1 solid transparent;
+  border-right: $bk1 solid transparent;
+  border-bottom: $bk2 solid $cl;
+}
+//溢出省略
+@mixin shenlv {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  -o-text-overflow: ellipsis;
+  overflow: hidden;
+}

@@ -1,0 +1,251 @@
+@import "../../../../static/publicscss/scss/_link.scss";
+@import "../../../../colorui/main.css";
+//搜索框
+.seach {
+    position: relative;
+    color: var(--darkGray);
+
+    > text {
+        @include center(centerY, -55%);
+        left: rpx(15);
+        font-size: $bigfont;
+        color: rgba($gray,.5);
+    }
+
+    > input {
+        width: 100%;
+        padding: 0 $space_1 *2.5;
+        @include boderradius($radius);
+        background: $white;
+        border: solid $border $bordercl;
+        height: rpx(70);
+        line-height: rpx(70);
+    }
+}
+//最近访问
+.nearest{
+    .nearest-top{
+
+        $strip_wd:30;
+        text-align: center;
+        >text{
+            color: $gray;
+            display: inline-block;
+            position: relative;
+            &:before,&:after{
+                content: "";
+                position: absolute;
+                width: rpx($strip_wd);
+                @include center(centerY,-50%);
+                height: rpx(1);
+                background: $bordercl_2;
+            }
+            &:before{
+                left:- rpx($strip_wd+5);
+            }
+            &:after{
+                right:- rpx($strip_wd+5);
+            }
+        }
+
+    }
+}
+.card-box{
+    .card-list{
+        width: 100%;
+        height: $cardht;
+        float: left;
+        margin-bottom: $space_1*1.4;
+        .template {
+            height: 100%;
+            position: relative;
+            @include img100;
+            @include boderradius($radius);
+            .collect,.cancel{
+                height: rpx(60);
+                position: absolute;
+                top: rpx(4);
+                right: rpx(-5);
+                z-index: 30;
+                width:  rpx(60);
+                .cricl{
+                    display:inline-block;
+                    width: rpx(10);
+                    height: rpx(10);
+                    background: var(--blue);
+                    margin-right: rpx(8);
+                    @include boderradius(50%);
+                }
+                .collect-strip{
+                    text-align: center;
+                    $srht:45;
+                    $srwd:150;
+                    height: rpx($srht);
+                    background: rgba($black,.7);
+                    width:rpx($srwd);
+                    position: absolute;
+                    z-index: 20;
+                    right: - rpx($srwd*1.5);
+                    color: $white;
+                    line-height:rpx($srht);
+                    top: rpx(5);
+                    @include transition(.3s);
+                    &.show{
+                        right:- rpx(8);
+                    }
+                }
+            }
+            .collect{
+                .collect-strip{
+
+                }
+            }
+            .cancel{
+                .collect-strip{
+
+                }
+            }
+            overflow: hidden;
+            .userimg {
+                position: absolute;
+                width: rpx(120);
+                height: rpx(120);
+                border: solid rpx(5) rgba($gray, .1);
+                @include boderradius(50%);
+                @include imgauto;
+                overflow: hidden;
+                z-index: 15;
+            }
+
+            .cardcontent {
+                z-index: 15;
+                position: absolute;
+                padding-left: rpx(45);
+
+                .public {
+                    display: block;
+                    position: relative;
+
+                    &.bigtitle {
+                        font-size: $bigfont;
+                    }
+
+                    &.smallfont {
+                        font-size: $smallfoot;
+                    }
+
+                    > text {
+                        display: inline-block;
+
+                        > text {
+                            position: absolute;
+                            left: 0;
+                            top: -1px;
+                        }
+
+                        &.text {
+                            padding-left: 20px;
+                        }
+                    }
+                }
+
+                .cardcontent-top {
+                    padding-bottom: rpx(60);
+                }
+
+                .cardcontent-bottom {
+                    > span {
+                        padding-bottom: 3px;
+                    }
+                }
+            }
+            .img-bg {
+                position: absolute;
+                top: 0;
+                left: 0;
+            }
+
+            &.tm_0 {
+                .userimg {
+                    right: 7px;
+                    top: 15px;
+                }
+
+                .cardcontent {
+                    @include center(centerY, -40%);
+                    color: $white;
+                    left: 0;
+                }
+            }
+
+            &.tm_1 {
+                .userimg {
+                    @include center(centerX,-50%);
+                }
+                .cardcontent-top {
+                    padding-bottom: rpx(30);
+                }
+                .cardcontent {
+                    @include center(centerY, -20%);
+                    color: $white;
+                    right: 0;
+                    padding-right: rpx(50);
+                }
+            }
+
+            &.tm_2 {
+                .userimg {
+                    @include center(centerY,-50%);
+                    left: rpx(221);
+                }
+                .cardcontent {
+                    @include center(centerY, -50%);
+                    color: $white;
+                    right: 0;
+                    padding-right: rpx(50);
+                }
+            }
+
+            &.tm_3 {
+                .userimg {
+                    @include center(centerY,-80%);
+                    right: rpx(270);
+                }
+                .cardcontent {
+                    @include center(centerY, -50%);
+                    color: $black;
+                    left: 0;
+                    padding-right: rpx(50);
+                }
+            }
+        }
+        // 取消收藏
+        .cancel-collection {
+            position: absolute;
+            width: 100rpx;
+            height: 40rpx;
+            padding: 0;
+            font-size: 11px;
+            text-align: center;
+            line-height: 1.9;
+            z-index: 20;
+        }
+        .cancel-collection-0 {
+            bottom: 0;
+            right: 0;
+        }
+        .cancel-collection-1 {
+            bottom: 0;
+            left: 0;
+        }
+        .cancel-collection-2 {
+            bottom: 0;
+            left: 0;
+        }
+        .cancel-collection-3 {
+            bottom: 0;
+            right: 0;
+        }
+
+    }
+}

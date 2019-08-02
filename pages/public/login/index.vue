@@ -19,31 +19,52 @@
 </template>
 
 <script>
-	import { mapMutations } from 'vuex'
-
+	import { mapMutations} from 'vuex';
 	export default {
 		data: _ => ({
 			formBean: {
-				mobile: '',
-				password: ''
+				mobile: '10000000000',
+				password: '000000'
 			}
 		}),
 		methods: {
 			...mapMutations(['login']),
 			handleLogin() {
 				this.$http('auth/login', this.formBean, 'post').then(r => {
-					uni.setStorageSync('apiToken', r.access_token)
-					this.login(r.user)
+					// console.log(r);
+					let res = r.user;
+					const userInfo = {
+						id: res.id,
+						companyname: res.company.name,
+						avatar: res.avatar,
+						name: res.name,
+						position: res.department.name,
+						phone: res.mobile,
+						weixin: res.weixin,
+						email: res.email,
+						mobile: res.mobile,
+						signature: res.signature
+					}
+					// console.log(userInfo);
+					uni.setStorageSync('userInfo', userInfo);
+					// 表示已经登录成功
+					// this.hasLogin = true;
+					uni.setStorageSync('apiToken', r.access_token);
+					this.login(userInfo);
 					uni.switchTab({
 						url: '/pages/ucenter/index/index'
 					})
 				}).catch(e => {
+					// console.log(e);
 					uni.showToast({
 						title: '用户名或者密码错误',
 						icon: 'none'
 					})
 				})
 			}
+		},
+		computed: {
+			// ...MapState(['hasLogin'])
 		}
 	}
 </script>
