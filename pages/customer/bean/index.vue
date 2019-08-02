@@ -55,17 +55,17 @@
 			</view>
 			<view class="cu-form-group">
 				<view class="title">职业</view>
-				<picker @change="jobChange" :value="jobInx" :range="jobs" range-key="text">
+				<picker @change="jobChange" :value="jobInx" :range="jobs" range-key="name">
 					<view class="picker">
-						{{jobInx>-1?jobs[jobInx]:'选择职业'}}
+						{{jobInx>-1?jobs[jobInx].name:'选择职业'}}
 					</view>
 				</picker>
 			</view>
 			<view class="cu-form-group">
 				<view class="title">年纪</view>
-				<picker @change="ageChange" :value="ageInx" :range="ages" range-key="text">
+				<picker @change="ageChange" :value="ageInx" :range="ages" range-key="name">
 					<view class="picker">
-						{{ageInx>-1?ages[jobInx]:'选择年纪'}}
+						{{ageInx>-1?ages[ageInx].name:'选择年纪'}}
 					</view>
 				</picker>
 			</view>
@@ -83,9 +83,9 @@
 			</view>
 			<view class="cu-form-group">
 				<view class="title">客户星级</view>
-				<picker @change="starChange" :value="startInx" :range="startInx" range-key="text">
+				<picker @change="starChange" :value="starInx" :range="stars" range-key="text">
 					<view class="picker">
-						{{startInx>-1?startInx[startInx]:'选择年纪'}}
+						{{starInx>-1?stars[starInx]:'选择年纪'}}
 					</view>
 				</picker>
 			</view>
@@ -101,7 +101,19 @@
 	import { RULES as r} from '@/utils/const'
 
 	export default {
+		onLoad(opt) {
+			this.customerType = opt.type
+			this.$http("attribute").then(r => {
+				let d = r.data["Customer sales"]
+				this.ages = d.age || []
+				this.sources = d.source || []
+			})
+			this.$http("customer_job").then(r => {
+			  this.jobs = r.data;
+			});
+		},
 		data: _ => ({
+			customerType: 0,
 			formBean: {
 				name: '',
 				phone: '',
@@ -168,7 +180,7 @@
 					return
 				}
 				
-				let data = this.formBean
+				let data = Object.assign({}, this.formBean, {type: this.customerType == 0 ? '新房' : '分销'}) 
 				this.$http('customer', data, 'post').then(r => {
 					
 				}).catch(e => {

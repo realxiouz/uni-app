@@ -21,7 +21,7 @@
 				</data-list>
 			</swiper-item>
 		</swiper>
-		<navigator url="/pages/customer/bean/index" class="bg-blue round flex justify-around align-center" style="width:100upx;height:100upx;position: fixed; bottom: 50upx;right: 50upx;">
+		<navigator :url="`/pages/customer/bean/index?type=${selTab}`" class="bg-blue round flex justify-around align-center" style="width:100upx;height:100upx;position: fixed; bottom: 50upx;right: 50upx;">
 			<text class="cuIcon-add xl"></text>
 		</navigator>
 	</view>

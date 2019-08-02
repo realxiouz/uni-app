@@ -28,17 +28,18 @@ export const http = (url, data, method = 'GET') => {
 					})
 					break
 				case 403:
-					uni.showToast({
-						title: 'token失效,重新登录',
-						icon: 'none'
-					});
-					reject(new Error('token失效,重新登录'))
-					uni.navigateTo({
-						url: '/pages/public/login/index'
-					})
+					// uni.showToast({
+					// 	title: 'token失效,重新登录',
+					// 	icon: 'none'
+					// });
+					// reject(new Error('token失效,重新登录'))
+					// uni.navigateTo({
+					// 	url: '/pages/public/login/index'
+					// })
 					break
 				case 422:
 					reject(new Error('表单不完整'))
+					if (data.data)
 					break;
 				case 200:
 					resolve(data.data)
