@@ -87,7 +87,7 @@ import { mapState } from 'vuex'
 			handleNav(url) {
 				if (url) {
 					uni.navigateTo({
-						url: '/pages/attendance/businesscard/index/businesscard'
+						url: '/pages/ucenter/businesscard/index/businesscard'
 					})
 				}
 			}

@@ -7,48 +7,48 @@
       }
     },
     {
-      "path": "pages/attendance/businesscard/index/businesscard",
+      "path": "pages/ucenter/businesscard/index/businesscard",
       "style": {
         "navigationBarTitleText": "我的名片"
       }
     },
     {
-      "path": "pages/attendance/page_makecard/index/page_makecard",
+      "path": "pages/ucenter/page_makecard/index/page_makecard",
       "style": {
       }
     },
     {
-      "path": "pages/attendance/cardclamp/index/cardclamp",
+      "path": "pages/ucenter/cardclamp/index/cardclamp",
       "style": {
         "navigationBarTitleText": "名片夹"
       }
     },
     {
-      "path": "pages/attendance/share/index/share",
+      "path": "pages/ucenter/share/index/share",
       "style": {
         "navigationBarTitleText": "分享名片"
       }
     },
     {
-      "path": "pages/attendance/recommend/index/recommend",
+      "path": "pages/ucenter/recommend/index/recommend",
       "style": {
         "navigationBarTitleText": "推荐楼盘"
       }
     },
     {
-      "path": "pages/attendance/choosehouse/index/choosehouse",
+      "path": "pages/ucenter/choosehouse/index/choosehouse",
       "style": {
         "navigationBarTitleText": "选择楼盘"
       }
     },
     {
-      "path": "pages/attendance/browsecount/index/browsecount",
+      "path": "pages/ucenter/browsecount/index/browsecount",
       "style": {
         "navigationBarTitleText": "浏览记录"
       }
     },
     {
-      "path": "pages/attendance/cardtemplate_list/index/cardtemplate_list",
+      "path": "pages/ucenter/cardtemplate_list/index/cardtemplate_list",
       "style": {
         "navigationBarTitleText": "模板"
       }
@@ -90,32 +90,66 @@
       }
     },
     {
-      "path": "pages/attendance/newcontact/index/newcontact",
-      "style": {
-        "navigationBarTitleText": "新建联系人"
-      }
-    },
-    {
       "path": "pages/out/index/out",
       "style": {}
     },
     {
-      "path": "component/makebtn/index/makebtn",
+      "path": "components/makebtn/index/makebtn",
       "style": {
         "navigationBarTitleText": "制作名片"
       }
     },
     {
-      "path": "pages/attendance/user/index/user",
+      "path": "pages/ucenter/user/index/user",
       "style": {
         "navigationBarTitleText": "编辑名片"
       }
     },
     {
-      "path": "pages/attendance/explain/index/explain",
+      "path": "pages/ucenter/explain/index/explain",
       "style": {
         "navigationBarTitleText": "流程图"
       }
+    },
+    {
+      "path": "pages/customer/detail/index",
+      "style": {}
+    },
+    {
+      "path": "pages/customer/bean/index",
+      "style": {}
+    },
+    {
+      "path": "pages/attendance/setting/index",
+      "style": {}
+    },
+    {
+      "path": "pages/attendance/group/index",
+      "style": {}
+    },
+    {
+      "path": "pages/attendance/wifi/index",
+      "style": {}
+    },
+    {
+      "path": "pages/attendance/date/index",
+      "style": {}
+    },
+    {
+      "path": "pages/attendance/time-list/index",
+      "style": {}
+    },
+    {
+      "path": "pages/attendance/time/index",
+      "style": {}
+    },
+    {
+      "path": "pages/attendance/person/index",
+      "style": {}
+    },
+    {
+      "path": "pages/attendance/staffs/index",
+      "style": {}
     }
   ],
   "tabBar": {

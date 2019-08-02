@@ -28,7 +28,7 @@
 			}
 		}),
 		methods: {
-			...mapMutations(['login']),
+			...mapMutations(['login', 'changeToken']),
 			handleLogin() {
 				this.$http('auth/login', this.formBean, 'post').then(r => {
 					// console.log(r);
@@ -49,6 +49,7 @@
 					uni.setStorageSync('userInfo', userInfo);
 					// 表示已经登录成功
 					// this.hasLogin = true;
+					this.changeToken(r.access_token);
 					uni.setStorageSync('apiToken', r.access_token);
 					this.login(userInfo);
 					uni.switchTab({

@@ -1,13 +1,17 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import attendance from './attendance/index.js'
 
 Vue.use(Vuex)
 
 const store = new Vuex.Store({
+	modules: {
+		attendance,
+	},
 	state: {
 		hasLogin: false,
 		userInfo: {},// 用户的相关信息, 登录
-		token: uni.getStorageSync('apiToken'),
+		token: uni.getStorageSync('apiToken') || '',
 		currentuserinfo: {// 用户相关信息, 非登录
 			template_id: '0'
 		},
@@ -39,6 +43,9 @@ const store = new Vuex.Store({
 			} else {
 				state.houseid.splice(data.index, 1);
 			}
+		},
+		changeToken(state, token) {
+			state.token = token;
 		}
 	},
 	actions: {

@@ -1,16 +1,18 @@
 <script>
-	import { mapMutations } from 'vuex'
+	import {
+		mapMutations
+	} from 'vuex'
 	export default {
-		onLaunch: function () {
+		onLaunch: function() {
 			this.$http('auth/user').then(r => {
 				this.login(r);
 			});
 		},
-		onShow: function () {
-			
+		onShow: function() {
+
 		},
-		onHide: function () {
-			
+		onHide: function() {
+
 		},
 		methods: {
 			...mapMutations(['login'])
@@ -21,7 +23,4 @@
 <style>
 	@import "colorui/main.css";
 	@import "colorui/icon.css";
-	.padding-25 {
-		padding: 25rpx;
-	}
 </style>

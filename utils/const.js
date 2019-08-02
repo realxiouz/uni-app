@@ -1,6 +1,4 @@
-//
-export const BASE_URL = 'https://dev.km999.com/';
-    
+
 export var GLOBALDATA = {
     // baseUrl: 'https://oa.km999.com',
     cardlist: '',//名片
@@ -20,6 +18,9 @@ export var GLOBALDATA = {
 		}
 	}
 };
-export const pattern  = {
-    phone: /^1[345789]\d{9}$/
+
+export const BASE_URL = 'https://dev.km999.com'
+
+export const RULES = {
+	phone: v => v && /^1[\d]{10}$/.test(v)
 }

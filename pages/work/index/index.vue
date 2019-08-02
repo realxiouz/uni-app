@@ -70,7 +70,8 @@
 						cuIcon: 'settingsfill',
 						color: 'blue',
 						badge: 0,
-						name: '设置'
+						name: '设置',
+						path: '/pages/attendance/setting/index'
 					}
 				]
 			};
