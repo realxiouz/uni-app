@@ -16,6 +16,7 @@ export const http = (url, data, method = 'GET') => {
 		}).then(r => {
 			let [err, data] = r
 			if (err) {
+				cosnole.log('出错了...')
 				reject(err)
 			}
 			let status = data.statusCode
@@ -25,9 +26,9 @@ export const http = (url, data, method = 'GET') => {
 					uni.navigateTo({
 						url: '/pages/public/login/index'
 					})
-					break;
+					break
 				case 403:
-					uni.uni.showToast({
+					uni.showToast({
 						title: 'token失效,重新登录',
 						icon: 'none'
 					});
@@ -35,9 +36,13 @@ export const http = (url, data, method = 'GET') => {
 					uni.navigateTo({
 						url: '/pages/public/login/index'
 					})
+					break
+				case 422:
+					reject(new Error('表单不完整'))
 					break;
 				case 200:
 					resolve(data.data)
+					break
 				default:
 					resolve(data)
 					break;

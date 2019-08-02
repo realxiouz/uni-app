@@ -1,9 +1,13 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import attendance from './attendance/index.js'
 
 Vue.use(Vuex)
 
 const store = new Vuex.Store({
+	modules: {
+		attendance,
+	},
 	state: {
 		hasLogin: false,
 		userInfo: {},

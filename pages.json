@@ -5,6 +5,14 @@
 			"style": {}
 		},
 		{
+			"path": "pages/customer/detail/index",
+			"style": {}
+		},
+		{
+			"path": "pages/customer/bean/index",
+			"style": {}
+		},
+		{
 			"path": "pages/message/index/index"
 		},
 		{
@@ -22,8 +30,40 @@
 		{
 			"path": "pages/attendance/signin/index",
 			"style": {}
+		},
+		{
+			"path": "pages/attendance/setting/index",
+			"style": {}
 		}
-	],
+	    ,{
+            "path" : "pages/attendance/group/index",
+            "style" : {}
+        },
+		{
+		    "path" : "pages/attendance/wifi/index",
+		    "style" : {}
+		},
+		{
+		    "path" : "pages/attendance/date/index",
+		    "style" : {}
+		},
+		{
+		    "path" : "pages/attendance/time-list/index",
+		    "style" : {}
+		},
+		{
+		    "path" : "pages/attendance/time/index",
+		    "style" : {}
+		},
+		{
+		    "path" : "pages/attendance/person/index",
+		    "style" : {}
+		},
+		{
+			"path": "pages/attendance/staffs/index",
+			"style": {}
+		}
+    ],
 	"tabBar": {
 		"color": "#000000",
 		"selectedColor": "#2F85FC",
