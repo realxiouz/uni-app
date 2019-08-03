@@ -1,7 +1,7 @@
 <template>
 	<view>
-		<view class="makecard" @tap="topMakeCard" :data-num="currentnum" :style="{left:left + 'px;',top:top +'px;'}">
-			<image :src="onEvent.imgSrc" mode="bottom right" class="bg-img"></image>
+		<view class="makecard" @tap="topMakeCard" :style="{left:left + 'px;',top:top +'px;'}">
+			<image :src="onEvent.imgSrc" mode="top center" class="bg-img"></image>
 			<text>
 				{{onEvent.title}}
 			</text>
@@ -10,7 +10,6 @@
 </template>
 
 <script>
-	import {GLOBALDATA} from "../../../utils/const";
 
 	export default {
 		data() {
@@ -38,7 +37,6 @@
 				uni[isRedirect? 'reLaunch': 'navigateTo']({
 					url: url
 				})
-				GLOBALDATA.templatecurrnum = e.currentTarget.dataset;
 			},
 			viewTouchMove(e) {
 				this.left = e.touches[0].clientX - 60;

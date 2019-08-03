@@ -5,7 +5,7 @@
             <image :src="user.avatar"></image>
         </view>
         <view class="cardcontent">
-            <view class="cardcontent-top"><!-- span -->
+            <view class="cardcontent-top">
                 <text class="bigtitle">
                     {{user.name || ''}}
                 </text>
@@ -45,9 +45,6 @@
                 type: [String, Number],
                 default: 0
             }
-        },
-        mounted() {
-            // console.log(this.num);
         }
     };
 </script>
@@ -136,14 +133,14 @@
         &.tm_2 {
             .user-img {
                 @include center(centerY, -50%);
-                left: 221rpx;
+                left: 220upx;
             }
 
             .cardcontent {
                 @include center(centerY, -50%);
                 color: $white;
-                right: 57rpx;
-                padding-right: 50rpx;
+                right: 0;
+                padding-right: 110upx;
             }
         }
 

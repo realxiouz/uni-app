@@ -1,11 +1,11 @@
 <template>
 	<view>
-		<view class="cardtemplate" v-if="one">
-			<child-com :user="currentuserinfo"  style="width: 700rpx" :num="template_id"></child-com>
+		<view class="cardtemplate" v-if="!isShowList">
+			<child-com :user="currentuserinfo"  style="width: 700rpx" :num="currentuserinfo.template_id || 0"></child-com>
 		</view>
 
-		<form>
-			<view class="cardtemplate" v-if="all">
+		<form v-else style="display: block;">
+			<view class="cardtemplate">
 				<radio-group class="block" @change="changed">
 					<view @tap="changed" v-for="(item, index) of tem" :key="index" class="list-box" rol="radiogroup" :data-list="index">
 						<label class="radiu">
@@ -22,23 +22,19 @@
 <script>
 	import {BASE_URL} from '../../utils/const.js';
 	import childCom from './child-com.vue';
-	import {mapState} from 'vuex';
+	import {header} from '../../utils/global-data';
+	import {mapState, mapMutations} from 'vuex';
 	export default {
 		props: {
-			templateIndex: {
-				// 是否要显示多个(模板和显示共用)
-				type: Boolean,
-				default: false
-			},
-			template_id: {
-				type: [String, Number],
-				default: '0'
-			},
 			user: {
 				type: Object,
 				default() {
 					return {};
 				}
+			},
+			isShowList: {
+				type: Boolean,
+				required: true
 			}
 		},
 		components: {
@@ -55,67 +51,23 @@
 				templateNum: 4,
 				curr: [],
 				index: 0
-				// template_id: uni.getStorageSync('currnum')*1 || 0 // 获取模板的下标, 如果没有, 那么默认0, onLoad不会执行此事件
 			}
 		},
 		onReady() {
-			// let selectednum = '';
-			//读取本地缓存信息
-			/*app.userReadyCallback = res => {
-				// console.info("userReadyCallback", res);
-				this.setData({
-					user: res,
-					num: res.template_id
-				});
-				// console.info("this", this.data.user);
-			}*/
-			// this.user = currentuserinfo;
-			/*if (this.data.isVisit) {
-				if (app.globalData.visituserinfo) {
-					// console.log(app.globalData.visituserinfo)
-					this.setData({
-						user: app.globalData.visituserinfo,
-						num: app.globalData.visituserinfo.template_id
-					}, () => {
-						// console.log(this.data.user)
-					});
-				}
-			} else {
-				if (app.globalData.currentuserinfo) {
-					this.setData({
-						user: app.globalData.currentuserinfo,
-						num: app.globalData.currentuserinfo.template_id
-					});
-				}
-			}*/
-
+			if (!this.isShowList) return false;
 			for (let i = 0; i < this.templateNum; i++) {
 				this.curr.push({
 					value: `模板${i}`,
 					checked: false
 				})
 			}
-			if (this.templateIndex) {// true  false不添加
-				this.all = true;
-				this.one = false;
-				this.tem = this.curr;
-			} else {
-				this.all = false;
-				this.one = true;
-			}
+			let num = this.currentuserinfo.template_id;
+			this.tem = JSON.parse(JSON.stringify(this.curr));
+			this.tem[num]['checked'] = true;
 			// 设置当前背景为已选中状态
-			/*let currnum = uni.getStorageSync("currnum") | "0";
-			this.setData({
-				tem: this.data.tem.map(item => {
-					if (item.value.slice(2) == currnum) {
-						item.checked = true
-					}
-					return item
-				})
-			})*/
-			//  console.log(this.data.tem)
 		},
 		methods: {
+			...mapMutations(['changeCurrentUserInfo']),
 			changed(e) {
 				let index = e.detail.value || e.currentTarget.dataset.list;
 				const self = this;
@@ -130,63 +82,21 @@
 					data: {
 						templateId: index
 					},
-					header: {
-						"X-Requested-With": "XMLHttpRequest",
-						"Authorization": "Bearer " + self.token
-					},
+					header: header(self.token),
 					success: (res) => {
-						uni.setStorageSync("currnum", index);
-						// console.log(res);
-						uni.navigateTo({
-							url: "../../businesscard/index/businesscard"
+						this.changeCurrentUserInfo({template_id: index});
+						uni.navigateBack({
+							delta: 1
 						})
 					},
 					fail(res) {
-						// res
-						// debugger
+
 					},
 					complete() {
 						uni.hideLoading();
 					}
 				});
-			},
-			choose(e){}
-			/*choose(e) {
-				const list = e.currentTarget.dataset.list;
-				this.data.tem.forEach((ele, index) => {
-					var ckd = "tem[" + index + "].checked";
-					if (list === index) {
-
-						uni.request({
-							url: BASE_URL + 'api/geren/uptemplate',
-							header: GLOBALDATA.header(),
-							data: {
-								templateId: index
-							},
-							success: (res) => {
-								uni.setStorageSync("currnum", index)
-								GLOBALDATA.currentuserinfo.template_id = index;
-								uni.navigateTo({
-									url: " "//////////////////////////////////////
-								})
-							},
-							fail(res) {
-								res
-								// debugger
-							}
-						});
-
-						this.setData({
-							[ckd]: true
-						});
-
-					} else {
-						this.setData({
-							[ckd]: false
-						})
-					}
-				})
-			}*/
+			}
 		},
 		computed: {
 			...mapState(['token', 'currentuserinfo'])

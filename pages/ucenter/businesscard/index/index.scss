@@ -1,5 +1,7 @@
 @import "../../../../static/publicscss/scss/_link.scss";
-
+[v-cloak] {
+    display: none !important;
+}
 .cu-form-group .title {
     min-width: calc(4em + 30rpx);
 }
@@ -253,6 +255,15 @@
                         height: 100%;
                         @include boderradius(50%);
                     }
+                }
+                .show-browse-ellipsis {
+                    background: #ccc;
+                    @include boderradius(50%);
+                    font-size: 18px;
+                    color: #fff;
+                    line-height: 1.5;
+                    text-align: center;
+                    order: -1;
                 }
             }
         }

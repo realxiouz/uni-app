@@ -72,7 +72,7 @@ export default {
             ewm: '/static/images/publicimg/ewm.jpg',
             ewmUrl: "http://www.t.com/storage/qrCode/156144383447.png"
         }
-        // 小图标地址end
+        // 背景路径
         let bgPath = [
             "/static/images/img/template_0.png",
             "/static/images/img/template_1.png",
@@ -121,15 +121,15 @@ export default {
         }
         this.canvasWidth = this.canvasWidth;
         this.canvasHeight = (3*this.canvasWidth) / 5;
+        cardInfo.userImg = this.qrCode;
         roundRect(ctx, 0, 0, this.canvasWidth, this.canvasHeight, 5);
         // 绘制文本
-        console.log(this.currentbgnum);
         switch (Number(this.currentbgnum)) {
             case 0:
             {
-                ctx.drawImage(bgPath[0], 0, 0, 200, 150);
-                // ctx.drawImage(cardInfo.ewm, this.canvasWidth * .85, this.canvasHeight * .66, 50, 50);
-                // ctx.drawImage(cardInfo.userImg, this.canvasWidth - 80, 30, 50, 50);
+                ctx.drawImage(bgPath[0], 0, 0, this.canvasWidth, this.canvasHeight);
+                ctx.drawImage(cardInfo.ewm, this.canvasWidth * .85, this.canvasHeight * .66, 50, 50);
+                ctx.drawImage(cardInfo.userImg, this.canvasWidth - 80, 30, 50, 50);
                 ctx.setFontSize(17);
                 ctx.fillText(cardInfo.name, 30, this.canvasHeight / 2.3);
                 ctx.setFontSize(13);
@@ -173,6 +173,7 @@ export default {
                 ctx.drawImage(bgPath[2], 0, 0, this.canvasWidth, this.canvasHeight);
                 ctx.drawImage(cardInfo.ewm, this.canvasWidth * .005, this.canvasHeight * .66, 50, 50);
                 ctx.drawImage(cardInfo.userImg, this.canvasWidth * .33, this.canvasHeight / 2 - 20, 50, 50);
+                console.log(cardInfo.userImg);
                 ctx.setFontSize(17);
                 ctx.fillText(cardInfo.name, this.canvasWidth * .58, this.canvasHeight / 2.8);
                 ctx.setFontSize(13);
@@ -223,7 +224,7 @@ export default {
                 }
             })
         }, 500));
-
+        if (!this.isShowShare) return false;
         // 绘制小图片
         let smWd = 157;
         let	smHt = 140;

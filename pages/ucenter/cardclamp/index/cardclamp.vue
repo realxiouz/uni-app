@@ -57,6 +57,7 @@
                 currCollect: [],
                 userData: {}, // userInfo
                 isCollect: false,
+                cardBox: [],
                 /*cardBox: [
                     {
                         "username": "小明",
@@ -66,27 +67,12 @@
                         "userimg": "https://ss0.baidu.com/6ONWsjip0QIZ8tyhnq/it/u=3516274884,2016513193&fm=58",
                         "template_id": 3
                     },
-                    {
-                        "username": "温家宝",
-                        "zhiwei": "公务员",
-                        "companyname": "机关单位",
-                        "phone": 18314307882,
-                        "userimg": "https://ss0.baidu.com/6ONWsjip0QIZ8tyhnq/it/u=3516274884,2016513193&fm=58",
-                        "template_id": 2
-                    },
-                    {
-                        "username": "温家宝",
-                        "zhiwei": "公务员",
-                        "companyname": "机关单位",
-                        "phone": 18314307882,
-                        "userimg": "https://ss0.baidu.com/6ONWsjip0QIZ8tyhnq/it/u=3516274884,2016513193&fm=58",
-                        "template_id": 1
-                    }
-                ],*/
+                ]*/
                 onMyEvent: {
                     title: '返回首页',
                     imgSrc: '/static/images/img/card.png',
-                    url: '../../businesscard/index/businesscard'
+                    url: '../../businesscard/index/businesscard',
+                    isRedirect: true
                 }
             }
         },
@@ -104,21 +90,13 @@
             showCancel(e) {
                 // 取消收藏
                 this.cardBox.forEach((ele, index) => {
-                    // let isShowBt = "cardBox[" + index + "].isShow";
                     this.cardBox[index].isShow = false;
-                    /*this.setData({
-                        [isshowbt]:false
-                    })*/
                 })
 
                 let colletData = this.currCollect;
                 colletData.forEach((ele, index) => {
                     let itemID = e.currentTarget.dataset.cancelbt;
                     if (itemID == index) {
-                        /*var isshowbt= "currcollect[" + index + "].isshow";
-                        this.setData({
-                            [isshowbt]:true
-                        })*/
                         this.currCollect[index].isShow = false;
                     }
                 })
@@ -126,93 +104,16 @@
             showCollect(e) {
                 // 收藏
                 this.currCollect.forEach((ele, index) => {
-                    // let isShowBt = "currCollect[" + index + "].isShow";
                     this.currCollect[index].isShow = false;
                 })
                 this.cardBox.forEach((ele, index) => {
                     let itemID = e.currentTarget.dataset.btindex;
                     ele.isShow = false;
                     if (itemID == index) {
-                        // let isShowBt= "cardBox[" + index + "].isShow";
                         this.cardBox[index].isShow = true;
                     }
                 })
-            }/*,
-            cancel(e) {
-                // 取消收藏, 阻止冒泡
-                let time = 1000;
-                // let colletData = GLOBALDATA.colletelist;
-                colletData.forEach((ele, index) => {
-                    // let isshowbt= "currcollect[" + index + "].isshow";
-                    let itemID = e.currentTarget.dataset.deletindex;
-                    if (itemID == index) {
-                        this.currCollect[index] = false;
-                        /!*this.setData({
-                            [isshowbt]:false
-                        })*!/
-                        colletData.splice(index, 1);
-                        uni.showToast({
-                            title: '已取消',
-                            icon: 'none',
-                            duration: time
-                        });
-                        setTimeout(() => {
-                            // 重定向
-                            uni.redirectTo({
-                                url: './cardclamp'
-                            })
-                        }, time);
-
-                    }
-                })
-            },
-            collect(e) {
-                // 收藏阻止冒泡
-                let time = 1000;
-                let list = e.currentTarget.dataset.list;
-                let curr = GLOBALDATA.colletelist;
-                for (let i = 0; i < this.cardBox.length; i++) {
-                    // let isshowbt = "cardbox[" + list + "].isshow";
-                    if (list == i) {
-                        let isTrue = false;
-                        let _arr = this.cardBox[i];
-                        for (let j = 0; j < curr.length; j++) {
-                            if (curr[j].phone == _arr.phone) {
-                                isTrue = true;
-                                break;
-                            }
-                        }
-                        if (!isTrue) {
-                            curr.push(_arr);
-                            uni.showToast({
-                                title: '收藏成功',
-                                icon: 'success',
-                                duration: time
-                            });
-                            this.cardBox[list].isShow = false;
-                            /!*this.setData({
-                                [isshowbt]: false
-                            });*!/
-                            setTimeout(() => {
-                                uni.redirectTo({
-                                    url: './cardclamp'
-                                })
-                            }, time)
-                        } else {
-                            uni.showToast({
-                                title: '不许重复收藏哦',
-                                icon: 'none',
-                                duration: time
-                            });
-                            this.cardBox[list].isShow = false;
-                            /!*this.setData({
-                                [isshowbt]: false
-                            });*!/
-                            return false;
-                        }
-                    }
-                }
-            }*/
+            }
         },
         onLoad() {
             const self = this;
@@ -223,17 +124,10 @@
                 dataType: 'json',
                 header: header(self.token),
                 success(res) {
-                    console.log(res);
                     self.users = res.data.data;
                 }
             });
             this.userData = this.userInfo;
-            /*if (GLOBALDATA.colletelist.length > 0) {
-                this.currCollect = GLOBALDATA.colletelist,
-                this.isCollect = true;
-            } else {
-                this.isCollect = false;
-            }*/
             this.cardBox.forEach((item, index) => {
                 Object.defineProperty(item, 'isShow', {
                     configurable: false,

@@ -4,7 +4,7 @@
         <view class="pd-left-right pubmgtop">
             <view class="grid col-2">
                 <view class="browse-list">
-                    <view class="browse-box"><!--span-->
+                    <view class="browse-box">
                         <view class="browse-count-left">
                             今日浏览量：
                         </view>
@@ -14,7 +14,7 @@
                     </view>
                 </view>
                 <view class="browse-list">
-                    <view class="browse-box"><!--span-->
+                    <view class="browse-box">
                         <view class="browse-count-left">
                             今日转发量：
                         </view>
@@ -24,7 +24,7 @@
                     </view>
                 </view>
                 <view class="browse-list">
-                    <view class="browse-box"><!--span-->
+                    <view class="browse-box">
                         <view class="browse-count-left">
                             历史浏览量：
                         </view>
@@ -34,7 +34,7 @@
                     </view>
                 </view>
                 <view class="browse-list">
-                    <view class="browse-box"><!--span-->
+                    <view class="browse-box">
                         <view class="browse-count-left">
                             历史转发量：
                         </view>
@@ -89,14 +89,12 @@
         },
         onLoad() {
             const self = this;
-            console.log(self.token);
             uni.request({
                 url: BASE_URL+ '/api/browse/fwbrowse',
                 header: header(self.token),
                 method: 'GET',
                 success(res) {
                     self.recordlist = res.data;
-                    console.log(res.data);
                     self.countbs = res.data.countbs; // 浏览合计
                     self.Browse = res.data.Browseuser;// 浏览的人
                     self.countzf = res.data.countzf;// 转发记录

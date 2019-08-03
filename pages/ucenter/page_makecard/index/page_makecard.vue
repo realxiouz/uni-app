@@ -1,6 +1,6 @@
 <template>
     <view class="padding-25">
-        <card-template :template_id="currentuserinfo.template_id || '0'" :user="currentuserinfo"></card-template>
+        <card-template :user="currentUserInfo" :is-show-list="false"></card-template>
         <!--导航栏列表 start-->
         <view class="radiusbox pubmgtop cardlist">
             <view @tap="toPages" data-page="../../user/index/user">
@@ -70,8 +70,12 @@
                     title: '返回首页',
                     url: '../../businesscard/index/businesscard',
                     isRedirect: true
-                }
+                },
+                currentUserInfo: {}
             }
+        },
+        onLoad() {
+            this.currentUserInfo = this.currentuserinfo;
         },
         methods: {
             toPages(e) {
@@ -84,9 +88,6 @@
         components: {
             cardTemplate,
             makeBtn
-        },
-        mounted() {
-            // console.log(this.currentuserinfo);
         },
         computed: {
             ...mapState(['currentuserinfo'])
