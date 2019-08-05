@@ -1,25 +1,30 @@
-let globalData = {
-    base_url: 'http://www.t.com',
-    cardList: '',// 名片
-    colleteList: [],// 名片收藏
-    houseArr: [],// 楼盘
-    templateCurrNum: 0,// 保存名片当前被选中值
-    userInfo: {},// 用户基本信息
-    token: '',// token值
-    inFormations: {},// 浏览记录
-    houseId: [],//保存被选中的楼盘ID
-    currentuserinfo: {},// 获取到用户相关信息进行保存
-    visitUserInfo: {}
-};
-
-
 function header(token) {
     return {
         "X-Requested-With": "XMLHttpRequest",
         "Authorization": "Bearer " + token
     }
 }
+function getElSize(id) { //得到元素的size
+    return new Promise((res, rej) => {
+        uni.createSelectorQuery().select('#' + id).fields({
+            size: true,
+            scrollOffset: true
+        }, (data) => {
+            res(data);
+        }).exec();
+    });
+};
+/*async function getElSize(id) {
+    let obj = {};
+    await uni.createSelectorQuery().select('#' + id).fields({
+        size: true,
+        scrollOffset: true
+    }, (data) => {
+        obj = data;
+    }).exec();
+    return obj;
+}*/
 export {
-    globalData,
-    header
+    header,
+    getElSize
 }

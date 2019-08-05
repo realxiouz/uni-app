@@ -917,7 +917,7 @@ button.cuIcon.lg {
 .cu-avatar-group {
 	direction: rtl;
 	unicode-bidi: bidi-override;
-	padding: 0 10upx 0 40upx;
+	/*padding: 0 10upx 0 40upx;*/
 	display: inline-block;
 }
 

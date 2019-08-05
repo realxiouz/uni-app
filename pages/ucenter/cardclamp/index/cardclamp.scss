@@ -1,5 +1,4 @@
 @import "../../../../static/publicscss/scss/_link.scss";
-@import "../../../../colorui/main.css";
 //搜索框
 .seach {
     position: relative;
@@ -165,7 +164,7 @@
                 left: 0;
             }
 
-            &.tm_0 {
+            /*&.tm_0 {
                 .userimg {
                     right: 7px;
                     top: 15px;
@@ -217,7 +216,7 @@
                     left: 0;
                     padding-right: rpx(50);
                 }
-            }
+            }*/
         }
         // 取消收藏
         .cancel-collection {

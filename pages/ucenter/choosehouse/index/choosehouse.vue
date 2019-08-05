@@ -118,8 +118,8 @@
                     success(res) {
                         if (res.data.code === 100) {
                             //返回上一页面
-                            wx.navigateTo({
-                                url: '../../recommend/index/recommend'
+                            uni.navigateBack({
+                                delta: 1
                             });
                         } else {
                             uni.showToast({

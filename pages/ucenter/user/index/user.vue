@@ -128,10 +128,10 @@
                     data: this.editUserInfo,
                     header: header(self.token),
                     success(res) {
-						// 保存成功
+                        // 保存成功
                         self.changeCurrentUserInfo(res.data.data);
-                        uni.redirectTo({
-                            url: '../../page_makecard/index/page_makecard'
+                        uni.navigateBack({
+                            delta: 1
                         })
                     },
 					complete(){

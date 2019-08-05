@@ -60,7 +60,7 @@ radio-group {
             }
         }
 
-        &.tm_0 {
+        /*&.tm_0 {
             .userimg {
                 right: 7px;
                 top: 15px;
@@ -93,14 +93,14 @@ radio-group {
         &.tm_2 {
             .userimg {
                 @include center(centerY, -50%);
-                left: rpx(221);
+                left: rpx(250);
             }
 
             .cardcontent {
                 @include center(centerY, -50%);
                 color: $white;
                 right: 0;
-                padding-right: rpx(50);
+                padding-right: 0;
             }
         }
 
@@ -116,6 +116,6 @@ radio-group {
                 left: 0;
                 padding-right: rpx(50);
             }
-        }
+        }*/
     }
 }

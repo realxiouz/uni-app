@@ -32,7 +32,6 @@ const store = new Vuex.Store({
 			for (const [key, val] of Object.entries(data)) {
 				Vue.set(state.currentuserinfo, key, val);
 			}
-			// state.currentuserinfo = data;
 		},
 		changeHouseArr(state, data) {
 			state.housearr = data;
