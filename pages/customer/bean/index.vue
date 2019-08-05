@@ -39,9 +39,9 @@
 			</view>
 			<view class="cu-form-group">
 				<view class="title">来源</view>
-				<picker @change="sourceChange" :value="sourceInx" :range="sources">
+				<picker @change="sourceChange" :value="sourceInx" :range="sources" range-key="name">
 					<view class="picker">
-						{{sourceInx>-1?sources[sourceInx]:'选择来源'}}
+						{{sourceInx>-1?sources[sourceInx].name:'选择来源'}}
 					</view>
 				</picker>
 			</view>
@@ -49,7 +49,7 @@
 				<view class="title">状态</view>
 				<picker @change="statusChange" :value="statusInx" :range="[{text: '有效', value: '0'}, {text: '无效', value: '8'}]" range-key="text">
 					<view class="picker">
-						{{statusInx>-1?[{text: '有效', value: '0'}, {text: '无效', value: '8'}][statusInx]:'选择状态'}}
+						{{statusInx>-1?[{text: '有效', value: '0'}, {text: '无效', value: '8'}][statusInx].text:'选择状态'}}
 					</view>
 				</picker>
 			</view>
@@ -85,7 +85,7 @@
 				<view class="title">客户星级</view>
 				<picker @change="starChange" :value="starInx" :range="stars" range-key="text">
 					<view class="picker">
-						{{starInx>-1?stars[starInx]:'选择年纪'}}
+						{{starInx>-1?stars[starInx].text:'选择年纪'}}
 					</view>
 				</picker>
 			</view>
@@ -110,9 +110,14 @@
 			})
 			this.$http("customer_job").then(r => {
 			  this.jobs = r.data;
-			});
+			})
+			this.$http('path').then(r => {
+				this.rules = r.data.find(i => i.name == '客户'&& i.field == 'Customer').values
+				console.log(this.rules)
+			})
 		},
 		data: _ => ({
+			rules: [],
 			customerType: 0,
 			formBean: {
 				name: '',
@@ -139,12 +144,19 @@
 			ages: [],
 			ageInx: -1,
 			
-			stars: [],
+			stars: [
+				{text: '一星', value: '1'},
+				{text: '二星', value: '2'},
+				{text: '三星', value: '3'},
+				{text: '四星', value: '4'},
+				{text: '五星', value: '5'},
+			],
 			starInx: -1
 		}),
 		methods: {
 			sexChange(e) {
 				this.sexInx = e.detail.value
+				this.formBean.sex = this.sexs[this.sexInx].value
 			},
 			typeChange(e) {
 				this.typeInx = e.detail.value
@@ -167,6 +179,9 @@
 			
 			selAddress1(e) {
 				console.log(e)
+				this.formBean.current_province_id = e.pId
+				this.formBean.current_city_id = e.cId
+				this.formBean.current_district_id = e.dId
 			},
 			selAddress2(e) {
 				console.log(e)

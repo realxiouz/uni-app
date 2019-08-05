@@ -1,0 +1,129 @@
+@import "../../../../static/publicscss/scss/link";
+@import "../../../../colorui/main.css";
+
+.browse-list {
+    height: rpx(130);
+    &:not(:nth-child(2n)) {
+        padding-right: $space_1;
+    }
+
+    > .browse-box {
+        padding: rpx(15) rpx(20);
+        display: inline-block;
+        @extend .radius;
+        width: 100%;
+        height: 100%;
+        @include box-x;
+        color: $white;
+
+        .browse-count-left {
+
+        }
+
+        .browse-count-right {
+            padding-top: rpx(30);
+            padding-left: $space_1;
+            @include flex-x(1);
+        }
+    }
+
+    &:nth-child(n) {
+        > .browse-box {
+            background: #77801a;
+        }
+    }
+
+    &:nth-child(2n) {
+        > .browse-box {
+            background: #228017;
+        }
+    }
+
+    &:nth-child(3n) {
+        > .browse-box {
+            background: #218067;
+        }
+    }
+
+    &:nth-child(4n) {
+        > .browse-box {
+            background: #15a3ff;
+        }
+    }
+
+    padding: rpx(10) 0;
+}
+
+//浏览和转发记录
+.record {
+    position: relative;
+
+    > .num-box {
+        background: $white;
+        border-top: solid $border rgba($gray, .12);
+        border-bottom: solid $border rgba($gray, .12);
+        @include box-x;
+
+        > view {
+            text-align: center;
+            padding: $space_1 0;
+            @include flex-x(1);
+
+            &.on {
+                color: #70a530;
+                border-bottom: solid $border #70a530;
+            }
+        }
+    }
+}
+
+.record-content {
+    display: none;
+
+    &.active {
+        display: block;
+    }
+}
+
+.browse-content-title {
+    color: #9c9c9c;
+    padding-bottom: $space_1;
+}
+
+.brows-list, .transmit {
+    > view {
+        padding:0 $space_1*1.2 $space_1 $space_1*1.2;
+        @include box-x;
+        margin-bottom: $space_1;
+        &:not(:last-child) {
+            border-bottom: solid $border $bordercl;
+        }
+
+        .brows-middle {
+            @include flex-x(1);
+
+            .brows-content {
+                padding-left: $space_1;
+                @include relativecenter(centerY, -50%);
+
+                .username {
+                    padding-bottom: rpx(10);
+                }
+
+                .browstime {
+                    color: var(--gray);
+                }
+            }
+        }
+
+        .brows-both {
+            .brows-cunt {
+                color: #4f4f4f;
+                @include relativecenter(centerY, -50%);
+            }
+        }
+    }
+}
+.cordecunt{
+    color: var(--blue);
+}

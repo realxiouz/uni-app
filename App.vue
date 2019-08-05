@@ -5,15 +5,8 @@
 	export default {
 		onLaunch: function() {
 			this.$http('auth/user').then(r => {
-				this.login(r)
-			})
-
-			wx.getNetworkType({
-				success(res) {
-					const networkType = res.networkType
-					console.log(res)
-				}
-			})
+				this.login(r);
+			});
 		},
 		onShow: function() {
 

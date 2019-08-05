@@ -1,108 +1,204 @@
 {
-	"pages": [
-		{
-			"path": "pages/customer/index/index",
-			"style": {}
-		},
-		{
-			"path": "pages/customer/detail/index",
-			"style": {}
-		},
-		{
-			"path": "pages/customer/bean/index",
-			"style": {}
-		},
-		{
-			"path": "pages/message/index/index"
-		},
-		{
-			"path": "pages/work/index/index"
-		},  {
-			"path": "pages/ucenter/index/index",
-			"style": {}
-		}, {
-			"path": "pages/public/login/index",
-			"style": {}
-		}, {
-			"path": "pages/contact/index/index",
-			"style": {}
-		},
-		{
-			"path": "pages/attendance/signin/index",
-			"style": {}
-		},
-		{
-			"path": "pages/attendance/setting/index",
-			"style": {}
-		}
-	    ,{
-            "path" : "pages/attendance/group/index",
-            "style" : {}
-        },
-		{
-		    "path" : "pages/attendance/wifi/index",
-		    "style" : {}
-		},
-		{
-		    "path" : "pages/attendance/date/index",
-		    "style" : {}
-		},
-		{
-		    "path" : "pages/attendance/time-list/index",
-		    "style" : {}
-		},
-		{
-		    "path" : "pages/attendance/time/index",
-		    "style" : {}
-		},
-		{
-		    "path" : "pages/attendance/person/index",
-		    "style" : {}
-		},
-		{
-			"path": "pages/attendance/staffs/index",
-			"style": {}
-		}
-    ],
-	"tabBar": {
-		"color": "#000000",
-		"selectedColor": "#2F85FC",
-		"backgroundColor": "#FFFFFF",
-		"borderStyle": "black",
-		"list": [{
-				"pagePath": "pages/customer/index/index",
-				"iconPath": "static/home.png",
-				"selectedIconPath": "static/home-active.png",
-				"text": "客户"
-			}, {
-				"pagePath": "pages/message/index/index",
-				"iconPath": "static/home.png",
-				"selectedIconPath": "static/home-active.png",
-				"text": "消息"
-			}, {
-				"pagePath": "pages/work/index/index",
-				"iconPath": "static/home.png",
-				"selectedIconPath": "static/home-active.png",
-				"text": "工作"
-			},
-			{
-				"pagePath": "pages/contact/index/index",
-				"iconPath": "static/home.png",
-				"selectedIconPath": "static/home-active.png",
-				"text": "通讯录"
-			},
-			{
-				"pagePath": "pages/ucenter/index/index",
-				"iconPath": "static/center.png",
-				"selectedIconPath": "static/center-active.png",
-				"text": "我的"
-			}
-		]
-	},
-	"globalStyle": {
-		"navigationBarTextStyle": "white",
-		"navigationBarTitleText": "房销客",
-		"navigationBarBackgroundColor": "#2F85FC",
-		"backgroundColor": "#FFFFFF"
+  "pages": [
+    {
+      "path": "pages/customer/index/index",
+      "style": {
+        "navigationBarTitleText": "房销客",
+		"enablePullDownRefresh": false
+      }
+    },
+    {
+      "path": "pages/ucenter/businesscard/index/businesscard",
+      "style": {
+        "navigationBarTitleText": "我的名片"
+      }
+    },
+    {
+      "path": "pages/ucenter/page_makecard/index/page_makecard",
+      "style": {
+      }
+    },
+    {
+      "path": "pages/ucenter/cardclamp/index/cardclamp",
+      "style": {
+        "navigationBarTitleText": "名片夹"
+      }
+    },
+    {
+      "path": "pages/ucenter/share/index/share",
+      "style": {
+        "navigationBarTitleText": "分享名片"
+      }
+    },
+    {
+      "path": "pages/ucenter/recommend/index/recommend",
+      "style": {
+        "navigationBarTitleText": "推荐楼盘"
+      }
+    },
+    {
+      "path": "pages/ucenter/choosehouse/index/choosehouse",
+      "style": {
+        "navigationBarTitleText": "选择楼盘"
+      }
+    },
+    {
+      "path": "pages/ucenter/browsecount/index/browsecount",
+      "style": {
+        "navigationBarTitleText": "浏览记录"
+      }
+    },
+    {
+      "path": "pages/ucenter/cardtemplate_list/index/cardtemplate_list",
+      "style": {
+        "navigationBarTitleText": "模板"
+      }
+    },
+    {
+      "path": "pages/message/index/index",
+      "style": {
+        "navigationBarTitleText": "消息"
+      }
+    },
+    {
+      "path": "pages/work/index/index",
+      "style": {
+        "navigationBarTitleText": "工作"
+      }
+    },
+    {
+      "path": "pages/ucenter/index/index",
+      "style": {
+        "navigationBarTitleText": "我的"
+      }
+    },
+    {
+      "path": "pages/public/login/index",
+      "style": {
+        "navigationBarTitleText": "登录·注册"
+      }
+    },
+    {
+      "path": "pages/contact/index/index",
+      "style": {
+        "navigationBarTitleText": "通讯录"
+      }
+    },
+    {
+      "path": "pages/attendance/signin/index",
+      "style": {
+        "navigationBarTitleText": "我的名片"
+      }
+    },
+    {
+      "path": "pages/out/index/out",
+      "style": {}
+    },
+    {
+      "path": "components/makebtn/index/makebtn",
+      "style": {
+        "navigationBarTitleText": "制作名片"
+      }
+    },
+    {
+      "path": "pages/ucenter/user/index/user",
+      "style": {
+        "navigationBarTitleText": "编辑名片"
+      }
+    },
+    {
+      "path": "pages/ucenter/explain/index/explain",
+      "style": {
+        "navigationBarTitleText": "流程图"
+      }
+    },
+    {
+      "path": "pages/customer/detail/index",
+      "style": {}
+    },
+    {
+      "path": "pages/customer/bean/index",
+      "style": {}
+    },
+    {
+      "path": "pages/attendance/setting/index",
+      "style": {}
+    },
+    {
+      "path": "pages/attendance/group/index",
+      "style": {}
+    },
+    {
+      "path": "pages/attendance/wifi/index",
+      "style": {}
+    },
+    {
+      "path": "pages/attendance/date/index",
+      "style": {}
+    },
+    {
+      "path": "pages/attendance/time-list/index",
+      "style": {}
+    },
+    {
+      "path": "pages/attendance/time/index",
+      "style": {}
+    },
+    {
+      "path": "pages/attendance/person/index",
+      "style": {}
+    },
+    {
+      "path": "pages/attendance/staffs/index",
+      "style": {}
+    },
+	{
+	  "path": "pages/common/followup/index",
+	  "style": {}
 	}
+  ],
+  "tabBar": {
+    "color": "#000000",
+    "selectedColor": "#2F85FC",
+    "backgroundColor": "#FFFFFF",
+    "borderStyle": "black",
+    "list": [
+      {
+        "pagePath": "pages/customer/index/index",
+        "iconPath": "static/images/tablist/home.png",
+        "selectedIconPath": "static/images/tablist/home-active.png",
+        "text": "客户"
+      },
+      {
+        "pagePath": "pages/message/index/index",
+        "iconPath": "static/images/tablist/home.png",
+        "selectedIconPath": "static/images/tablist/home-active.png",
+        "text": "消息"
+      },
+      {
+        "pagePath": "pages/work/index/index",
+        "iconPath": "static/images/tablist/home.png",
+        "selectedIconPath": "static/images/tablist/home-active.png",
+        "text": "工作"
+      },
+      {
+        "pagePath": "pages/contact/index/index",
+        "iconPath": "static/images/tablist/home.png",
+        "selectedIconPath": "static/images/tablist/home-active.png",
+        "text": "通讯录"
+      },
+      {
+        "pagePath": "pages/ucenter/index/index",
+        "iconPath": "static/images/tablist/center.png",
+        "selectedIconPath": "static/images/tablist/center-active.png",
+        "text": "我的"
+      }
+    ]
+  },
+  "globalStyle": {
+    "navigationBarTextStyle": "white",
+    "navigationBarTitleText": "房销客",
+    "navigationBarBackgroundColor": "#2F85FC",
+    "backgroundColor": "#FFFFFF"
+  }
 }

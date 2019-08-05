@@ -1,0 +1,146 @@
+@import "../../../../static/publicscss/scss/_link.scss";
+$liht:95;
+.chooseseach {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: rpx(90);
+    padding: rpx(15) $space_1;
+    background: rgba($gray, .2);
+}
+
+//搜索框
+.search {
+    position: relative;
+    color: var(--darkGray);
+    > text {
+        @include center(centerY, -55%);
+        left: rpx(15);
+        font-size: $bigfont;
+        color: rgba($gray, .5);
+    }
+
+    > input {
+        width: 100%;
+        padding: 0 $space_1 *2.5;
+        @include boderradius($radius);
+        background: $white;
+        height: rpx(60);
+        line-height: rpx(60);
+    }
+}
+
+.showchoose {
+    position: fixed;
+    top: rpx(90);
+    left: 0;
+    padding-top: rpx(8);
+    width: 750rpx;
+    height: rpx(87);
+    overflow: hidden;
+    background: $white;
+    padding-left: $space_1 *.9;
+    padding-right: $space_1 *.9;
+    z-index: 10;
+    > view {
+        display: block;
+        @include widthlist(rpx(8), 10, 0);
+        width: rpx(60);
+        height: rpx(60);
+        overflow: hidden;
+        image {
+            width: 100%;
+            height: 100%;
+        }
+    }
+
+    border-bottom: solid 3px rgba($gray, .2);
+}
+
+.mainpage {
+
+}
+.choosehouse {
+    padding-bottom: rpx(90);
+    margin-top: 80rpx;
+}
+
+.chooselist {
+    > view {
+        padding: 0 $space_1;
+        height: rpx($liht);
+
+        &:not(:last-child) {
+            border-bottom: solid $border $bordercl;
+        }
+
+        @include box-x;
+
+        .selectbox {
+            position: relative;
+            width: rpx(50);
+            height: 100%;
+
+            > text {
+                @include center(center, -50%, -50%);
+                font-size: $bigfont*1.3;
+
+                &.noselect {
+                    color: rgba($gray, .4);
+                }
+
+                &.selected {
+                    display: none;
+                    color: var(--blue);
+                }
+            }
+        }
+
+        .selecimg {
+
+            margin-left: $space_1 * .8;
+            width: rpx(60);
+            height: rpx($liht);
+            position: relative;
+
+            > image {
+                width: rpx(60);
+                height: rpx(60);
+                @include center(center, -50%, -50%);
+            }
+        }
+
+        .selectxt {
+            @include flex-x(1);
+            position: relative;
+
+            > text {
+                width: 90%;
+                padding-left: $space_1 * .8;
+                @include center(centerY, -50%);
+                @include shenlv;
+                color: $gray;
+            }
+        }
+
+        &.on {
+            .selectbox {
+                > text {
+                    &.noselect {
+                        display: none;
+                    }
+                }
+            }
+
+            .selectbox {
+                > text {
+                    &.selected {
+                        display: block;
+                    }
+                }
+            }
+        }
+    }
+}

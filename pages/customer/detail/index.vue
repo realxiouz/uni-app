@@ -11,7 +11,7 @@
 			<swiper-item>
 				<data-list ref="list0" @data="handleList0" r-url="customer_genjin" :r-data="{customer_id: id}">
 					<view class="cu-bar"></view>
-					<!-- <item v-for="(i, inx) in list0" :key="inx" :bean="i" /> -->
+					<genjin v-for="(i, inx) in list0" :key="inx" :bean="i" />
 				</data-list>
 			</swiper-item>
 			<swiper-item>
@@ -27,11 +27,15 @@
 				</data-list>
 			</swiper-item>
 		</swiper>
+		
+		<float-button @go="handleGo" />
 	</view>
 </template>
 
 <script>
-	import DataList from '@/components/data-list.vue'
+	import DataList from '@/components/data-list'
+	import Genjin from './components/genjin'
+	import FloatButton from '@/components/float-button'
 	
 	export default {
 		onLoad(opt) {
@@ -45,7 +49,7 @@
 		data: _ => ({
 			id: '',
 			bean: {},
-			selTab: '',
+			selTab: 0,
 			tabs: [
 				{text: '跟进记录'},
 				{text: '到访记录'},
@@ -76,10 +80,18 @@
 			},
 			handleNavChange(inx) {
 				this.selTab = inx
+			},
+			handleGo() {
+				let path = {
+					'0': `/pages/common/followup/index?customerId=${this.id}`
+				}
+				uni.navigateTo({
+					url: path[this.selTab]
+				})
 			}
 		},
 		components: {
-			DataList
+			DataList, Genjin, FloatButton
 		}
 	}
 </script>

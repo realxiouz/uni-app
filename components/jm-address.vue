@@ -1,20 +1,12 @@
-<!-- 本插件只是个框架,适用于地址数据要从后台逐级获取的需求 -->
-<!-- 可对照注释根据业务需求更改 -->
-<!-- 作者：qq315500033 -->
-
-
 <template>
 	<view>
-		<!-- 选择地址展示 -->
 		<view @tap="showAddress">
 			{{coname}} - {{ctname}} - {{csname}}
 		</view>
-		<!-- 选择地址模态框 -->
 		<view class="jm-modal" :class="showFlag==true?'show1':''">
 			<view class="dialog">
 				<view class="showBox">
 					<view class="content">选择地址</view>
-					<!-- 关闭按钮 -->
 					<view class="action" @tap="hideAddress">
 						x
 					</view>
@@ -49,30 +41,19 @@
 	export default {
 		data() {
 			return {
-				//模态框状态
 				showFlag: false,
-				// 省份列表
 				addressd1: [],
-				// 城市列表
 				addressd2: [],
-				// 地区列表
 				addressd3: [],
-				//省份id 默认为64，可根据想要默认展示的id自行更改
 				co: '1',
-				//默认省份名称
 				coname: '北京',
-				//城市id 默认为64，可根据想要默认展示的id自行更改
 				ct: '64',
-				//默认城市名称
 				ctname: '朝阳区',
-				//地区id 默认为575，可根据想要默认展示的id自行更改
 				cs: '575',
-				//默认地区名称
 				csname: '三环以内'
 			};
 		},
 		props: {
-			//载入的标签数据
 			addressd: Array
 		},
 		mounted() {
@@ -98,9 +79,9 @@
 			// 声明默认地址,并传送给父组件
 			emitData() {
 				var data = {
-					province: _self.coname,
-					city: _self.ctname,
-					district: _self.csname
+					pId: _self.co,
+					cId: _self.ct,
+					dId: _self.cs
 				}
 				_self.$emit("changes", data);
 			},

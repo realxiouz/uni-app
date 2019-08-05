@@ -1,0 +1,340 @@
+@import "../../../../static/publicscss/scss/_link.scss";
+
+.cu-form-group .title {
+    min-width: calc(4em + 30rpx);
+}
+
+.text-center {
+    text-align: center;
+}
+
+.subbtn {
+    padding: rpx(15);
+    width: 60%;
+    margin: 0 auto;
+}
+
+.imgauto {
+    display: block;
+    width: 100%;
+}
+
+.cardmain {
+    padding: $spacepublic;
+}
+
+//首页头部
+.index-top {
+    height: rpx(100);
+    position: relative;
+
+    .top-content {
+        position: absolute;
+        top: 0;
+        z-index: 10;
+        width: 100%;
+        left: 0;
+        right: 0;
+        padding-top: rpx(80);
+        text-align: left;
+        font-size: rpx(28);
+        padding-left: 15px;
+        color: #fff;
+    }
+}
+
+.txt-left {
+    text-align: left;
+    padding-left: 15px;
+}
+
+//底部
+.objfoot {
+    position: fixed;
+    border-top: solid rpx(1) #ccc;
+    width: 100%;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: $spacepublic;
+    background: $white;
+    @include box-x;
+
+    > button {
+        position: relative;
+        @include boderradius(5px);
+        @include flex-x(1);
+
+        &:first-child {
+            margin-right: 7px;
+        }
+
+        &:last-child {
+            margin-left: 7px;
+        }
+
+        > i {
+            @include center(centerY, -50%);
+            font-size: rpx(40);
+            left: 20px;
+        }
+    }
+}
+
+//名片模板
+/*.cardtemplate {
+    height: rpx(500);
+    background: red;
+}*/
+
+//显示隐藏名片信息
+.isshowcard {
+
+}
+
+.isshow-top {
+    text-align: center;
+    @include transition;
+    min-height: rpx(60);
+
+    > isshow-top-box {
+        display: inline-block;
+        position: relative;
+
+        > text {
+            @include center(centerY, -50%);
+            right: -20px;
+        }
+    }
+
+    .down {
+        display: block;
+    }
+
+    .up {
+        display: none;
+    }
+
+    &.on {
+        .down {
+            display: none;
+        }
+
+        .up {
+            display: block;
+        }
+    }
+}
+
+.card-details {
+    @include boderradius(4px);
+    background: $white;
+    padding: $spacepublic;
+
+    > text {
+        display: block;
+        line-height: rpx(50);
+    }
+}
+
+//分享名片
+.cardshare {
+    padding-top: $space_1;
+    @include box-x;
+
+    > button {
+        padding: 5px;
+        @include flex-x(1);
+        @include boderradius(5px);
+        line-height: 1.8;
+
+        &:first-child {
+            margin-right: 7px;
+
+        }
+
+        &:last-child {
+            margin-left: 7px;
+        }
+    }
+}
+
+//分享名片end
+
+.userimg {
+    width: rpx(130);
+    height: rpx(130);
+    position: absolute;
+    @include boderradius(50%);
+    border: solid 5px rgba($gray, .1);
+    @include imgauto;
+    overflow: hidden;
+    z-index: 15;
+}
+
+//浏览次数
+
+.browse-count {
+    margin-top: $space_1;
+    background: $white;
+    @include boderradius($radius);
+    @include box-x;
+    padding: $space_1;
+
+    .browse-count-letf {
+        padding-right: rpx(30);
+
+        text-align: center;
+        @include box-y;
+
+        .browse-count-text {
+            padding-bottom: rpx(5);
+            color: rgba($gray, .5);
+        }
+
+        .browse-count-nunber {
+            @include flex-y(1);
+
+        }
+    }
+    .browse-count-right {
+        @include flex-x(1);
+        position: relative;
+
+        .vertical-md {
+            @include center(centerY, -50%);
+
+            .lg {
+                width: rpx(65);
+                height: rpx(65);
+
+                &:first-child {
+                    position: relative;
+                    background: var(--gray);
+                    padding-left: rpx(20);
+                    margin-left: rpx(-20);
+                    line-height: rpx(65);
+                    > text {
+                        width: rpx(7);
+                        height: rpx(7);
+                        display: inline-block;
+                        @include boderradius(50%);
+                        background: $white;
+                        position: relative;
+                        margin-left: rpx(-8);
+
+                        &:before, &:after {
+                            content: "";
+                            @include boderradius(50%);
+                            position: absolute;
+                            width: rpx(7);
+                            height: rpx(7);
+                            background: $white;
+                        }
+
+                        &:before {
+                            left: rpx(10);
+                        }
+
+                        &:after {
+                            right: rpx(10);
+                        }
+                    }
+                }
+            }
+            .cu-avatar-group {
+                display: flex;
+                .avatar-info {
+                    width: rpx(50);
+                    height: rpx(50);
+                    margin-left: 5rpx;
+                    image {
+                        width: 100%;
+                        height: 100%;
+                        @include boderradius(50%);
+                    }
+                }
+            }
+        }
+    }
+
+}
+
+//模块
+.Module {
+    padding-top: $space_1;
+
+    .Module-title {
+        font-size: $midfont;
+        padding-bottom: $space_1;
+        font-weight: bold;
+    }
+
+    .Module-content {
+        @include boderradius($radius);
+        background: $white;
+        padding: $space_1;
+    }
+}
+
+.btnwd {
+    width: 50%;
+    margin: 0 auto;
+}
+
+.informationlist {
+    @include clear;
+    padding-bottom: rpx(200);
+
+    > ul {
+        width: 100%;
+        float: left;
+
+        > li {
+            float: left;
+            width: 100%;
+            margin-bottom: $space_1;
+            @include boderradius($radius);
+            background: $white;
+            padding-bottom: $space_1*.8;
+
+            .topimg {
+                height: rpx(430);
+                overflow: hidden;
+            }
+        }
+    }
+}
+
+.radius-nobottom {
+    @include boderradius($radius);
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+.housesource {
+    @include box-x;
+
+    .housesource-left {
+        @include flex-x(1);
+    }
+
+    .housesource-right {
+        .houseprice {
+            @include relativecenter(-50%);
+            color: $orange;
+        }
+    }
+}
+
+.block {
+    display: block;
+}
+
+.spece-1 {
+    padding-bottom: $space_1*.2;
+}
+
+.sotpscol {
+    overflow-y: hidden;
+}

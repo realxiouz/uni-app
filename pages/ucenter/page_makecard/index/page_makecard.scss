@@ -1,0 +1,20 @@
+@import "../../../../static/publicscss/scss/link";
+.cardlist {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    padding: $space_1;
+    width: 100%;
+    > view {
+        text-align: center;
+        @include widthlist(rpx(10),3,rpx(10));
+        height: rpx(120);
+        padding-bottom: $space_1*.8;
+        > view {
+            > text {
+                color: $uni-color-primary;
+                font-size: $bigfont *1.2;
+            }
+        }
+    }
+}
