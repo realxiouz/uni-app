@@ -15,7 +15,7 @@
                 </view>
                 <text>模板</text>
             </view>
-            <view @tap="toPages" data-page="../../businesscard/index/businesscard">
+            <view @tap="toPages" data-page="../../businesscard/index/businesscard?previewB=1">
                 <view>
                     <text class="cuIcon-card"></text>
                 </view>

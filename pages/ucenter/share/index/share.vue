@@ -24,7 +24,12 @@
                     <view class="sharetoobj">
                         <view class="sharetoobj-list">
                             <!--open-type="share"-->
+							<!-- #ifdef MP-WEIXIN--->
                             <button open-type="share"></button>
+							<!-- #endif -->
+							<!-- #ifdef APP-PLUS -->
+							<button @tap="appShareFriend"></button>
+							<!-- #endif -->
                             <view>
                                 <image src="/static/images/img/weixin.png"></image>
                             </view>
@@ -91,13 +96,10 @@
             }
             //
         },
-        onLaunch() {
-            // console.log(this.currentBgNum);
-        },
         onLoad() {
             const self = this;
             uni.request({
-                url: BASE_URL + 'api/geren/qrcode',
+                url: BASE_URL + '/api/geren/qrcode',
                 method: "GET",
                 dataType: 'json',
                 data: {
@@ -105,7 +107,6 @@
                 },
                 header: header(self.token),
                 success(res) {
-                    console.log(res.data);
                     self.isDisabled = false;// 恢复按钮的功能
                     self.cNames = res.data.cname;
                     let array = uni.base64ToArrayBuffer(res.data.data);
@@ -127,10 +128,7 @@
             //获取当前显示的名片背景索引
             // console.log(this.canvasWidth, this.canvasHeight, this.currentBgNum);
         },
-        mounted() {
-            // console.log();
-        },
-        methods: {
+        methods:{
             generateCard(e) {
                 const self = this;
                 // 规则, 限定字符长度
@@ -257,9 +255,27 @@
                     }, 500))
                 })
             },
-            formSubmit() {
-                // 表单提交
+            // ifdef APP-PLUS
+            appShareFriend() {
+            	const self = this;
+            	console.log(222222222222222222222222222)
+            	uni.share({
+            		provider: "weixin",
+            		scene: "WXSceneSession",
+            		type: 0,
+            		title: '11111',
+            		href: "http://uniapp.dcloud.io/",
+            		summary: "房销客管理系统，管理您的客户，提高您的业绩！",
+            		imgUrl: self.shareImg,
+            		success(res) {
+            			console.log(res);
+            		},
+            		fail(error) {
+            			console.log(erros)
+            		}
+            	});
             },
+            // endif
             saveImage() {
                 // 保存图片
                 if (this.shareImg) {

@@ -1,7 +1,6 @@
 <template>
 	<view class="padding-25" v-cloak>
 		<!-- cardtemplate 组件start -->
-		<!--添加'0'是为了解决这里先执行但是currentuserinfo.template为undefinde的问题-->
 		<card-template :user="currentuserinfo" :is-show-list="false"></card-template>
 		<!-- cardtemplate 组件end -->
 
@@ -35,7 +34,12 @@
 						<view class="sharetoobj">
 							<view class="sharetoobj-list">
 								<!--open-type="share"-->
+								<!-- #ifdef MP-WEIXIN -->
 								<button open-type="share"></button>
+								<!-- #endif -->
+								<!-- #ifdef APP-PLUS -->
+								<button @tap="appShareFriend"></button>
+								<!-- #endif -->
 								<view>
 									<image src="/static/images/img/weixin.png"></image>
 								</view>
@@ -89,9 +93,6 @@
 			<view class="browse-count-right" id="browse-user">
 				<view class="vertical-md">
 					<view class="cu-avatar-group">
-						<!--<view :class="['cu-avatar', 'round', 'lg', recordList.todayData+recordList.historyData >= 4? 'none': '']">
-							<text></text>
-						</view>-->
 						<view class="avatar-info" v-for="(item, index) of BrowseUser" :key="index" :id="[index === 0? 'img_width': '']">
 							<image class="avatar-style" :src="item.avatar"></image>
 						</view>
@@ -142,35 +143,12 @@
 				<i class="right iconfont icondianhua"></i>
 				来电咨询
 			</button>
-			<!-- <button bindtap="tel" open-type="getPhoneNumber" bindgetphonenumber="getPhoneNumber" class="cu-btn round bg-red">
-                       <i class="right iconfont icondianhua"></i>
-                       来电咨询
-                   </button> -->
 		</view>
 		<!-- 底部 end -->
 
 		<!--制作名片按钮 start-->
-		<make-btn :on-event="onMyEvent" ></make-btn>
+		<make-btn :on-event="onMyEvent" v-if="!showMakeBth"></make-btn>
 		<!--制作名片按钮 end-->
-
-
-		<!--    判断用户是否后期，如果未授权则弹出授权-->
-		<!--<view v-if="ifShowRZbt" :class="['cu-modal', modalName==1? 'show': '']">
-			<view class="cu-dialog">
-				<view class="cu-bar bg-white justify-end">
-					<view class="content">你还未认证，请认证通过</view>
-					&lt;!&ndash; <view class="action" @tap="hideModal">
-                        <text class="cuIcon-close text-red"></text>
-                    </view> &ndash;&gt;
-				</view>
-				<view class="padding-xl">
-					&lt;!&ndash;open-type="getUserInfo" 仅小程序支持 用来获取用户信息 从返回参数的detail中获取到的值同uni.getUserInfo&ndash;&gt;
-					<button class="cu-btn bg-red margin-tb-sm lg button-hover" open-type="getUserInfo" @getuserinfo="getUserInfo" @tap="hideModal" withCredentials="true">
-						获取授权
-					</button>
-				</view>
-			</view>
-		</view>-->
 	</view>
 </template>
 
@@ -185,39 +163,24 @@
 	export default {
 		data() {
 			return {
-				url: BASE_URL + "?wapp=1#wechat_redirect",
-				companyId: "",
-				redirect: "",
 				userInfo: {},// 绘制图片时调用
-				hasUserInfo: false,
-				canIUse: uni.canIUse('button.open-type.getuserInfo'),
-				//
 				readNumber: 0, //阅读次数
 				BrowseUser: [], // 浏览的人
 				signature: '', // 名片签名
 				isShowCard: '展开名片信息', //名片模板的标题
 				cardIs: false, //名片详情
-				cardTop: '',
 				isShowCardContent: false, //名片内容的显隐
 				isExeCuteCanvas: false, //在还没点击的时候不执行子组件里的分享(v-if)
 				canvasWidth: '', //canvas宽
 				canvasHeight: '', //canvas高
 				currentBgNum: 0, //当前名片索引
 				userInfo: {}, //名片上显示的内容
-				temUrl: '',
-				shareImg: '',
+				shareImg: '', // 分享img
 				modalName: '',// 用户授权时使用, 打开分享界面时也使用
 				ifShowRZbt: false,// 用户授权使用
-				browsTotal: '',
-				isCircle: false,
-				recordList: {
-					todayData: 0,
-					historyData: 0
-				},
 				showBrowseEllipsis: false,// 显示浏览名片人的头像的省略号
-				componentPass: '',
 				isShowShare: false,
-				testUserInfo: {},
+				testUserInfo: {},// 分享是绘制canvas需要
 				qrCode: '', // 图片的src(头像)
 				bg_gradual_blue: 'bg-gradual-blue',
 				house: {},
@@ -226,7 +189,7 @@
 					title: '制作名片',
 					imgSrc: '/static/images/img/card.png'
 				},
-				waitTime: 500
+				showMakeBth: false // 这里true显示makebtn, false反之
 			}
 		},
 		components: {
@@ -234,36 +197,15 @@
 			makeBtn
 		},
 		onLoad(options) {
-			// 在这里的options时如何过来的, 又怎样的业务需求, 对应下面的251-255
 			const self = this;
-			//授权
-			// #ifdef MP-WEIXIN
-			uni.getSetting({
-				success: res => {
-					let authMap = res.authSetting;
-					// let length = Object.keys(authMap).length;
-					if (!(Object.values(authMap)[0])) {
-						// 这个长度等于0时, 要向用户调用授权窗口
-						// this.modalName = 1;
-						// this.ifShowRZbt =  true;
-					}
-				}
-			});
-			// #endif
+			self.showMakeBth = options.previewB === '1';
 			// canvas
 			let screenwd = uni.getSystemInfoSync().windowWidth;
 			let canvaswd = this.canvasWidth = screenwd - 20 * 1.9;
 			this.currentbgnum = this.currentuserinfo.template_id || 1;
 			// 为画布设置宽高
 			this.canvasWidth = canvaswd;
-			// this.canvasHeight = canvasht; 
-			//////////////////////////////////////这里不知道是干啥的
-			let companyId = options.cid ? options.cid : '';
-			let redirect = options.redirect ? options.redirect : '';
-			this.companyId = companyId,
-			this.redirect = redirect,
-			this.url = BASE_URL + "?cid=" + companyId + "&redirect=" + redirect + "&wapp=1#wechat_redirect";
-			//////////////////////////////////////
+			// this.canvasHeight = canvasht;
             uni.showLoading({
                 title: '加载中',
                 mask: true
@@ -307,7 +249,6 @@
 					return Math.floor(widthP.width / imgW);
 				}
 				getSize().then(data => {
-					console.log(data);
 					if (self.BrowseUser.length <= data-1) return false;
 					self.BrowseUser = self.BrowseUser.slice(0, data);
 					self.showBrowseEllipsis = true;
@@ -409,7 +350,28 @@
 						}
 					})
 				}
+			},
+			// ifdef APP-PLUS
+			appShareFriend() {
+				const self = this;
+				console.log(222222222222222222222222222)
+				uni.share({
+					provider: "weixin",
+					scene: "WXSceneSession",
+					type: 0,
+					title: '11111',
+					href: "http://uniapp.dcloud.io/",
+					summary: "房销客管理系统，管理您的客户，提高您的业绩！",
+					imgUrl: self.shareImg,
+					success(res) {
+						console.log(res);
+					},
+					fail(error) {
+						console.log(erros)
+					}
+				});
 			}
+			// endif
 		},
 		onShareAppMessage() {
 			return {
@@ -420,9 +382,6 @@
 		},
 		computed: {
 			...mapState(['token', 'currentuserinfo'])
-		},
-		updated() {
-
 		}
 	}
 </script>

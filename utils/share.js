@@ -18,10 +18,6 @@ export default {
                     reject(err);
                 }
             });
-            // 为了让生成图片不出差需要有个延时
-           /* setTimeout(() => {
-                this.modalName = e.currentTarget.dataset.target;
-            }, this.waitTime)*/
         })
     },
     // 绘制canvas图片 end
@@ -80,15 +76,6 @@ export default {
             "/static/images/img/template_3.png"
         ];
         let userInfo = this.currentuserinfo;
-        // var cardInfo = {
-        //   "userImg": userInfo.avatar,
-        //   "name": userInfo.name,
-        //   "companyname": userInfo.companyname,
-        //   "phone": userInfo.phone,
-        //   "position": userInfo.position,
-        //   "ewm": icon.ewm
-        // };
-        // console.log(that)
         let cardInfo = {
             "userImg": this.testUserInfo.avatar,// 头像
             "name": this.testUserInfo.name,// 名称
