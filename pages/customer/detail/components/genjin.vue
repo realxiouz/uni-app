@@ -2,8 +2,10 @@
 	<view class="bg-white margin-bottom-sm">
 			<view class="padding-tb-xs padding-lr-sm">
 				<view style="word-wrap:break-word">
-					<text class="cu-tag bg-blue radius">{{bean.type_name}}</text>
 					<text>{{bean.content}}</text>
+				</view>
+				<view>
+					<text class="cu-tag bg-blue radius">{{bean.type_name}}</text>
 					<text class="cu-tag radius" :class="bean.desire<=2?'bg-red':bean.desire==2?'bg-yellow':'bg-green'">{{desireObj[bean.desire]}}</text>
 				</view>
 				<view class="flex flex-wrap">

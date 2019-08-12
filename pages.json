@@ -7,6 +7,17 @@
 		"enablePullDownRefresh": false
       }
     },
+	{
+	  "path": "pages/customer/employee/index",
+	  "style": {}
+	},
+	{
+	  "path": "pages/customer/need-list/index",
+	  "style": {}
+	},{
+	  "path": "pages/customer/need/index",
+	  "style": {}
+	},
     {
       "path": "pages/ucenter/businesscard/index/businesscard",
       "style": {
@@ -154,6 +165,14 @@
     },
 	{
 	  "path": "pages/common/followup/index",
+	  "style": {}
+	},
+	{
+	  "path": "pages/common/daofang/index",
+	  "style": {}
+	},
+	{
+	  "path": "pages/common/baobei/index",
 	  "style": {}
 	}
   ],

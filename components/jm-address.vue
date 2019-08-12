@@ -57,10 +57,8 @@
 			addressd: Array
 		},
 		mounted() {
-			_self = this;
-			this.getadd(1, 0);
-			this.emitData();
-
+			_self = this
+			this.getadd(1, 0)
 		},
 		methods: {
 			//呼出模态框
@@ -70,11 +68,7 @@
 			},
 			// 关闭模态框
 			hideAddress() {
-				// 关闭模态框
 				this.showFlag = null;
-				// 声明默认地址,并传送给父组件
-				this.emitData();
-
 			},
 			// 声明默认地址,并传送给父组件
 			emitData() {
@@ -85,10 +79,6 @@
 				}
 				_self.$emit("changes", data);
 			},
-			// 模态框地址点击赋值并获取下一级
-			// --flag--- 1(省份点击);2(城市点击);3(地区点击)；
-			// --id----(点击的地址id);
-			// --name--(点击的地址名称);
 			clickAddress(flag, id, name) {
 				//判断点击的状态
 				switch (flag) {
@@ -106,7 +96,7 @@
 						_self.csname = name;
 						_self.cs = id;
 						_self.emitData();
-						_self.hideAddress();
+						// _self.hideAddress();
 						break;
 					default:
 						return;
@@ -135,8 +125,7 @@
 					case 3:
 						this.$http(`districts/${id}`).then(r => {
 							this.addressd3 = r
-							this.cs = this.addressd3[0].id
-							this.csname = this.addressd3[0].name
+							this.clickAddress(3, this.addressd3[0].id, this.addressd3[0].name)
 						})
 						break;
 					default:

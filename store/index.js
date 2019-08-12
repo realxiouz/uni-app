@@ -1,12 +1,13 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import attendance from './attendance/index.js'
+import attendance from './attendance'
+import customer from './customer'
 
 Vue.use(Vuex)
 
 const store = new Vuex.Store({
 	modules: {
-		attendance,
+		attendance, customer
 	},
 	state: {
 		hasLogin: false,

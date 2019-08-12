@@ -1,17 +1,15 @@
 <template>
 	<view class="bg-white margin-bottom-sm">
 			<view class="padding-tb-xs padding-lr-sm">
-				<!-- <view style="word-wrap:break-word">
-					<text class="cu-tag bg-blue radius">{{bean.type_name}}</text>
-					<text>{{bean.content}}</text>
-					<text class="cu-tag radius" :class="bean.desire<=2?'bg-red':bean.desire==2?'bg-yellow':'bg-green'">{{desireObj[bean.desire]}}</text>
+				<view style="word-wrap:break-word">
+					<text class="cu-tag bg-blue radius">{{bean.status_name}}</text>
 				</view>
 				<view class="flex flex-wrap">
-					<text class="basis-df"><text class="text-gray">时间:&nbsp;</text>{{bean.created_at|moment('from')}}</text>
-					<text class="basis-df"><text class="text-gray">跟进人:&nbsp;</text>{{bean.user.name}}</text>
-				</view> -->
+					<text class="basis-df"><text class="text-gray">看房时间:&nbsp;</text>{{bean.created_at|moment('from')}}</text>
+					<text class="basis-df"><text class="text-gray">实看人数:&nbsp;</text>{{bean.peoples}}</text>
+				</view>
 				<view class="grid col-4 grid-square flex-sub">
-					<view class="bg-img" v-for="(i,inx) in bean.img" :key="inx" @tap="viewImage(bean.imgs, inx)">
+					<view class="bg-img" v-for="(i,inx) in bean.img" :key="inx" @tap="viewImage(bean.img, inx)">
 						<image :src="i" mode="aspectFill"></image>
 					</view>
 				</view>

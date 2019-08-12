@@ -16,7 +16,7 @@ export const http = (url, data, method = 'GET') => {
 		}).then(r => {
 			let [err, data] = r
 			if (err) {
-				cosnole.log('出错了...')
+				console.log('出错了...')
 				reject(err)
 			}
 			let status = data.statusCode

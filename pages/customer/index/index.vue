@@ -1,8 +1,8 @@
 <template>
 	<view>
-		<view class="cu-bar fixed bg-blue nav text-center">
+		<view class="cu-bar fixed bg-white nav text-center">
 			<view class="flex text-center">
-				<view class="cu-item flex-sub" :class="inx==selTab?'text-white cur':''" v-for="(i,inx) in tabs" :key="inx" @click="handleNavChange(inx)">
+				<view class="cu-item flex-sub" :class="inx==selTab?'text-black cur':''" v-for="(i,inx) in tabs" :key="inx" @click="handleNavChange(inx)">
 					{{i.text}}
 				</view>
 			</view>

@@ -1,14 +1,14 @@
 <template>
-	<scroll-view scroll-y @scrolltolower="handleMore" style="height:100%;" :lower-threshold="0">
+	<scroll-view scroll-y @scrolltolower="handleMore" style="height:100%;" :lower-threshold="50">
 		<slot></slot>
 		<slot name="loading" v-if="isLoading">
-			<view class="cu-load load-cuIcon loading"></view>
+			<view class="cu-load loading"></view>
 		</slot>
 		<slot name="noData" v-if="hasLoaded && !list.length">
 			列表数据空
 		</slot>
 		<slot name="isEnd" v-if="isEnd && !isLoading && list.length">
-			数据全部加载完毕
+			<view class="cu-load over"></view>
 		</slot>
 	</scroll-view>
 </template>
@@ -33,8 +33,11 @@
 			}
 		},
 		methods: {
-			getData() {
+			getData(resetPage = false) {
 				this.isLoading = true
+				if (resetPage) {
+					this.page = 1
+				}
 				let data = Object.assign({}, this.rData, {
 					page: this.page,
 					per_page: this.per_page
@@ -44,6 +47,7 @@
 						this.hasLoaded = true
 						if (this.page === 1) {
 							this.list = []
+							this.isEnd = false
 						}
 						this.list = this.list.concat(r.data)
 						this.$emit('data', this.list)

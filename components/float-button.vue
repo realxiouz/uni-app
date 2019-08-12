@@ -1,6 +1,6 @@
 <template>
 	<view @click="handleClick" class="round flex justify-around align-center" :class="'bg-'+color" :style="style">
-		<text class="cuIcon-add xl"></text>
+		<text class="cuIcon-add text-xxl text-bold"></text>
 	</view>
 </template>
 
@@ -42,7 +42,7 @@
 				// 	right: this.r,
 				// 	position: 'fixed'
 				// }
-				return `width: ${this.w};height: ${this.h};bottom:${this.b};right:${this.r};position:fixed`
+				return `width: ${this.w};height: ${this.h};bottom:${this.b};right:${this.r};position:fixed;box-shadow: 0 0 5px 2px rgba(0, 0, 0, 0.2);`
 			}
 		}
 	}

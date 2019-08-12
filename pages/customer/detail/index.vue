@@ -17,7 +17,7 @@
 			<swiper-item>
 				<data-list ref="list1" @data="handleList1" r-url="daikan" :r-data="{customer_id: id}">
 					<view class="cu-bar"></view>
-					<!-- <item v-for="(i, inx) in list1" :key="inx" :bean="i" /> -->
+					<daofang v-for="(i, inx) in list1" :key="inx" :bean="i" />
 				</data-list>
 			</swiper-item>
 			<swiper-item>
@@ -35,6 +35,7 @@
 <script>
 	import DataList from '@/components/data-list'
 	import Genjin from './components/genjin'
+	import Daofang from './components/daofang'
 	import FloatButton from '@/components/float-button'
 	
 	export default {
@@ -45,6 +46,17 @@
 			this.$nextTick(_ => {
 				this.$refs.list0.init()
 			})
+		},
+		onShow() {
+			let pages = getCurrentPages();
+			let currPage = pages[pages.length-1];
+			if (currPage.data.needRefresh) {
+				console.log(currPage)
+				this.$refs[`list${this.selTab}`].getData(true)
+				currPage.setData({
+					needRefresh: false
+				})
+			}
 		},
 		data: _ => ({
 			id: '',
@@ -83,7 +95,9 @@
 			},
 			handleGo() {
 				let path = {
-					'0': `/pages/common/followup/index?customerId=${this.id}`
+					'0': `/pages/common/followup/index?customerId=${this.id}`,
+					'1': `/pages/common/daofang/index?customerId=${this.id}`,
+					'2': `/pages/common/baobei/index?`
 				}
 				uni.navigateTo({
 					url: path[this.selTab]
@@ -91,7 +105,7 @@
 			}
 		},
 		components: {
-			DataList, Genjin, FloatButton
+			DataList, Genjin, FloatButton, Daofang
 		}
 	}
 </script>

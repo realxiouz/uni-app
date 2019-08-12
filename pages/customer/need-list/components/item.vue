@@ -1,7 +1,7 @@
 <template>
-	<navigator class="bg-white margin-bottom-sm" :url="`/pages/customer/detail/index?id=${bean.id}`">
-			<view class="content flex align-center padding-tb-xs padding-lr-sm">
-				<view class="margin-right-sm">
+	<navigator class="bg-white margin-bottom-sm" :url="`/pages/customer/need/index?id=${bean.id}`">
+			<view class="padding-tb-xs padding-lr-sm">
+				<!-- <view class="margin-right-sm">
 					<ava :name="bean.name"></ava>
 				</view>
 				<view class="content">
@@ -12,10 +12,9 @@
 					<view>{{bean.desireRatio}}</view>
 					<view>客户星级：{{bean.star}}</view>
 					<view>录入时间：{{bean.created_at}}</view>
-					<view>
-						<view @click.stop="editCustomer(bean)">编辑</view>
-					</view>
-				</view>
+				</view> -->
+				
+				<view>{{bean.type}}</view>
 			</view>
 	</navigator>
 </template>
@@ -28,16 +27,8 @@
 				type: Object
 			}
 		},
-		data: _ => ({}),
 		components: {
 			Ava
-		},
-		methods: {
-			editCustomer(bean) {
-				uni.navigateTo({
-					url: `/pages/customer/bean/index?id=${bean.id}&type=${bean.type == '新房'?0:1}`
-				})
-			}
 		}
 	}
 </script>
