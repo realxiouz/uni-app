@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<view class="makecard" @tap="topMakeCard" :style="{left:left + 'px;',top:top +'px;'}">
+		<view class="makecard" @tap="topMakeCard">
 			<image :src="onEvent.imgSrc" mode="top center" class="bg-img"></image>
 			<text>
 				{{onEvent.title}}
@@ -12,13 +12,6 @@
 <script>
 
 	export default {
-		data() {
-			return {
-				left: '',
-				right: '',
-				newClass: ''
-			}
-		},
 		props: {
 			onEvent: {
 				type: Object,
@@ -27,22 +20,28 @@
 				}
 			}
 		},
-		mounted() {
-			// console.log(this.onEvent);
-		},
 		methods: {
 			topMakeCard(e) {
 				const {isRedirect, url} = this.onEvent;
-				// 判断是否要回到首页
-				uni[isRedirect? 'reLaunch': 'navigateTo']({
-					url: url
-				})
-			},
-			viewTouchMove(e) {
-				this.left = e.touches[0].clientX - 60;
-				this.right = e.touches[0].clientY - 60;
-				this.newClass = 'sotpscol';
-
+				if (!isRedirect) {
+					uni.navigateTo({
+						url: url
+					})
+				} else {
+					let pages = getCurrentPages();
+					let len = 0;
+					for (let i=pages.length-1; i>=0; i++) {
+						if (pages[i]['route'] === 'pages/ucenter/businesscard/index/businesscard') {
+							len = i+1;
+							break;
+						}
+					}
+					len = Math.max(1, len);
+					// 判断是否要回到首页
+					uni.navigateBack({
+						delta: len
+					})
+				}
 			}
 		}
 	}
