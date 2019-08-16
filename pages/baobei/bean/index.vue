@@ -1,0 +1,183 @@
+<template>
+	<view>
+		<form>
+			<view class="cu-form-group">
+				<view class="title">报备楼盘</view>
+				<navigator class="show-arrow" url="/pages/baobei/projects/index">
+					<view>选择楼盘</view>
+				</navigator>
+			</view>
+			<view class="bg-white padding-lr padding-tb-sm solid-bottom solid-top flex flex-wrap">
+				<view class="cu-capsule radius margin-bottom-xs" v-for="(i, inx) in selProject" :key="inx" @click="delProject(inx)">
+					<view class="cu-tag line-grey">{{i.text}}</view>
+					<view class='cu-tag bg-red '>
+						<text class='cuIcon-delete'></text>
+					</view>
+				</view>
+			</view>
+			<view class="cu-form-group">
+				<view class="title">带看姓名</view>
+				<input placeholder="填写姓名" v-model="daikan.name"></input>
+			</view>
+			<view class="cu-form-group">
+				<view class="title">带看电话</view>
+				<input placeholder="填写电话" v-model="daikan.phone"></input>
+			</view>
+			<view class="cu-form-group">
+				<view class="title">预计看房日期</view>
+				<picker mode="date" :value="date" start="2015-09-01" end="2020-09-01" @change="dateChange">
+					<view class="picker">
+						{{date}}
+					</view>
+				</picker>
+			</view>
+			<view class="cu-form-group">
+				<view class="title">预计看房时间</view>
+				<picker mode="time" :value="time" start="09:01" end="21:01" @change="timeChange">
+					<view class="picker">
+						{{time}}
+					</view>
+				</picker>
+			</view>
+			
+			<view class="cu-form-group margin-top">
+				<view class="title">导入客户</view>
+				<view class="show-arrow" @click="importCustomer">
+					<view>共 {{selCustomer.length}} 个客户</view>
+				</view>
+			</view>
+			<view class="cu-form-group">
+				<view class="title">隐号报备</view>
+				<switch @change="handleHidePhone" :class="formBean.yinghao?'checked':''" :checked="formBean.yinghao"></switch>
+			</view>
+
+			<view v-for="(i, inx) in selCustomer" :key="inx">
+				<view class="cu-form-group margin-top">
+					<view class="title">客户名称</view>
+					<input type="text" placeholder="填写客户名称" v-model="i.name" />
+				</view>
+				<view class="cu-form-group">
+					<view class="title">客户电话</view>
+					<input type="text" placeholder="填写客户电话" v-model="i.phone"/>
+				</view>
+				<view class="cu-form-group">
+					<view class="title">客户性别</view>
+					<switch class='switch-sex' @change="SwitchA" :class="switchA?'checked':''" :checked="switchA?true:false"></switch>
+				</view>
+			</view>
+			
+			<view class="cu-form-group margin-top">
+				<textarea :maxlength="200" @input="textareaAInput" placeholder="备注"></textarea>
+			</view>
+		</form>
+		
+		<save @save="handleSave"/>
+	</view>
+	
+</template>
+
+<script>
+	import Save from "@/components/buttom-button"
+	import moment from 'moment'
+	import { mapState, mapMutations } from 'vuex'
+
+	export default {
+		onLoad(opt) {
+			this.customerId = opt.customerId
+			this.$http('baobeiProjects').then(r => {
+				
+			})
+		},
+		data: _ => ({
+			formBean: {
+				daikan_name: '',
+				daikan_phone: '',
+				ordered_time: '',
+				project_ids: [],
+				customers: [],
+				yinghao: false,
+				remark: ''
+			},
+			customerId: '',
+			date: moment().format('YYYY-MM-DD'),
+			time: moment().format('hh:mm')
+		}),
+		methods: {
+			...mapMutations('baobei', ['setSelProject']),
+			textareaAInput(e) {
+				this.formBean.remark = e.detail.value
+			},
+			handleSave() {
+				this.formBean.daikan_name = this.daikan.name
+				this.formBean.daikan_phone = this.daikan.phone
+				this.formBean.ordered_time = this.dateTime
+				this.formBean.customers = this.selCustomer.map(i => ({
+					customer_name: i.name,
+					customer_phone: i.phone
+				}))
+				this.formBean.project_ids = this.selProject.map(i => i.id)
+				this.$http('baobei', this.formBean, 'post').then(r => {
+					uni.showToast({
+						title: '表单提交成功'
+					})
+					
+					setTimeout(_ => {
+						uni.navigateBack()
+					}, 1500)
+				})
+			},
+			importCustomer() {
+				let itemList = ['历史记录', '客户列表']
+				// #ifdef APP-PLUS
+				itemList.push('通讯录')
+				// #endif
+				uni.showActionSheet({
+					itemList,
+					success: r => {
+						switch (itemList[r.tapIndex]){
+							case '历史记录':
+								uni.navigateTo({
+									url: `/pages/baobei/customers/index?type=history`
+								})
+								break;
+							case '客户列表':
+								uni.navigateTo({
+									url: `/pages/baobei/customers/index?type=my`
+								})
+								break;
+							case '通讯录':
+								uni.navigateTo({
+									url: `/pages/app/contact/index`
+								})
+								break;
+							default:
+								break;
+						}
+					},
+					fail: e => {
+						console.log(e.errMsg)
+					}
+				})
+			},
+			handleHidePhone(e) {
+				this.formBean.yinghao = e.detail.value
+			},
+			delProject(inx) {
+				let arr = JSON.parse(JSON.stringify(this.selProject))
+				this.setSelProject(arr.splice(inx, 1))
+			}
+		},
+		components: {
+			Save
+		},
+		computed: {
+			...mapState('baobei', ['selCustomer', 'daikan', 'selProject']),
+			dateTime() {
+				return `${this.date} ${this.time}`
+			}
+		}
+	}
+</script>
+
+<style>
+</style>

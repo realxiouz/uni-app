@@ -2,7 +2,7 @@ import Vue from 'vue'
 import App from './App'
 import store from './store'
 import '@/filter/index'
-import './utils/index.css';
+import './utils/index.css'
 
 Vue.config.productionTip = false
 Vue.prototype.$store = store

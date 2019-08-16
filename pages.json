@@ -174,6 +174,44 @@
 	{
 	  "path": "pages/common/baobei/index",
 	  "style": {}
+	},
+	{
+	  "path": "pages/project/baobei/index",
+	  "style": {}
+	},
+	{
+	  "path": "pages/project/detail/index",
+	  "style": {
+	  	"app-plus": {
+	  		"titleNView": {
+	  			"type": "transparent"
+	  		}
+	  	}
+	  }
+	},
+	{
+	  "path": "pages/project/zhiye/index",
+	  "style": {}
+	},
+	{
+	  "path": "pages/project/channel/index",
+	  "style": {}
+	},
+	{
+	  "path": "pages/app/contact/index",
+	  "style": {}
+	},
+	{
+	  "path": "pages/baobei/bean/index",
+	  "style": {}
+	},
+	{
+	  "path": "pages/baobei/customers/index",
+	  "style": {}
+	},
+	{
+	  "path": "pages/baobei/projects/index",
+	  "style": {}
 	}
   ],
   "tabBar": {

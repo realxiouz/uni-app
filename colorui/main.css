@@ -256,11 +256,13 @@ radio.radio .uni-radio-input-checked::after {
 }
 
 .switch-sex::after {
-	content: "\e71c";
+	/* content: "\e71c"; */
+	content: '男';
 }
 
 .switch-sex::before {
-	content: "\e71a";
+	/* content: "\e71a"; */
+	content: '女';
 }
 
 .switch-sex .wx-switch-input,

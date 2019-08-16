@@ -25,11 +25,11 @@
 					</view>
 				</picker>
 			</view>
+			<button class='cu-btn bg-blue shadow'>导入</button>
 			<view>
 				<view class="cu-form-group margin-top">
 					<view class="title">客户名称</view>
 					<input type="text" placeholder="填写客户名称" />
-					<button class='cu-btn bg-blue shadow'>导入</button>
 				</view>
 				<view class="cu-form-group">
 					<view class="title">客户电话</view>
@@ -61,6 +61,9 @@
 	export default {
 		onLoad(opt) {
 			this.customerId = opt.customerId
+			this.$http('baobeiProjects').then(r => {
+				
+			})
 		},
 		data: _ => ({
 			formBean: {

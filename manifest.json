@@ -10,7 +10,8 @@
         "nvueCompiler" : "uni-app",
         /* 5+App特有相关 */
         "modules" : {
-            "Share" : {}
+            "Share" : {},
+            "Contacts" : {}
         },
         /* 模块配置 */
         "distribute" : {

@@ -334,29 +334,3 @@
 		}
 	}
 </script>
-
-<style lang="scss">
-	.show-arrow {
-		flex: 1;
-		padding-right: 40upx;
-		overflow: hidden;
-		position: relative;
-		text-align: right;
-		line-height: 100upx;
-		&::after {
-			font-family: cuIcon;
-			display: block;
-			content: "\E6A3";
-			position: absolute;
-			font-size: 17px;
-			color: #8799a3;
-			line-height: 100upx;
-			width: 60upx;
-			text-align: center;
-			top: 0;
-			bottom: 0;
-			right: -20upx;
-			margin: auto;
-		}
-	}
-</style>
