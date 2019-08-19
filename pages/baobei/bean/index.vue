@@ -8,7 +8,7 @@
 				</navigator>
 			</view>
 			<view class="bg-white padding-lr padding-tb-sm solid-bottom solid-top flex flex-wrap">
-				<view class="cu-capsule radius margin-bottom-xs" v-for="(i, inx) in selProject" :key="inx" @click="delProject(inx)">
+				<view class="cu-capsule radius margin-bottom-xs" v-for="(i, inx) in selProject" :key="inx" @click="delProject(i.id)">
 					<view class="cu-tag line-grey">{{i.text}}</view>
 					<view class='cu-tag bg-red '>
 						<text class='cuIcon-delete'></text>
@@ -55,15 +55,15 @@
 				<view class="cu-form-group margin-top">
 					<view class="title">客户名称</view>
 					<input type="text" placeholder="填写客户名称" v-model="i.name" />
+					<switch class='switch-sex' @change="handleSex($event, i)" :class="i.sex==1?'checked':''" :checked="i.sex==1"></switch>
 				</view>
 				<view class="cu-form-group">
 					<view class="title">客户电话</view>
 					<input type="text" placeholder="填写客户电话" v-model="i.phone"/>
 				</view>
-				<view class="cu-form-group">
+				<!-- <view class="cu-form-group">
 					<view class="title">客户性别</view>
-					<switch class='switch-sex' @change="SwitchA" :class="switchA?'checked':''" :checked="switchA?true:false"></switch>
-				</view>
+				</view> -->
 			</view>
 			
 			<view class="cu-form-group margin-top">
@@ -84,9 +84,6 @@
 	export default {
 		onLoad(opt) {
 			this.customerId = opt.customerId
-			this.$http('baobeiProjects').then(r => {
-				
-			})
 		},
 		data: _ => ({
 			formBean: {
@@ -113,14 +110,14 @@
 				this.formBean.ordered_time = this.dateTime
 				this.formBean.customers = this.selCustomer.map(i => ({
 					customer_name: i.name,
-					customer_phone: i.phone
+					customer_phone: i.phone,
+					customer_sex: i.sex
 				}))
 				this.formBean.project_ids = this.selProject.map(i => i.id)
 				this.$http('baobei', this.formBean, 'post').then(r => {
 					uni.showToast({
 						title: '表单提交成功'
 					})
-					
 					setTimeout(_ => {
 						uni.navigateBack()
 					}, 1500)
@@ -162,9 +159,12 @@
 			handleHidePhone(e) {
 				this.formBean.yinghao = e.detail.value
 			},
-			delProject(inx) {
-				let arr = JSON.parse(JSON.stringify(this.selProject))
-				this.setSelProject(arr.splice(inx, 1))
+			delProject(id) {
+				let arr = this.selProject.filter(i => i.id != id)
+				this.setSelProject(arr)
+			},
+			handleSex(e, i) {
+				e.detail.value ? i.sex = 1 : i.sex = 0
 			}
 		},
 		components: {

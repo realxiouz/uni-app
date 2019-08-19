@@ -3,12 +3,13 @@ import Vuex from 'vuex'
 import attendance from './attendance'
 import customer from './customer'
 import baobei from './baobei'
+import message from './message'
 
 Vue.use(Vuex)
 
 const store = new Vuex.Store({
 	modules: {
-		attendance, customer, baobei
+		attendance, customer, baobei, message
 	},
 	state: {
 		hasLogin: false,

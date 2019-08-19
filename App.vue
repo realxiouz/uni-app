@@ -1,34 +1,16 @@
 <script>
 	import {
-		mapMutations
-	} from 'vuex'
-	// import Echo from 'laravel-echo'
-	import {
 		BASE_URL
 	} from '@/utils/const'
 	
 	import Echo from '@/utils/echo.common'
 	import client from '@/utils/weapp.socket.io'
 	
-	import { mapState } from 'vuex'
+	import { mapState, mapMutations } from 'vuex'
 	export default {
 		onLaunch: function() {
 			this.$http('auth/user').then(r => {
-				this.login(r)
-				// uni.connectSocket({
-				// 	url: 'wss://dev.km999.com:6001',
-				// 	header: {
-				// 		Authorization: "Bearer " + uni.getStorageSync('apiToken')
-				// 	},
-				// 	success: _ => {
-				// 		console.log('11111')
-				// 	},
-				// 	fail: e => {
-				// 		console.log(e)
-				// 	}
-				// })
-			
-			
+				this.login(r)			
 				let e = new Echo({
 					client: client,
 					broadcaster: "socket.io",
@@ -41,10 +23,14 @@
 						}
 					}
 				})
-				e.private("App.User." + this.userInfo.id).notification(data => {
-					console.log(data)
+				e.private("App.User." + this.userInfo.id).notification(r => {
+					console.log(r.data)
+					this.setNew(r.data)
+					uni.setTabBarBadge({
+						index: 1,
+						text: ''
+					})
 				})
-				console.log(e)
 			});
 		},
 		onShow: function() {
@@ -54,7 +40,8 @@
 
 		},
 		methods: {
-			...mapMutations(['login'])
+			...mapMutations(['login']),
+			...mapMutations('message', ['setNew'])
 		},
 		computed: {
 			...mapState(['userInfo'])

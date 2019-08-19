@@ -72,6 +72,15 @@
 					this.getData()
 				}
 			}
+		},
+		watch: {
+			rData: {
+				handler() {
+					if (this.hasLoaded) {
+						this.getData(true)
+					}
+				}
+			}
 		}
 	}
 </script>
