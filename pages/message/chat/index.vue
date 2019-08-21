@@ -68,11 +68,11 @@
 					if (!message_id_start) {
 						this.list = r.data.reverse()
 						this.loaded = true
-						this.goBottom()
+						this.goTarget()
 						return
 					}
 					this.list = [...r.data.reverse(), ...this.list]
-					this.goBottom(message_id_start)
+					this.goTarget(message_id_start)
 				}).finally(_ => {
 					this.isLoading = false
 				})
@@ -89,18 +89,18 @@
 				this.$http('message', data, 'post').then(r => {
 					this.list.push(r.data)
 					this.content = ''
-					this.goBottom()
+					this.goTarget()
 				})
 			},
-			goBottom(id) {
-				this.$nextTick(_ => {
+			goTarget(id) {
+				// this.$nextTick(_ => {
 					if (id) {
 						this.sId = `message-${id}`
 						return
 					}
 					let lastId = this.list[this.list.length - 1].message.id
 					this.sId = `message-${lastId}`
-				})
+				// })
 			}
 		},
 		computed: {
@@ -112,7 +112,7 @@
 				if (val.id) {
 					if (val.both_type === this.bothType && val.both_id == this.bothId) {
 						this.list.push(val)
-						this.goBottom()
+						this.goTarget()
 					}
 				}
 			}

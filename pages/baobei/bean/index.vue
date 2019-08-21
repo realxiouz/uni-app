@@ -3,7 +3,7 @@
 		<form>
 			<view class="cu-form-group">
 				<view class="title">报备楼盘</view>
-				<navigator class="show-arrow" url="/pages/baobei/projects/index">
+				<navigator class="show-arrow" url="/pages/baobei/projects/index" hover-class="none">
 					<view>选择楼盘</view>
 				</navigator>
 			</view>
@@ -39,18 +39,16 @@
 					</view>
 				</picker>
 			</view>
-			
-			<view class="cu-form-group margin-top">
-				<view class="title">导入客户</view>
-				<view class="show-arrow" @click="importCustomer">
-					<view>共 {{selCustomer.length}} 个客户</view>
-				</view>
-			</view>
 			<view class="cu-form-group">
 				<view class="title">隐号报备</view>
 				<switch @change="handleHidePhone" :class="formBean.yinghao?'checked':''" :checked="formBean.yinghao"></switch>
 			</view>
-
+			
+			<view class="cu-form-group margin-top">
+				<button class="cu-btn radius bg-blue" @click="adddCustomer">添加客户</button>
+				<button class="cu-btn radius bg-green" @click="importCustomer">导入客户</button>
+			</view>
+			
 			<view v-for="(i, inx) in selCustomer" :key="inx">
 				<view class="cu-form-group margin-top">
 					<view class="title">客户名称</view>
@@ -60,10 +58,12 @@
 				<view class="cu-form-group">
 					<view class="title">客户电话</view>
 					<input type="text" placeholder="填写客户电话" v-model="i.phone"/>
+					<button class="cu-btn bg-red radius small" @click="delCustomer(inx)">
+						<view class="bg-red">
+							<text class="cuIcon cuIcon-delete"></text>
+						</view>
+					</button>
 				</view>
-				<!-- <view class="cu-form-group">
-					<view class="title">客户性别</view>
-				</view> -->
 			</view>
 			
 			<view class="cu-form-group margin-top">
@@ -97,10 +97,10 @@
 			},
 			customerId: '',
 			date: moment().format('YYYY-MM-DD'),
-			time: moment().format('hh:mm')
+			time: moment().format('HH:mm')
 		}),
 		methods: {
-			...mapMutations('baobei', ['setSelProject']),
+			...mapMutations('baobei', ['setSelProject', 'setSelCustomer']),
 			textareaAInput(e) {
 				this.formBean.remark = e.detail.value
 			},
@@ -111,7 +111,8 @@
 				this.formBean.customers = this.selCustomer.map(i => ({
 					customer_name: i.name,
 					customer_phone: i.phone,
-					customer_sex: i.sex
+					customer_sex: i.sex,
+					customer_id: i.id
 				}))
 				this.formBean.project_ids = this.selProject.map(i => i.id)
 				this.$http('baobei', this.formBean, 'post').then(r => {
@@ -150,9 +151,6 @@
 							default:
 								break;
 						}
-					},
-					fail: e => {
-						console.log(e.errMsg)
 					}
 				})
 			},
@@ -165,6 +163,18 @@
 			},
 			handleSex(e, i) {
 				e.detail.value ? i.sex = 1 : i.sex = 0
+			},
+			dateChange(e) {
+				this.date = e.detail.value
+			},
+			timeChange(e) {
+				this.time = e.detail.value
+			},
+			adddCustomer() {
+				this.setSelCustomer([...this.selCustomer, {name: '', phone: ''}])
+			},
+			delCustomer(inx) {
+				this.selCustomer.splice(inx, 1)
 			}
 		},
 		components: {

@@ -3,7 +3,7 @@
 		<view class="flex">
 			<ava :name="bean.both.name" class="margin-right-sm" is-square/>
 			<view class="flex-sub flex">
-				<view class="flex-sub">
+				<view class="flex-sub flex flex-direction justify-between">
 					<view class="text-black text-bold">{{bean.both.name}}</view>
 					<view class="text-gray text-sm" v-if="bean.message.data">
 						<text v-if="bean.message.data.type==='text'">{{bean.message.data.content}}</text>

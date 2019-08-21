@@ -37,6 +37,7 @@
 	import Genjin from './components/genjin'
 	import Daofang from './components/daofang'
 	import FloatButton from '@/components/float-button'
+	import { mapMutations, mapState } from 'vuex'
 	
 	export default {
 		onLoad(opt) {
@@ -72,6 +73,7 @@
 			list2: [],
 		}),
 		methods: {
+			...mapMutations('baobei', ['setDaikan', 'setSelProject', 'setSelCustomer']),
 			customerDetail() {
 				this.$http('customer', {id: this.id}).then(r => {
 					this.bean = r.data[0]
@@ -94,18 +96,40 @@
 				this.selTab = inx
 			},
 			handleGo() {
-				let path = {
-					'0': `/pages/common/followup/index?customerId=${this.id}`,
-					'1': `/pages/common/daofang/index?customerId=${this.id}`,
-					'2': `/pages/common/baobei/index?`
+				switch (this.selTab){
+					case 0:
+						uni.navigateTo({
+							url: `/pages/common/followup/index?customerId=${this.id}`
+						})
+						break
+					case 1: 
+						uni.navigateTo({
+							url: `/pages/common/daofang/index?customerId=${this.id}`
+						})
+					    break
+					case 2:
+						this.setDaikan({
+							name: this.userInfo.name,
+							phone: this.userInfo.mobile
+						})
+						this.setSelCustomer([
+							{name: this.bean.name, phone: this.bean.phone}
+						])
+						this.setSelProject([])
+						uni.navigateTo({
+							url: `/pages/baobei/bean/index`
+						})
+						break;
+					default:
+						break;
 				}
-				uni.navigateTo({
-					url: path[this.selTab]
-				})
 			}
 		},
 		components: {
 			DataList, Genjin, FloatButton, Daofang
+		},
+		computed: {
+			...mapState(['userInfo']),
 		}
 	}
 </script>

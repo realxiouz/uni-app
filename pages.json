@@ -178,11 +178,7 @@
 	  "style": {}
 	},
 	{
-	  "path": "pages/common/baobei/index",
-	  "style": {}
-	},
-	{
-	  "path": "pages/project/baobei/index",
+	  "path": "pages/project/list/index",
 	  "style": {}
 	},
 	{
@@ -209,7 +205,9 @@
 	},
 	{
 	  "path": "pages/baobei/bean/index",
-	  "style": {}
+	  "style": {
+		  "navigationBarTitleText": "新建报备"
+	  }
 	},
 	{
 	  "path": "pages/baobei/customers/index",
@@ -217,6 +215,12 @@
 	},
 	{
 	  "path": "pages/baobei/projects/index",
+	  "style": {
+		  "navigationBarTitleText": "选择楼盘"
+	  }
+	},
+	{
+	  "path": "pages/test/index/index",
 	  "style": {}
 	}
   ],

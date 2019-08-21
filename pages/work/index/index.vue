@@ -9,7 +9,7 @@
 			</view> -->
 		</view>
 		<view class="cu-list grid col-4 no-border">
-			<view class="cu-item" v-for="(item,index) in cuIconList" :key="index" @tab="handleNav" :item="item">
+			<view class="cu-item" v-for="(item,index) in cuIconList" :key="index" @click="handleNav(item.path)">
 				<view :class="['cuIcon-' + item.cuIcon,'text-' + item.color]">
 					<view class="cu-tag badge" v-if="item.badge">
 						<block v-if="item.badge!=1">{{item.badge>99?'99+':item.badge}}</block>
@@ -74,7 +74,8 @@
 					cuIcon: 'recordfill',
 					color: 'orange',
 					badge: 0,
-					name: '设置'
+					name: '设置',
+					path: '/pages/test/index/index'
 				}],
 
 				attendanceList: [
@@ -100,14 +101,14 @@
 						color: 'green',
 						badge: 0,
 						name: '报备',
-						path: '/pages/project/baobei/index'
+						path: '/pages/project/list/index?type=cooperation'
 					},
 					{
 						cuIcon: 'locationfill',
 						color: 'green',
 						badge: 0,
 						name: '云端',
-						path: '/pages/app/contact/index'
+						path: '/pages/project/list/index?type=public'
 					}
 				]
 			};

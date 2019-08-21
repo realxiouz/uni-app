@@ -9,7 +9,7 @@
 		<checkbox-group @change="handleChange">
 			<data-list r-url="baobeiProjects" ref="list" @data="handleList" :r-data="rData">
 				<view class="bg-white padding-sm solid-bottom" v-for="(i, inx) in list" :key="inx">
-					<view class="flex">
+					<label class="flex">
 						<view class="margin-right-sm">
 							<checkbox class='round blue' :class="i.checked?'checked':''" :checked="i.checked" :value="`${i.id} ${i.project.name}(${i.company.alias})`"></checkbox>
 						</view>
@@ -17,7 +17,7 @@
 							<view class="text-black text-bold">{{i.project.name}}</view>
 							<view class="text-gray text-sm">{{i.company.alias}}</view>
 						</view>
-					</view>
+					</label>
 				</view>
 			</data-list>
 		</checkbox-group>
@@ -71,18 +71,16 @@
 					})
 					return
 				}
-				let arr = []
+				let arr = [...this.selProject]
 				for (let i of this.sels) {
 					let [id, text] = i.split(' ')
-					arr.push({
-						id, text
-					})
+					if (this.selProject.findIndex(item => item.id == id) === -1) {
+						arr.push({
+							id, text
+						})
+					}
 				}
 				this.setSelProject(arr)
-				uni.showToast({
-					title: `重新选择了${arr.length}个楼盘`,
-					icon: 'none'
-				})
 				setTimeout(_ => {
 					uni.navigateBack()
 				}, 1500);

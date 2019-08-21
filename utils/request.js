@@ -32,7 +32,7 @@ export const http = (url, data, method = 'GET') => {
 						title: data.data.message,
 						icon: 'none'
 					});
-					reject(new Error('token失效,重新登录'))
+					reject(new Error('非正常响应'))
 					// uni.navigateTo({
 					// 	url: '/pages/public/login/index'
 					// })

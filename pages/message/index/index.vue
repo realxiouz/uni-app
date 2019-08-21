@@ -1,7 +1,7 @@
 <template>
-	<view>
+	<view style="height: 100vh;">
 		<data-list r-url="message_window" ref="list" @data="handleList" :r-data="rData">
-			<item :bean="i"  v-for="(i, inx) in chats" :key="inx"/>
+			<item :bean="i"  v-for="(i, inx) in list" :key="inx"/>
 		</data-list>
 	</view>
 </template>
@@ -14,8 +14,13 @@
 	export default {
 		onLoad(opt) {
 			this.rData.user_id = this.userInfo.id
+		},
+		onShow() {
 			this.$nextTick(_ => {
-				this.$refs.list.init()
+				this.$refs.list.getData(true)
+			})
+			uni.hideTabBarRedDot({
+				index: 1
 			})
 		},
 		components: {
@@ -36,7 +41,8 @@
 		methods: {
 			...mapMutations('message', ['setChats']),
 			handleList(list) {
-				this.setChats(list)
+				// this.setChats(list)
+				this.list = list
 			},
 			handleSearch() {
 				this.rData = {

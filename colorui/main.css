@@ -267,8 +267,10 @@ radio.radio .uni-radio-input-checked::after {
 
 .switch-sex .wx-switch-input,
 .switch-sex .uni-switch-input {
-	background: #e54d42 !important;
-	border-color: #e54d42 !important;
+	/* background: #e54d42 !important;
+	border-color: #e54d42 !important; */
+	background: #39b54a !important;
+	border-color: #39b54a !important;
 }
 
 .switch-sex[checked] .wx-switch-input,

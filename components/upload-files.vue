@@ -54,6 +54,10 @@
 			maxCount: {
 				type: Number,
 				default: 3
+			},
+			source: {
+				type: Array,
+				default: _ => (['camera'])
 			}
 		},
 		methods: {
@@ -61,7 +65,7 @@
 				uni.chooseImage({
 					count: this.maxCount - this.imgList.length,
 					sizeType: ['original', 'compressed'],
-					sourceType: ['album'],
+					sourceType: this.source,
 					success: (res) => {
 						this.upLoad(res.tempFilePaths)
 					}

@@ -5,7 +5,14 @@
 			<view class="cu-load loading"></view>
 		</slot>
 		<slot name="noData" v-if="hasLoaded && !list.length">
-			列表数据空
+			<view style="height:100%;padding-bottom:100upx" class="flex justify-around align-center">
+				<view>
+					<view class="text-xsl">
+						<text class="cuIcon-attentionforbidfill text-gray"></text>
+					</view>
+					<text class="text-gray">暂无数据</text>
+				</view>
+			</view>
 		</slot>
 		<slot name="isEnd" v-if="isEnd && !isLoading && list.length">
 			<view class="cu-load over"></view>

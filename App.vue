@@ -2,36 +2,42 @@
 	import {
 		BASE_URL
 	} from '@/utils/const'
-	
 	import Echo from '@/utils/echo.common'
 	import client from '@/utils/weapp.socket.io'
-	
 	import { mapState, mapMutations } from 'vuex'
+	
 	export default {
 		onLaunch: function() {
-			this.$http('auth/user').then(r => {
-				this.login(r)			
-				let e = new Echo({
-					client: client,
-					broadcaster: "socket.io",
-					// host: BASE_URL + ":6001",
-					protocol:'wss',
-					host:'dev.km999.com:6001',
-					auth: {
-						headers: {
-							Authorization: "Bearer " + uni.getStorageSync('apiToken')
+			let token = uni.getStorageSync('apiToken')
+			if (token) {
+				this.$http('auth/user').then(r => {
+					this.login(r)			
+					let e = new Echo({
+						client: client,
+						broadcaster: "socket.io",
+						// host: BASE_URL + ":6001",
+						protocol:'wss',
+						host:'dev.km999.com:6001',
+						auth: {
+							headers: {
+								Authorization: "Bearer " + uni.getStorageSync('apiToken')
+							}
 						}
-					}
-				})
-				e.private("App.User." + this.userInfo.id).notification(r => {
-					console.log(r.data)
-					this.setNew(r.data)
-					uni.setTabBarBadge({
-						index: 1,
-						text: ''
+					})
+					e.private("App.User." + this.userInfo.id).notification(r => {
+						console.log(r.data)
+						this.setNew(r.data)
+						uni.showTabBarRedDot({
+							index: 1
+						})
 					})
 				})
-			});
+			} else {
+				uni.navigateTo({
+					url: '/pages/public/login/index',
+				})
+			}
+			
 		},
 		onShow: function() {
 

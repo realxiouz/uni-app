@@ -49,7 +49,8 @@
 			</view>
 			<view class="flex justify-between">
 				<text class="text-cyan">{{i.baobei_remark}}</text>
-				<button class="cu-btn radius bg-blue" @click.stop="handleBaobei(i, bean)">报备</button>
+				<button class="cu-btn radius bg-blue shadow" v-if="listType==='cooperation'" @click.stop="handleBaobei(i, bean)">报备</button>
+				<button class="cu-btn radius bg-green shadow" v-else-if="listType==='public'" @click.stop="handleCooperation(i.id)">合作</button>
 			</view>
 		</navigator>
 		
@@ -95,12 +96,15 @@
 			}
 		},
 		methods: {
-			...mapMutations('baobei', ['setDaikan', 'setSelProject']),
+			...mapMutations('baobei', ['setDaikan', 'setSelProject', 'setSelCustomer']),
 			handleBaobei(i, bean) {
 				this.setDaikan({
 					name: this.userInfo.name,
 					phone: this.userInfo.mobile
 				})
+				this.setSelCustomer([
+					{name: '', phone: ''}
+				])
 				this.setSelProject([
 					{
 						id: i.id,
@@ -110,10 +114,20 @@
 				uni.navigateTo({
 					url: `/pages/baobei/bean/index`
 				})
+			},
+			handleCooperation(company_id) {
+				let data = {
+					company_id,
+					invitation_id: this.userInfo.id
+				}
+				this.$http('cooperation_log', data, 'post').then(r => {
+					
+				})
 			}
 		},
 		computed: {
-			...mapState(['userInfo'])
+			...mapState(['userInfo']),
+			...mapState('project', ['listType']),
 		}
 	}
 </script>
