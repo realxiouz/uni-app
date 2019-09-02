@@ -67,6 +67,16 @@
 			},
 			handleChange(e) {
 				this.sels = e.detail.value
+				for (let i = 0, lenI = this.list.length; i < lenI; ++i) {
+					this.list[i].checked = false
+					for (let j = 0, lenJ = this.sels.length; j < lenJ; ++j) {
+						if (this.list[i].id == this.sels[j].split(' ')[2]) {
+							this.list[i].checked = true
+							break
+						}
+					}
+				}
+				this.list = this.list.map(i => i)
 			},
 			handleSave() {
 				let arr = [...this.selCustomer]

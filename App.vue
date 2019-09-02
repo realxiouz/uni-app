@@ -8,6 +8,14 @@
 	
 	export default {
 		onLaunch: function() {
+			// #ifdef H5
+			this.setH5()
+			// #endif
+			uni.getSystemInfo({
+				success: e => {
+					console.log(e)
+				}
+			})
 			let token = uni.getStorageSync('apiToken')
 			if (token) {
 				this.$http('auth/user').then(r => {
@@ -15,9 +23,13 @@
 					let e = new Echo({
 						client: client,
 						broadcaster: "socket.io",
-						// host: BASE_URL + ":6001",
+						// #ifdef H5
+						host: BASE_URL + ":6001",
+						// #endif
+						// #ifndef H5
 						protocol:'wss',
 						host:'dev.km999.com:6001',
+						// #endif
 						auth: {
 							headers: {
 								Authorization: "Bearer " + uni.getStorageSync('apiToken')
@@ -25,7 +37,6 @@
 						}
 					})
 					e.private("App.User." + this.userInfo.id).notification(r => {
-						console.log(r.data)
 						this.setNew(r.data)
 						uni.showTabBarRedDot({
 							index: 1
@@ -38,6 +49,17 @@
 				})
 			}
 			
+			// uni.getLocation({
+			// 	type: 'gcj02',
+			// 	success: ({longitude, latitude, address}) => {
+			// 		console.log(longitude)
+			// 		console.log(latitude)
+			// 		console.log(address)
+			// 	},
+			// 	fail: (err) => {
+			// 		console.log(err);
+			// 	}
+			// })
 		},
 		onShow: function() {
 
@@ -46,7 +68,7 @@
 
 		},
 		methods: {
-			...mapMutations(['login']),
+			...mapMutations(['login', 'setH5']),
 			...mapMutations('message', ['setNew'])
 		},
 		computed: {
@@ -81,5 +103,18 @@
 		bottom: 0;
 		right: -20upx;
 		margin: auto;
+	}
+	
+	.q-fixed {
+		position: fixed;
+		z-index: 1;
+		left: 0;
+		right: 0;
+		top: 0;
+		bottom: 0;
+	}
+	
+	.uni-input-form{
+		height: 100%;
 	}
 </style>

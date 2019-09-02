@@ -12,8 +12,13 @@
 				</view>
 				
 				<button @tap="handleLogin">登录</button>
-				
+				<!-- <button @tap="wechatlogin">wechat</button>
+				<button open-type="getUserInfo" @getuserinfo="getuserinfo" withCredentials>open_type</button> -->
 			</form>
+		</view>
+		
+		<view class="text-xsl text-green text-center q-fixed" style="bottom: 160upx;top: auto">
+			<text class="cuIcon cuIcon-weixin" @click="wxLogin"></text>
 		</view>
 	</view>
 </template>
@@ -21,10 +26,13 @@
 <script>
 	import { mapMutations} from 'vuex';
 	export default {
+		onLoad() {
+			this.wechatlogin()
+		},
 		data: _ => ({
 			formBean: {
 				mobile: '10000000000',
-				password: '000000'
+				password: '000000',
 			}
 		}),
 		methods: {
@@ -33,25 +41,13 @@
 				this.$http('auth/login', this.formBean, 'post').then(r => {
 					// console.log(r);
 					let res = r.user;
-					const userInfo = {
-						id: res.id,
-						companyname: res.company.name,
-						avatar: res.avatar,
-						name: res.name,
-						position: res.department.name,
-						phone: res.mobile,
-						weixin: res.weixin,
-						email: res.email,
-						mobile: res.mobile,
-						signature: res.signature
-					}
 					// console.log(userInfo);
-					uni.setStorageSync('userInfo', userInfo);
+					// uni.setStorageSync('userInfo', r.user);
 					// 表示已经登录成功
 					// this.hasLogin = true;
 					this.changeToken(r.access_token);
 					uni.setStorageSync('apiToken', r.access_token);
-					this.login(userInfo);
+					this.login(r.user);
 					uni.switchTab({
 						url: '/pages/ucenter/index/index'
 					})
@@ -61,6 +57,72 @@
 						title: '用户名或者密码错误',
 						icon: 'none'
 					})
+				})
+			},
+			wechatlogin() {
+				uni.login({
+				  provider: 'weixin',
+				  success: (loginRes) => {
+				    console.log(loginRes);
+					this.code = loginRes.code
+					console.log(this.code);
+					// this.$http('wxapp/login', {code: loginRes.code}, 'post').then(r => {
+					// 	
+					// })
+				    // 获取用户信息
+				    uni.getUserInfo({
+				      provider: 'weixin',
+				      success: function (infoRes) {
+				        console.log(infoRes.userInfo);
+				      },
+					  fail: (err) => {
+					  	console.log(err);
+					  }
+				    });
+				  },
+				  fail: (err) => {
+				  	console.log(err);
+				  }
+				})
+			},
+			getuserinfo(e) {
+				let data = {
+					// encryptedData: e.detail.encryptedData,
+					// iv: e.detail.iv,
+					code: this.code
+				}
+				this.$http('wxapp/login', data, 'post').then(r => {
+					
+				})
+			},
+			wxLogin() {
+				uni.login({
+					provider: 'weixin',
+					success: (res) => {
+						this.$http('wxapp/login', {code: res.code}, 'post').then(r => {
+							this.login(r.user)
+							uni.setStorageSync('apiToken', r.access_token)
+							if (!r.user.wxbinded) {
+								uni.showModal({
+									title: '该微信还未绑定用户,是否绑定?',
+									cancelText: '暂不绑定',
+									confirmText: '去绑定',
+									success: (r) => {
+										if (r.confirm) {
+											uni.navigateTo({
+												url: '/pages/public/bind/index'
+											})
+										} else if (r.cancel) {
+											uni.switchTab({
+												url: '/pages/work/index/index'
+											})
+										}
+									},
+									
+								})
+							}
+						})
+					}
 				})
 			}
 		},

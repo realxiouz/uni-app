@@ -25,7 +25,7 @@
 			</view>
 		</view>
 		<view class="margin-top-sm flex justify-between">
-			<view class="w23 text-center bg-cyan radius padding-tb-xs padding-lr-xs">马上报备</view>
+			<view class="w23 text-center bg-cyan radius padding-tb-xs padding-lr-xs text-cut">{{bean.fee_view}}</view>
 			<view
 				class="w23 text-center radius padding-tb-xs padding-lr-xs text-white"
 				:class="bean.baobei_project.filter(i => i.sell_prize).length ? 'bg-cyan': 'bg-grey'"

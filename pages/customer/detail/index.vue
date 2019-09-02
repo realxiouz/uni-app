@@ -1,33 +1,33 @@
 <template>
 	<view>
-		<view class="cu-bar fixed bg-blue nav text-center">
-			<view class="flex text-center">
-				<view class="cu-item flex-sub" :class="inx==selTab?'text-white cur':''" v-for="(i,inx) in tabs" :key="inx" @click="handleNavChange(inx)">
-					{{i.text}}
-				</view>
+		<view class="fixed bg-white nav" :style="{top: isH5?'44px':'0'}">
+			<view class="cu-item" :class="inx==selTab?'text-blue cur':''" v-for="(i,inx) in tabs" :key="inx" @click="handleNavChange(inx)">
+				{{i.text}}
 			</view>
 		</view>
-		<swiper style="height:100vh;" @change="tabChange" :current="selTab">
+		<swiper :style="[{position:'fixed',left:0,right:0,bottom:'0',top:top+'px',height:'auto'}]" @change="tabChange"
+		 :current="selTab">
 			<swiper-item>
-				<data-list ref="list0" @data="handleList0" r-url="customer_genjin" :r-data="{customer_id: id}">
-					<view class="cu-bar"></view>
+				<data-list ref="list0" @data="handleList0" r-url="customer_genjin" :r-data="rData">
 					<genjin v-for="(i, inx) in list0" :key="inx" :bean="i" />
 				</data-list>
 			</swiper-item>
 			<swiper-item>
-				<data-list ref="list1" @data="handleList1" r-url="daikan" :r-data="{customer_id: id}">
-					<view class="cu-bar"></view>
+				<data-list ref="list1" @data="handleList1" r-url="daikan" :r-data="rData">
 					<daofang v-for="(i, inx) in list1" :key="inx" :bean="i" />
 				</data-list>
 			</swiper-item>
 			<swiper-item>
-				<data-list ref="list2" @data="handleList2" r-url="baobei" :r-data="{customer_id: id}">
-					<view class="cu-bar"></view>
-					<!-- <item v-for="(i, inx) in list2" :key="inx" :bean="i" /> -->
+				<data-list ref="list2" @data="handleList2" r-url="baobei" :r-data="rData">
+					<baobei v-for="(i, inx) in list2" :key="inx" :bean="i" />
+				</data-list>
+			</swiper-item>
+			<swiper-item>
+				<data-list ref="list3" @data="handleList3" r-url="customerDemand" :r-data="rData">
+					<baobei v-for="(i, inx) in list3" :key="inx" :bean="i" />
 				</data-list>
 			</swiper-item>
 		</swiper>
-		
 		<float-button @go="handleGo" />
 	</view>
 </template>
@@ -36,48 +36,65 @@
 	import DataList from '@/components/data-list'
 	import Genjin from './components/genjin'
 	import Daofang from './components/daofang'
+	import Baobei from './components/baobei'
 	import FloatButton from '@/components/float-button'
-	import { mapMutations, mapState } from 'vuex'
-	
+	import {
+		mapMutations,
+		mapState
+	} from 'vuex'
+
 	export default {
 		onLoad(opt) {
+			if (this.isH5) {
+				this.top = 44 + uni.upx2px(90)
+			}
 			this.id = opt.id
+			this.rData = {customer_id: this.id}
 			this.customerDetail()
-			
+
 			this.$nextTick(_ => {
 				this.$refs.list0.init()
 			})
 		},
-		onShow() {
-			let pages = getCurrentPages();
-			let currPage = pages[pages.length-1];
-			if (currPage.data.needRefresh) {
-				console.log(currPage)
-				this.$refs[`list${this.selTab}`].getData(true)
-				currPage.setData({
-					needRefresh: false
-				})
+		data() {
+			return {
+				top: uni.upx2px(90),
+				id: '',
+				bean: {},
+				selTab: 0,
+				tabs: [{
+						text: '跟进记录'
+					},
+					{
+						text: '到访记录'
+					},
+					{
+						text: '报备记录'
+					},
+					{
+						text: '客户需求'
+					},
+				],
+				list0: [],
+				list1: [],
+				list2: [],
+				list3: [],
+				rData: null,
 			}
 		},
-		data: _ => ({
-			id: '',
-			bean: {},
-			selTab: 0,
-			tabs: [
-				{text: '跟进记录'},
-				{text: '到访记录'},
-				{text: '报备记录'},
-			],
-			list0: [],
-			list1: [],
-			list2: [],
-		}),
 		methods: {
 			...mapMutations('baobei', ['setDaikan', 'setSelProject', 'setSelCustomer']),
 			customerDetail() {
-				this.$http('customer', {id: this.id}).then(r => {
+				this.$http('customer', {
+					id: this.id
+				}).then(r => {
 					this.bean = r.data[0]
 				})
+			},
+			handleList(inx, l) {
+				console.log(inx)
+				console.log(l)
+				// this.tabs[inx].list = l
 			},
 			handleList0(l) {
 				this.list0 = l
@@ -86,7 +103,10 @@
 				this.list1 = l
 			},
 			handleList2(l) {
-				this.list2 = l 
+				this.list2 = l
+			},
+			handleList3() {
+				this.list3 = l
 			},
 			tabChange(e) {
 				this.selTab = e.detail.current
@@ -96,25 +116,26 @@
 				this.selTab = inx
 			},
 			handleGo() {
-				switch (this.selTab){
+				switch (this.selTab) {
 					case 0:
 						uni.navigateTo({
 							url: `/pages/common/followup/index?customerId=${this.id}`
 						})
 						break
-					case 1: 
+					case 1:
 						uni.navigateTo({
 							url: `/pages/common/daofang/index?customerId=${this.id}`
 						})
-					    break
+						break
 					case 2:
 						this.setDaikan({
 							name: this.userInfo.name,
 							phone: this.userInfo.mobile
 						})
-						this.setSelCustomer([
-							{name: this.bean.name, phone: this.bean.phone}
-						])
+						this.setSelCustomer([{
+							name: this.bean.name,
+							phone: this.bean.phone
+						}])
 						this.setSelProject([])
 						uni.navigateTo({
 							url: `/pages/baobei/bean/index`
@@ -126,10 +147,14 @@
 			}
 		},
 		components: {
-			DataList, Genjin, FloatButton, Daofang
+			DataList,
+			Genjin,
+			FloatButton,
+			Daofang,
+			Baobei
 		},
 		computed: {
-			...mapState(['userInfo']),
+			...mapState(['userInfo', 'isH5']),
 		}
 	}
 </script>

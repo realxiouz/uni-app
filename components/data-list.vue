@@ -1,23 +1,39 @@
 <template>
-	<scroll-view scroll-y @scrolltolower="handleMore" style="height:100%;" :lower-threshold="50">
-		<slot></slot>
-		<slot name="loading" v-if="isLoading">
-			<view class="cu-load loading"></view>
-		</slot>
-		<slot name="noData" v-if="hasLoaded && !list.length">
-			<view style="height:100%;padding-bottom:100upx" class="flex justify-around align-center">
-				<view>
-					<view class="text-xsl">
-						<text class="cuIcon-attentionforbidfill text-gray"></text>
+	<view
+		style="height:100%;position: relative;"
+		@touchstart="tStart"
+		@touchmove="tMove"
+		@touchend="tEnd"
+	>
+		<scroll-view scroll-y
+			@scrolltolower="handleMore" style="height:100%;" :lower-threshold="50"
+		>	
+			<!-- <view class="refresh-wrap" :style="{top: delta-50+'px'}">
+				<view v-if="rStatus===1">下拉刷新</view>
+				<view v-if="rStatus===2">松开刷新</view>
+				<view v-if="rStatus===3">刷新中</view>
+				<view v-if="rStatus===4">数据已刷新</view>
+			</view> -->
+			<slot></slot>
+			<slot name="loading" v-if="isLoading">
+				<view class="cu-load loading"></view>
+			</slot>
+			<slot name="noData" v-if="hasLoaded && !list.length">
+				<view :style="{paddingTop:noDataTop}" class="flex justify-around align-center">
+					<view>
+						<view class="text-xsl">
+							<text class="cuIcon-attentionforbidfill text-gray"></text>
+						</view>
+						<text class="text-gray">暂无数据</text>
 					</view>
-					<text class="text-gray">暂无数据</text>
 				</view>
-			</view>
-		</slot>
-		<slot name="isEnd" v-if="isEnd && !isLoading && list.length">
-			<view class="cu-load over"></view>
-		</slot>
-	</scroll-view>
+			</slot>
+			<slot name="isEnd" v-if="isEnd && !isLoading && list.length">
+				<view class="cu-load over"></view>
+			</slot>
+		</scroll-view>
+	</view>
+	
 </template>
 
 <script>
@@ -29,7 +45,11 @@
 			
 			page: 1,
 			per_page: 10,
-			list: []
+			list: [],
+			
+			start: 0,
+			delta: 0,
+			rStatus: 0, // 0->未下拉;1->下拉刷新;2->松开刷新;3->刷新中;4->刷新完毕 
 		}),
 		props: {
 			rUrl: String,
@@ -37,6 +57,10 @@
 			rMethod: {
 				type: String,
 				default: 'get'
+			},
+			noDataTop: {
+				type: String,
+				default: '300rpx'
 			}
 		},
 		methods: {
@@ -78,6 +102,37 @@
 				if (!this.hasLoaded) {
 					this.getData()
 				}
+			},
+			handleScroll(e) {
+				console.log(e.detail);
+			},
+			tStart(e) {
+				this.start = e.touches[0].pageY
+			},
+			tMove(e) {
+				let move = e.touches[0].pageY
+				let _d = move - this.start
+				if (_d >= 0) {
+					this.delta = _d >= 150 ? 150 : _d
+					if (this.delta > 100) {
+						this.rStatus = 2
+					} else {
+						this.rStatus = 1
+					}
+				}
+			},
+			tEnd(e) {
+				switch (this.rStatus){
+					case 0:
+						break;
+					case 1:
+						this.delta = 0
+						this.rStatus = 0
+						break;
+					case 2:
+						// this.getData(true)
+						break;
+				}
 			}
 		},
 		watch: {
@@ -92,5 +147,10 @@
 	}
 </script>
 
-<style>
+<style lang="scss">
+	.refresh-wrap{
+		position: absolute;
+		height: 50px;
+		z-index: 1;
+	}
 </style>

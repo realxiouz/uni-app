@@ -1,9 +1,10 @@
 <template>
 	<view>
-		<scroll-view scroll-y class="cu-chat" :scroll-into-view="sId" style="height: 100vh;padding-bottom: 100upx;" @scrolltoupper="handleMore">
-			<item v-for="(i, inx) in list" :key="inx" :bean="i" :id="`message-${i.message.id}`"/>
+		<scroll-view scroll-y class="cu-chat" :scroll-into-view="sId" @scrolltoupper="handleMore"
+			:style="{position: 'fixed', top: isH5?'44px':'0', left:0, right:0, bottom: bottom}">
+			<item v-for="(i, inx) in list" :key="inx" :bean="i" :id="`message-${i.message_id}`"/>
 		</scroll-view>
-		<view class="cu-bar foot input" :style="[{bottom:InputBottom+'px'}]">
+		<view class="cu-bar foot input" :style="[{bottom:InputBottom+'px'}]" v-if="bothType == 'App\\User'">
 			<!-- <view class="action">
 				<text class="cuIcon-sound text-grey"></text>
 			</view> -->
@@ -26,6 +27,9 @@
 		onLoad(opt) {
 			this.bothId = opt.id
 			this.bothType = opt.type
+			if (this.bothType == "App\\User") {
+				this.bottom = uni.upx2px(100) + 'px'
+			}
 			this.getData()
 		},
 		data() {
@@ -39,7 +43,8 @@
 				
 				sId: '',
 				loaded: false,
-				isLoading: false
+				isLoading: false,
+				bottom: 0
 			};
 		},
 		methods: {
@@ -78,6 +83,13 @@
 				})
 			},
 			handleSend() {
+				if (!this.content) {
+					uni.showToast({
+						title: '还没有输入内容',
+						icon: 'none'
+					})
+					return
+				}
 				let data = {
 					receive_id: this.bothId,
 					receive_type: this.bothType,
@@ -93,18 +105,28 @@
 				})
 			},
 			goTarget(id) {
-				// this.$nextTick(_ => {
+				// #ifndef H5
+				if (id) {
+					this.sId = `message-${id}`
+					return
+				}
+				let lastId = this.list[this.list.length - 1].message.id
+				this.sId = `message-${lastId}`
+				// #endif
+				// #ifdef H5
+				this.$nextTick(_ => {
 					if (id) {
 						this.sId = `message-${id}`
 						return
 					}
 					let lastId = this.list[this.list.length - 1].message.id
 					this.sId = `message-${lastId}`
-				// })
+				})
+				// #endif
 			}
 		},
 		computed: {
-			...mapState(['userInfo']),
+			...mapState(['userInfo', 'isH5']),
 			...mapState('message',['new'])
 		},
 		watch: {

@@ -50,10 +50,10 @@
 			<view class="flex justify-between">
 				<text class="text-cyan">{{i.baobei_remark}}</text>
 				<button class="cu-btn radius bg-blue shadow" v-if="listType==='cooperation'" @click.stop="handleBaobei(i, bean)">报备</button>
-				<button class="cu-btn radius bg-green shadow" v-else-if="listType==='public'" @click.stop="handleCooperation(i.id)">合作</button>
+				<button class="cu-btn radius bg-green shadow" v-else-if="listType==='public'" @click.stop="handleCooperation(i.company_id)">合作</button>
 			</view>
 		</navigator>
-		
+
 		<view class="cu-bar tabbar"></view>
 		<view class="cu-bar bg-white tabbar border shop foot">
 			<view class="action">
@@ -74,19 +74,48 @@
 </template>
 
 <script>
-	import { mapMutations, mapState } from 'vuex'
-	
+	import {
+		mapMutations,
+		mapState
+	} from 'vuex'
+
 	export default {
+		onNavigationBarButtonTap({
+			index
+		}) {
+			switch (index) {
+				case 0:
+					console.log('menu')
+					break;
+				case 1:
+					console.log('share')
+					break
+				default:
+					break;
+			}
+		},
 		onLoad(opt) {
 			this.id = opt.id
-			this.$http(`project/${this.id}`).then(r => {
+			let data = null
+			if (this.listType === 'cooperation') {
+				data = {
+					baobei_projects_sub: JSON.stringify({
+						route_type: 'cooperation'
+					})
+				}
+			}
+			this.$http(`project/${this.id}`, data).then(r => {
 				this.bean = r.data
-				this.bean.banners = [
-					'http://st.fangxiaoke.com/1/company/project/fm/201908/156585356573826.jpg',
-					'http://st.fangxiaoke.com/1/company/project/huxing/201908/156585365660132.jpg',
-					'http://st.fangxiaoke.com/1/company/project/fm/201908/156585356573826.jpg',
-				]
-				this.bean.c = ['商铺', '写字楼']
+				let banners = []
+				for (let i of r.data.albums) {
+					banners = [...banners, ...i.photos.map(i => i.uri)]
+				}
+				this.bean.banners = banners
+				let c = new Set()
+				for (let i of this.bean.house_types) {
+					c.add(i.house_using_type.title)
+				}
+				this.bean.c = [...c]
 			})
 		},
 		data() {
@@ -102,15 +131,14 @@
 					name: this.userInfo.name,
 					phone: this.userInfo.mobile
 				})
-				this.setSelCustomer([
-					{name: '', phone: ''}
-				])
-				this.setSelProject([
-					{
-						id: i.id,
-						text: `${bean.name}(${i.company.alias})`
-					}
-				])
+				this.setSelCustomer([{
+					name: '',
+					phone: ''
+				}])
+				this.setSelProject([{
+					id: i.id,
+					text: `${bean.name}(${i.company.alias})`
+				}])
 				uni.navigateTo({
 					url: `/pages/baobei/bean/index`
 				})
@@ -121,7 +149,7 @@
 					invitation_id: this.userInfo.id
 				}
 				this.$http('cooperation_log', data, 'post').then(r => {
-					
+
 				})
 			}
 		},

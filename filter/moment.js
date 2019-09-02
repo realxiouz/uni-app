@@ -19,6 +19,14 @@ export default function(value, ...rest) {
 					}
 
 					break
+				case 'chat':
+					let diff = moment().diff(moment(date))
+					if (diff < 1000*3600*24) {
+						value = moment(date).format('HH:mm')
+					} else {
+						value = moment(date).format('MM-DD')
+					}
+					break
 				default:
 					value = moment(date).format(key)
 			}
