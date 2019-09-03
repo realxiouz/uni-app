@@ -56,10 +56,29 @@
             }
         },
         mounted() {
-
+			
         }
     }
 </script>
 <style lang="scss">
     /* css样式在../index/browsercount.scss的末尾*/
+	.browse-content-title {
+		padding: 0 31.2rpx 26rpx 31.2rpx;
+	}
+	.brows-list, transmit {
+		> view {
+			display: flex;
+			flex-wrap: nowrap;
+			padding: 0 31.2rpx 26rpx 31.2rpx;
+			margin-bottom: 26rpx;
+			border-bottom: 1px solid #e3e3e3;
+			.brows-middle {
+				flex: 1;
+				padding-left: 26rpx;
+				view {
+					padding-bottom: 10rpx;
+				}
+			}
+		}	
+	}
 </style>

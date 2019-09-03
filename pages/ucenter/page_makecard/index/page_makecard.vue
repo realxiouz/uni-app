@@ -1,6 +1,6 @@
 <template>
     <view class="padding-25">
-        <card-template :user="currentUserInfo" :is-show-list="false"></card-template>
+        <card-template :is-show-list="false"></card-template>
         <!--导航栏列表 start-->
         <view class="radiusbox pubmgtop cardlist">
             <view @tap="toPages" data-page="../../user/index/user">
@@ -33,12 +33,14 @@
                 </view>
                 <text>推荐楼盘</text>
             </view>
+			<!-- #ifdef MP-WEIXIN -->
             <view @tap="toPages" data-page="../../share/index/share">
                 <view>
                     <text class="cuIcon-evaluate_fill"></text>
                 </view>
                 <text>分享名片</text>
             </view>
+			<!-- #endif -->
             <view @tap="toPages" data-page="../../cardclamp/index/cardclamp">
                 <view>
                     <text class="cuIcon-file"></text>
@@ -70,13 +72,10 @@
                     title: '返回首页',
                     url: '../../businesscard/index/businesscard',
                     isRedirect: true
-                },
-                currentUserInfo: {}
+                }
             }
         },
-        onLoad() {
-            this.currentUserInfo = this.currentuserinfo;
-        },
+        onLoad() {},
         methods: {
             toPages(e) {
                 const url = e.currentTarget.dataset.page;
@@ -90,7 +89,7 @@
             makeBtn
         },
         computed: {
-            ...mapState(['currentuserinfo'])
+            ...mapState('ucenter', ['currentUserInfo'])
         }
     }
 </script>

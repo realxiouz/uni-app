@@ -24,15 +24,21 @@
         "navigationBarTitleText": "我的名片"
       }
     },
+	{
+	  "path": "pages/ucenter/browsecount/index/browsecount",
+	  "style": {
+	    "navigationBarTitleText": "浏览记录"
+	  }
+	},
+	{
+	  "path": "pages/ucenter/cardclamp/index/cardclamp",
+	  "style": {
+	    "navigationBarTitleText": "名片夹"
+	  }
+	},
     {
       "path": "pages/ucenter/page_makecard/index/page_makecard",
       "style": {
-      }
-    },
-    {
-      "path": "pages/ucenter/cardclamp/index/cardclamp",
-      "style": {
-        "navigationBarTitleText": "名片夹"
       }
     },
     {
@@ -50,13 +56,8 @@
     {
       "path": "pages/ucenter/choosehouse/index/choosehouse",
       "style": {
-        "navigationBarTitleText": "选择楼盘"
-      }
-    },
-    {
-      "path": "pages/ucenter/browsecount/index/browsecount",
-      "style": {
-        "navigationBarTitleText": "浏览记录"
+        "navigationBarTitleText": "选择楼盘",
+		"enablePullDownRefresh": true
       }
     },
     {

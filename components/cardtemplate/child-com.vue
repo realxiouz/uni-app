@@ -2,56 +2,79 @@
     <view :class="['template', 'shadow', 'tm_'+ num]" id="template">
         <slot name="cancel"></slot>
         <view class="user-img">
-            <image :src="user.avatar"></image>
+            <image :src="currentUserInfo.avatar"></image>
         </view>
         <view class="cardcontent">
             <view class="cardcontent-top">
                 <text class="bigtitle">
-                    {{user.name || ''}}
+                    {{currentUserInfo.name || ''}}
                 </text>
                 <text class="smallfont">
-                    {{user.position || ''}}
+                    {{currentUserInfo.position || ''}}
                 </text>
             </view>
             <view class="cardcontent-bottom">
                 <view class="smallfont">
                     <view>
                         <text class="iconfont icongongsi"></text>
-                        <text class="text"> {{user.companyname || ''}}</text>
+                        <text class="text"> {{currentUserInfo.companyname || ''}}</text>
                     </view>
                 </view>
                 <view class="smallfont">
                     <view>
                         <text class="iconfont iconshouji"></text>
-                        <text class="text">{{user.phone || ''}}</text>
+                        <text class="text">{{currentUserInfo.phone || ''}}</text>
                     </view>
                 </view>
             </view>
         </view>
-        <image :src="'/static/images/img/template_' + num + '.png'"></image>
+        <image :src="imgSrcGetters('template_' + num + '.png')"></image>
     </view>
 </template>
 
 <script>
+	import {mapState, mapGetters} from 'vuex';
+	import {getElSize} from '../../utils/global-data.js'
     export default {
         props: {
-            user: {
-                type: Object,
-                default: function () {
-                    return {}
-                }
-            },
             num: {
                 type: [String, Number],
                 default: 0
             }
-        }
+        },
+		data() {
+			return {
+				userImg: {},
+				style: {}
+			}
+		},
+		watch: {},
+		computed: {
+			...mapState('ucenter', ['currentUserInfo']),
+			...mapGetters('ucenter', ['imgSrcGetters']),
+			isList() {
+				return this.$route.path === '/pages/ucenter/cardtemplate_list/index/cardtemplate_list';
+			}
+		},
+		created() {
+			// #ifdef H5
+			if (this.$route.path === '/pages/ucenter/cardtemplate_list/index/cardtemplate_list') {
+				console.log(22222222);
+				this.userImg = {
+					'left': 190 + 'rpx !important'
+				};
+				this.style = {
+					'padding-right': '35rpx !important'
+				}
+			}
+			// #endif
+			console.log(this.$router);
+		}
     };
 </script>
 
 <style lang="scss">
     @import "../../static/publicscss/scss/_link.scss";
-
     .template {
         @include flex-x(1);
         position: relative;
@@ -133,14 +156,14 @@
         &.tm_2 {
             .user-img {
                 @include center(centerY, -50%);
-                left: 220upx;
+                left: 220rpx;
             }
 
             .cardcontent {
                 @include center(centerY, -50%);
                 color: $white;
                 right: 0;
-                padding-right: 110upx;
+                padding-right: 60rpx;
             }
         }
 

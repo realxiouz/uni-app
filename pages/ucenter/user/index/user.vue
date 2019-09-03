@@ -67,18 +67,17 @@
                     mobile: '',
                     email: '',
                     weixin: '',
-                    signature: '',
-                    centerLet: {}
+                    signature: ''
                 }
             }
         },
         onLoad() {
-            this.centerLet = JSON.stringify(this.currentuserinfo);
-            this.editUserInfo = JSON.parse(this.centerLet);
+            let centerLet = JSON.stringify(this.currentUserInfo);
+            this.editUserInfo = JSON.parse(centerLet);
 
         },
         methods: {
-            ...mapMutations(['changeCurrentUserInfo']),
+            ...mapMutations('ucenter', ['changeCurrentUserInfo']),
             submitForm() {
                 const self = this;
                 const editUserInfo = this.editUserInfo;
@@ -122,30 +121,20 @@
 				uni.showLoading({
 					title: '提交中'
 				})
-                uni.request({
-                    url: BASE_URL + '/api/geren/addcard',
-                    method: 'GET',
-                    data: this.editUserInfo,
-                    header: header(self.token),
-                    success(res) {
-                        // 保存成功
-                        self.changeCurrentUserInfo(res.data.data);
-                        uni.navigateBack({
-                            delta: 1
-                        })
-                    },
-					complete(){
-						uni.hideLoading();
-					}
-                })
+				this.$http('geren/addcard', this.editUserInfo).then(res => {
+					// 保存成功
+					self.changeCurrentUserInfo(res.data);
+					uni.navigateBack({
+					    delta: 1
+					})
+					uni.hideLoading();
+				}).catch(err => {
+					uni.hideLoading();
+				})
             }
         },
         computed: {
-            ...mapState([
-                'currentuserinfo',
-                'token',
-                'userInfo'
-            ])
+			...mapState('ucenter', ['token', 'currentUserInfo'])
         }
     }
 </script>

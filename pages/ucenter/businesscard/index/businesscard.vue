@@ -1,7 +1,8 @@
 <template>
 	<view class="padding-25" v-cloak>
 		<!-- cardtemplate 组件start -->
-		<card-template :user="currentuserinfo" :is-show-list="false"></card-template>
+		<!-- :user="currentUserInfo"  -->
+		<card-template :is-show-list="false"></card-template>
 		<!-- cardtemplate 组件end -->
 
 		<!-- 名片详情start -->
@@ -15,17 +16,18 @@
 			</view>
 			<view class="isshow-content" v-if="isShowCardContent">
 				<view class="card-details">
-					<text>公司名称：{{currentuserinfo.companyname || ''}}</text>
-					<text>电话：{{currentuserinfo.phone || ''}}</text>
-					<text>微信手机号：{{currentuserinfo.mobile || ''}}</text>
-					<text>微信号：{{currentuserinfo.weixin || ''}}</text>
-					<text>邮箱：{{currentuserinfo.email || ''}}</text>
+					<text>公司名称：{{currentUserInfo.companyname || ''}}</text>
+					<text>电话：{{currentUserInfo.phone || ''}}</text>
+					<text>微信手机号：{{currentUserInfo.mobile || ''}}</text>
+					<text>微信号：{{currentUserInfo.weixin || ''}}</text>
+					<text>邮箱：{{currentUserInfo.email || ''}}</text>
 				</view>
 			</view>
 		</view>
 		<!-- 名片详情 end -->
 
 		<!-- 分享名片 satart -->
+		<!-- #ifdef MP-WEIXIN -->
 		<view class="cardshare">
 			<button @tap="generateCard" class="cu-btn block bg-cyan" data-target="bottomModal">分享名片</button>
 			<view :class="['cu-modal', 'bottom-modal', modalName === 'bottomModal'? 'show': '']">
@@ -41,14 +43,14 @@
 								<button @tap="appShareFriend"></button>
 								<!-- #endif -->
 								<view>
-									<image src="/static/images/img/weixin.png"></image>
+									<image :src="imgSrcGetters('weixin.png')"></image>
 								</view>
 								<text>分享给好友</text>
 							</view>
 							<view class="sharetoobj-list">
 								<button @tap="showcard" data-target="bottomModal-0"></button>
 								<view>
-									<image src="/static/images/img/pyq.png"></image>
+									<image :src="imgSrcGetters('pyq.png')"></image>
 								</view>
 								<view>分享到朋友圈</view>
 							</view>
@@ -82,6 +84,7 @@
 			</view>
 			<button @tap="addPhoneNumber" class="cu-btn round bg-blue">存入手机通讯录</button>
 		</view>
+		<!-- #endif -->
 		<!-- 分享名片 end -->
 
 		<!-- 浏览次数 start -->
@@ -109,21 +112,22 @@
 				我的签名
 			</view>
 			<view class="Module-content">
-				{{currentuserinfo.signature || ''}}
+				{{currentUserInfo.signature || ''}}
 			</view>
 			<view class="Module-title pubpdtop">
 				推荐房源
 			</view>
+			<!-- /#/shop/project/detail?id=' + items.id -->
 			<view class="informationlist" v-for="(items, index) of house" :key="index">
-				<view @tap="goUrl" :data-uri="'/#/shop/project/detail?id=' + items.id">
+				<view @tap="toDetail(items.id)">
 					<view class="topimg">
 						<image class="imgauto radius-top" :src="items.img"></image>
 					</view>
 					<view class="housesource pd-left-right pubpdtop">
-						<views class="housesource-left">
+						<view class="housesource-left">
 							<text class="block spece-1">{{items.name}}</text>
 							<text class="block gray">{{items.address}}</text>
-						</views>
+						</view>
 						<view class="housesource-right">
 							<view class="houseprice" v-for="(item, i) of items.prices" :key="i">{{item.price}}元/㎡</view>
 						</view>
@@ -135,7 +139,7 @@
 
 		<!-- 底部 start-->
 		<view class="objfoot">
-			<button class="cu-btn round bg-cyan">
+			<button class="cu-btn round bg-cyan" @tap="messageInformation">
 				<i class="left iconfont iconxiaoxi"></i>
 				留言咨询
 			</button>
@@ -157,13 +161,13 @@
 	import makeBtn from '../../../../components/makebtn/index/makebtn.vue';
 	import {BASE_URL} from '../../../../utils/const.js';
 	import share from '../../../../utils/share.js';
-	import {mapMutations, mapState} from 'vuex';
+	import {mapMutations, mapState, mapGetters} from 'vuex';
 	import {header, getElSize} from "../../../../utils/global-data";
 
 	export default {
 		data() {
 			return {
-				userInfo: {},// 绘制图片时调用
+				// userInfo: {},// 绘制图片时调用
 				readNumber: 0, //阅读次数
 				BrowseUser: [], // 浏览的人
 				signature: '', // 名片签名
@@ -174,7 +178,6 @@
 				canvasWidth: '', //canvas宽
 				canvasHeight: '', //canvas高
 				currentBgNum: 0, //当前名片索引
-				userInfo: {}, //名片上显示的内容
 				shareImg: '', // 分享img
 				modalName: '',// 用户授权时使用, 打开分享界面时也使用
 				ifShowRZbt: false,// 用户授权使用
@@ -187,9 +190,10 @@
 				onMyEvent: {
 					url: '../../page_makecard/index/page_makecard',
 					title: '制作名片',
-					imgSrc: '/static/images/img/card.png'
+					imgSrc: ''
 				},
-				showMakeBth: false // 这里true显示makebtn, false反之
+				showMakeBth: false, // 这里true显示makebtn, false反之
+				cardTop: ''// 名片信息
 			}
 		},
 		components: {
@@ -201,38 +205,25 @@
 			self.showMakeBth = options.previewB === '1';
 			// canvas
 			let screenwd = uni.getSystemInfoSync().windowWidth;
-			let canvaswd = this.canvasWidth = screenwd - 20 * 1.9;
-			this.currentbgnum = this.currentuserinfo.template_id || 1;
-			// 为画布设置宽高
-			this.canvasWidth = canvaswd;
+			this.canvasWd = this.canvasWidth = screenwd - 20 * 1.9;
+			this.currentbgnum = this.currentUserInfo.template_id || 1;
+			
 			// this.canvasHeight = canvasht;
             uni.showLoading({
                 title: '加载中',
                 mask: true
-            })
-			uni.request({
-				url: BASE_URL + '/api/geren/userinfo',
-				header: header(self.token),
-				method: "GET",
-				success(res) {
-					const data = res.data;
-					self.readNumber = data.readnumber;
-					self.BrowseUser = data.Browseuser;
-					// self.currentuserinfo = data.data;
-					self.house = data.house.data;
-					self.changeCurrentUserInfo(data.data);// 用户相关信息, 在vuex中
-                    uni.hideLoading();
-				},
-				fail() {
-					// 在网络错误的情况下使用, 但信息显示的不全, 不过只要后台的登录时返回的和userinfo接口的数据一致, 就可以正常显示
-					if (!self.currentuserinfo.id) {
-						self.changeCurrentUserInfo(uni.getStorageSync('userInfo'));
-					}
-				},
-				complete() {
-					self.testUserInfo = self.currentuserinfo;
-				}
-			});
+            });
+			this.$http('geren/userinfo').then(res => {
+				self.readNumber = res.readnumber;
+				self.BrowseUser = res.Browseuser;
+				self.house = res.house.data;
+				self.changeCurrentUserInfo(res.data);// 用户相关信息, 在vuex中
+				self.testUserInfo = self.currentUserInfo;
+				uni.hideLoading();
+			}).catch(err => {
+				uni.hideLoading();
+			})
+			this.onMyEvent.imgSrc = this.imgSrcGetters('card.png');
 		},
 		onHide() {
 			uni.hideLoading();
@@ -256,10 +247,12 @@
 			}
 		},
 		methods: {
-			...mapMutations(['login', 'changeCurrentUserInfo']),
-			goUrl(event) {
+			...mapMutations(['login']),
+			...mapMutations('ucenter', ['changeCurrentUserInfo']),
+			toDetail(id) {
+				// recommend为1表示是从名片推荐楼盘这里跳转过去的, 因为在详情页里有些不显示户型图片, 地图, 详情
 				uni.navigateTo({
-				  url: '/pages/out/index/out?url=' + BASE_URL + event.currentTarget.dataset.uri
+				  url: `/pages/project/detail/index?id=${id}&recommend=1`
 				})
 		    },
 			bindViewTap: function() {
@@ -284,19 +277,22 @@
 
 			/* 名片分享到朋友圈*/
 			generateCard(e) {
-				share.loading(this.currentuserinfo).then(data => {
+				share.loading(this.currentUserInfo).then(data => {
+					// 为画布设置宽高
+					this.canvasWidth = this.canvasWd;
+					
 					this.qrCode = data.tempFilePath;
 					this.modalName = e.currentTarget.dataset.target;
 					// 绘制canvas图片
 					const ctx = uni.createCanvasContext('sharecard');
 					const cardSm = uni.createCanvasContext('sharesm');
 					let bgSm = [
-						"/static/images/img/sm_0.png",
-						"/static/images/img/sm_1.png",
-						"/static/images/img/sm_2.png",
-						"/static/images/img/sm_3.png"
+						this.imgSrcGetters('sm_0.png'),
+						this.imgSrcGetters('sm_1.png'),
+						this.imgSrcGetters('sm_2.png'),
+						this.imgSrcGetters('sm_3.png'),
 					];
-					this.currentbgnum = this.currentuserinfo.template_id;
+					this.currentbgnum = this.currentUserInfo.template_id;
 					share.canvas.call(this, e, ctx, cardSm, bgSm, share.roundRect);
 				}).catch(err => {
 					console.log(err);
@@ -318,17 +314,14 @@
 			/*拨打电话*/
 			tel() {
 				uni.makePhoneCall({
-					phoneNumber: this.currentuserinfo.mobile
+					phoneNumber: this.currentUserInfo.mobile
 				})
 			},
 			/* 新建联系人 */
 			addPhoneNumber() {
-				/*uni.navigateTo({
-					url: '/pages/newcontact/index/newcontact'
-				})*/
 				uni.addPhoneContact({
-					firstName: this.currentuserinfo.name,
-					mobilePhoneNumber: this.currentuserinfo.mobile
+					firstName: this.currentUserInfo.name,
+					mobilePhoneNumber: this.currentUserInfo.mobile
 				})
 			},
 			showcard(e) {
@@ -351,10 +344,9 @@
 					})
 				}
 			},
-			// ifdef APP-PLUS
+			// #ifdef APP-PLUS
 			appShareFriend() {
 				const self = this;
-				console.log(222222222222222222222222222)
 				uni.share({
 					provider: "weixin",
 					scene: "WXSceneSession",
@@ -370,8 +362,15 @@
 						console.log(erros)
 					}
 				});
+			},
+			// #endif
+			messageInformation() {
+				// 留言咨询
+				uni.navigateTo({
+					url: `/pages/message/chat/index?id=${this.currentUserInfo.uid}&type=App\\User`
+				});
 			}
-			// endif
+			
 		},
 		onShareAppMessage() {
 			return {
@@ -381,7 +380,12 @@
 			}
 		},
 		computed: {
-			...mapState(['token', 'currentuserinfo'])
+			...mapState('ucenter', ['currentUserInfo']),
+			...mapState(['userInfo']),
+			...mapGetters('ucenter', ['imgSrcGetters'])
+		},
+		mounted() {
+			
 		}
 	}
 </script>

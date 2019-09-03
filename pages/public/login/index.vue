@@ -46,12 +46,12 @@
 						signature: res.signature
 					}
 					// console.log(userInfo);
-					uni.setStorageSync('userInfo', userInfo);
+					// uni.setStorageSync('userInfo', userInfo);
 					// 表示已经登录成功
 					// this.hasLogin = true;
 					this.changeToken(r.access_token);
 					uni.setStorageSync('apiToken', r.access_token);
-					this.login(userInfo);
+					this.login(res);
 					uni.switchTab({
 						url: '/pages/ucenter/index/index'
 					})
