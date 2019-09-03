@@ -17,9 +17,11 @@
 			</form>
 		</view>
 		
+		<!-- #ifndef H5 -->
 		<view class="text-xsl text-green text-center q-fixed" style="bottom: 160upx;top: auto">
 			<text class="cuIcon cuIcon-weixin" @click="wxLogin"></text>
 		</view>
+		<!-- #endif -->
 	</view>
 </template>
 
@@ -118,7 +120,10 @@
 											})
 										}
 									},
-									
+								})
+							} else {
+								uni.switchTab({
+									url: '/pages/work/index/index'
 								})
 							}
 						})

@@ -19,25 +19,37 @@
 			</view>
 			<view class="cu-form-group">
 				<view class="title">期望价格</view>
-				<rang-picker :list="[0, 30, 50, 100, 150, 200, 500]" unit="万" :v="v"/>
+				<rang-picker :list="[0, 30, 50, 100, 150, 200, 500]" unit="万"/>
 			</view>
 			<view class="cu-form-group">
 				<view class="title">期望单价</view>
-				<rang-picker :list="[0, 5000, 8000, 10000, 15000, 20000, 30000]" unit="元" :v="v"/>
+				<rang-picker :list="[0, 5000, 8000, 10000, 15000, 20000, 30000]" unit="元"/>
 			</view>
 			<view class="cu-form-group">
 				<view class="title">期望面积</view>
-				<rang-picker :list="[0, 50, 80, 100, 150, 200, 300, 500]" unit="㎡" :v="v"/>
+				<rang-picker :list="[0, 50, 80, 100, 150, 200, 300, 500]" unit="㎡"/>
+			</view>
+			
+			<view class="cu-form-group">
+				<view class="title">意向程度</view>
+				<multi-picker class="show-arrow" :range="[{name: '1', value: 1}, {name: '2', value: 2}]" rang-key="name"/>
 			</view>
 		</form>
+		
+		<save @save="handleSave" />
 	</view>
 </template>
 
 <script>
 	import RangPicker from '@/components/rang-picker'
+	import MultiPicker from '@/components/multi-picker'
+	import Save from '@/components/buttom-button'
 	
 	export default {
 		onLoad(opt) {
+			this.$http('attribute').then(r => {
+				this.allSels = r.data['CustomerDemand sales']
+			})
 			setTimeout(_ => {
 				this.v = [30, 50]
 			}, 3000);
@@ -77,7 +89,9 @@
 			types: ['商铺', '住宅', '公寓', '写字楼'],
 			typeInx: 0,
 			
-			v: []
+			v: [],
+			
+			allSels: {}
 		}),
 		methods: {
 			typeChange(e) {
@@ -85,10 +99,13 @@
 			},
 			multiChange(e) {
 				this.multiInx =e.detail.value
+			},
+			handleSave() {
+				
 			}
 		},
 		components: {
-			RangPicker
+			RangPicker, Save, MultiPicker
 		}
 	}
 </script>

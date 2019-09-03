@@ -7,7 +7,7 @@
 			</view>
 			<view class="cu-form-group">
 				<view class="title">电话</view>
-				<input placeholder="输入电话号码" v-model="formBean.phone"></input>
+				<input placeholder="输入电话号码" v-model="formBean.phone" :maxlength="11"></input>
 			</view>
 			<view class="cu-form-group">
 				<view class="title">性别</view>
@@ -100,7 +100,7 @@
 				<view class="title">客户星级</view>
 				<rate v-model="formBean.star" />
 			</view>
-			<navigator :url="`/pages/customer/need-list/index?id=${customerId}&type=${customerType}`">客户需求</navigator>
+			<!-- <navigator :url="`/pages/customer/need-list/index?id=${customerId}&type=${customerType}`">客户需求</navigator> -->
 			<save @save="handleSave" />
 		</form>
 	</view>
@@ -153,9 +153,8 @@
 				let field = this.customerType == 0 ? 'Customer sales' : 'Customer'
 				this.rules = r.data.find(i => i.name == '客户' && i.field == field).values
 			})
-			this.$http('project?page=1&route_type=my&per_page=100').then(r => {
-				this.projects = r.data.map(i => i.project)
-
+			this.$http('project/list').then(r => {
+				this.projects = r
 				if (this.customerId) {
 					this.projectInx = this.projects.findIndex(i => i.id == this.originData.project_id)
 				}
@@ -331,6 +330,26 @@
 		},
 		computed: {
 			...mapState('customer', ['selEmployee'])
+		},
+		watch: {
+			'formBean.phone': {
+				handler(val) {
+					if (val.length == 11) {
+						this.$http('customer/owner', {
+							type: this.customerType == 0 ? '分销':'新房',
+							phone: val
+						}).then(r => {
+							if(r.id) {
+								uni.showToast({
+									title: '客户已存在,重新输入',
+									icon: 'none'
+								})
+								this.formBean.phone = ''
+							}
+						})
+					}
+				}
+			}
 		}
 	}
 </script>

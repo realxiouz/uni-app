@@ -105,7 +105,7 @@
 			handleList2(l) {
 				this.list2 = l
 			},
-			handleList3() {
+			handleList3(l) {
 				this.list3 = l
 			},
 			tabChange(e) {
@@ -141,6 +141,11 @@
 							url: `/pages/baobei/bean/index`
 						})
 						break;
+					case 3:
+						uni.navigateTo({
+							url: '/pages/customer/need/index'
+						})
+						break
 					default:
 						break;
 				}

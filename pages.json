@@ -255,22 +255,16 @@
 		"backgroundColor": "#FFFFFF",
 		"borderStyle": "black",
 		"list": [{
-				"pagePath": "pages/customer/index/index",
-				"iconPath": "static/images/tablist/customer.png",
-				"selectedIconPath": "static/images/tablist/customer-active.png",
-				"text": "客户"
+				"pagePath": "pages/work/index/index",
+				"iconPath": "static/images/tablist/work.png",
+				"selectedIconPath": "static/images/tablist/work-active.png",
+				"text": "工作"
 			},
 			{
 				"pagePath": "pages/message/index/index",
 				"iconPath": "static/images/tablist/message.png",
 				"selectedIconPath": "static/images/tablist/message-active.png",
 				"text": "消息"
-			},
-			{
-				"pagePath": "pages/work/index/index",
-				"iconPath": "static/images/tablist/work.png",
-				"selectedIconPath": "static/images/tablist/work-active.png",
-				"text": "工作"
 			},
 			{
 				"pagePath": "pages/contact/index/index",

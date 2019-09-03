@@ -1,5 +1,5 @@
 <template>
-	<navigator class="bg-white margin-bottom-sm" :url="`/pages/customer/detail/index?id=${bean.id}`">
+	<navigator class="bg-white margin-top-sm" :url="`/pages/customer/detail/index?id=${bean.id}`">
 			<view class="content flex align-center padding-tb-xs padding-lr-sm">
 				<view class="margin-right-sm">
 					<ava :name="bean.name"></ava>

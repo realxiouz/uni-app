@@ -35,7 +35,36 @@
 				<text>{{item.name}}</text>
 			</view>
 		</view>
-
+		
+		<template v-if="hasFeature('customer sales')">
+			<view class="cu-bar bg-white solid-bottom margin-top">
+				<view class="action">
+					<text class="cuIcon-title text-orange "></text>客户列表
+				</view>
+			</view>
+			<view class="cu-list grid col-4 no-border">
+				<view class="cu-item" v-for="(i, inx) in customer1" :key="inx" @click="handleNav(i.path)">
+					<view :class="['cuIcon-' + i.cuIcon,'text-' + i.color]">
+					</view>
+					<text>{{i.name}}</text>
+				</view>
+			</view>
+		</template>
+		
+		<!-- <template v-if="">
+			<view class="cu-bar bg-white solid-bottom margin-top">
+				<view class="action">
+					<text class="cuIcon-title text-orange "></text>客户列表
+				</view>
+			</view>
+			<view class="cu-list grid col-4 no-border">
+				<view class="cu-item" v-for="(item,index) in projectList" :key="index">
+					<view :class="['cuIcon-' + item.cuIcon,'text-' + item.color]" @click="handleNav(item.path)">
+					</view>
+					<text>{{item.name}}</text>
+				</view>
+			</view>
+		</template> -->
 	</view>
 </template>
 
@@ -97,7 +126,29 @@
 						name: '云端楼盘',
 						path: '/pages/project/list/index?type=public'
 					}
-				]
+				],
+				
+				customer1: [
+					{
+						cuIcon: 'locationfill',
+						color: 'green',
+						name: '客户列表',
+						path: '/pages/customer/index/index?type=新房'
+					},
+					{
+						cuIcon: 'locationfill',
+						color: 'green',
+						name: '共享客户',
+						path: '/pages/customer/index/index?type=新房&is_share=true'
+					},
+					{
+						cuIcon: 'locationfill',
+						color: 'green',
+						name: '客户公池',
+						path: '/pages/customer/index/index?type=新房&private=false'
+					},
+				],
+				customer2: [],
 			};
 		},
 		onShow() {
@@ -111,10 +162,13 @@
 				if (url) {
 					uni.navigateTo({ url })
 				}
+			},
+			hasFeature(f) {
+				return this.userInfo.company.features.findIndex(i => i == f) > -1
 			}
 		},
 		computed: {
-			...mapState(['hasLogin'])
+			...mapState(['hasLogin', 'userInfo'])
 		},
 	}
 </script>
