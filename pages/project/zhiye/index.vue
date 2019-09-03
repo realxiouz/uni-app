@@ -1,6 +1,6 @@
 <template>
 	<view style="height: 100vh;">
-		<data-list ref="list" @data="handleList" r-url="common/adviser" :r-data="{project_id: pId}">
+		<data-list ref="list" @data="handleList" r-url="common/adviser" :r-data="rData">
 			<view class="bg-white padding-sm solid-bottom" v-for="(i, inx) in list" :key="inx" @click="makePhone(i.mobile)">
 				<view class="flex align-center">
 					<ava :name="i.name" class="margin-right-sm"></ava>
@@ -24,6 +24,7 @@
 	export default {
 		onLoad(opt) {
 			this.pId = opt.pId
+			this.rData = {project_id: this.pId}
 			this.$nextTick(_ => {
 				this.$refs.list.init()
 			})
@@ -31,7 +32,8 @@
 		data () {
 			return {
 				pId: '',
-				list: []
+				list: [],
+				rData: null
 			}
 		},
 		components: {

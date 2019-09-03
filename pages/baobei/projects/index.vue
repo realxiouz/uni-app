@@ -1,12 +1,12 @@
 <template>
 	<view>
-		<view class="cu-bar bg-cyan search">
+		<view class="cu-bar bg-cyan search fixed" :style="{top: isH5?'44px':'0px'}">
 			<view class="search-form radius">
 				<text class="cuIcon-search"></text>
 				<input v-model="keywords" :adjust-position="false" type="text" placeholder="搜索楼盘" confirm-type="search" @confirm="handleSearch"></input>
 			</view>
 		</view>
-		<checkbox-group @change="handleChange">
+		<checkbox-group @change="handleChange" class="for-select" :style="{top: isH5?44+uni.upx2px(100)+'px':uni.upx2px(100)+'px'}">
 			<data-list r-url="baobeiProjects" ref="list" @data="handleList" :r-data="rData">
 				<view class="bg-white padding-sm solid-bottom" v-for="(i, inx) in list" :key="inx">
 					<label class="flex">
@@ -46,11 +46,13 @@
 				rData: {
 					keywords: ''
 				},
-				keywords: ''
+				keywords: '',
+				uni
 			}
 		},
 		computed: {
-			...mapState('baobei', ['selProject'])
+			...mapState('baobei', ['selProject']),
+			...mapState(['isH5']),
 		},
 		methods: {
 			...mapMutations('baobei', ['setSelProject']),
@@ -62,6 +64,16 @@
 			},
 			handleChange(e) {
 				this.sels = e.detail.value
+				for (let i = 0, lenI = this.list.length; i < lenI; ++i) {
+					this.list[i].checked = false
+					for (let j = 0, lenJ = this.sels.length; j < lenJ; ++j) {
+						if (this.list[i].id == this.sels[j].split(' ')[0]) {
+							this.list[i].checked = true
+							break
+						}
+					}
+				}
+				this.list = this.list.map(i => i)
 			},
 			handleSave() {
 				if (!this.sels.length) {
@@ -101,6 +113,12 @@
 	}
 </script>
 
-<style>
+<style lang="scss">
+	.for-select{
+		position: fixed;
+		left: 0;
+		right: 0;
+		bottom: 104rpx;
+	}
 </style>
 

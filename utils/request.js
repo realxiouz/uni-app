@@ -51,6 +51,9 @@ export const http = (url, data, method = 'GET') => {
 					}
 					reject(new Error('表单不完整'))
 					break;
+				case 500:
+					reject(new Error('500'))
+					break;
 				case 200:
 					resolve(data.data)
 					break

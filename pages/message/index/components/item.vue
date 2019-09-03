@@ -2,16 +2,15 @@
 	<navigator class="bg-white padding-sm solids-bottom" :url="`/pages/message/chat/index?id=${bean.both_id}&type=${bean.both_type}`">
 		<view class="flex">
 			<ava :name="bean.both.name" class="margin-right-sm" is-square/>
-			<view class="flex-sub flex">
-				<view class="flex-sub flex flex-direction justify-between">
-					<view class="text-black text-bold">{{bean.both.name}}</view>
-					<view class="text-gray text-sm" v-if="bean.message.data">
-						<text v-if="bean.message.data.type==='text'">{{bean.message.data.content}}</text>
-					</view>
+			<view class="flex-sub flex flex-direction justify-between margin-right-sm" style="max-width: calc(100vw - 240upx);">
+				<view class="text-black text-bold">{{bean.both.name}}</view>
+				<view class="text-gray text-sm" v-if="bean.message.data">
+					<view v-if="bean.message.data.type==='text'" class="text-cut">{{bean.message.data.content}}</view>
 				</view>
-				<view>
-					<view>{{bean.message.created_at|moment('MM-DD HH:mm')}}</view>
-				</view>
+			</view>
+			<view class="flex flex-direction justify-between">
+				<view class="text-grey text-xs">{{bean.message.created_at|moment('chat')}}</view>
+				<view class="text-center"><text class="cu-tag round bg-red sm" v-if="bean.unread_count">{{bean.unread_count}}</text></view>
 			</view>
 		</view>
 	</navigator>
@@ -29,14 +28,6 @@
 		},
 		components: {
 			Ava
-		},
-		methods: {
-			viewImage(urls, current) {
-				uni.previewImage({
-					urls,
-					current
-				})
-			}
 		},
 		computed: {
 			...mapState(['userInfo'])

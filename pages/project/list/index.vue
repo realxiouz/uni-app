@@ -30,7 +30,8 @@
 			return {
 				list: [],
 				rData: {
-					route_type: ''
+					route_type: '',
+					
 				}
 			}
 		},

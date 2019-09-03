@@ -24,7 +24,7 @@
 		data() {
 			return {
 				firstColumnInx: 0,
-				value: [1,2]
+				value: [0,1]
 			}
 		},
 		methods: {
@@ -44,6 +44,11 @@
 					text: `${i}${this.unit}`,
 					value: i
 				}))
+				
+				console.log([
+					temp,
+					temp.slice(this.firstColumnInx)
+				])
 				
 				return [
 					temp,

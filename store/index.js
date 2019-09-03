@@ -13,6 +13,7 @@ const store = new Vuex.Store({
 		attendance, customer, baobei, message, project, ucenter
 	},
 	state: {
+		isH5: false,
 		hasLogin: false,
 		userInfo: {},// 用户的相关信息, 登录
 		statusBarHeight: 0, //状态栏的高度，单位px
@@ -29,6 +30,9 @@ const store = new Vuex.Store({
 		},
 		changeToken(state, token) {
 			state.token = token;
+		},
+		setH5(s) {
+			s.isH5 = true
 		}
 	},
 	actions: {

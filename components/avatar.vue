@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<view class="cu-avatar lg" :class="isSquare?'radius':'round'" v-if="url">
+		<view class="cu-avatar" :class="[isSquare?'radius':'round', isSmall?'small':'lg']" v-if="url">
 			<img style="width: 100%;height:100%" class="round" :src="url" alt="">
 		</view>
 		<view class="cu-avatar lg bg-blue" :class="isSquare?'radius':'round'" v-else-if="name">
@@ -16,6 +16,10 @@
 			name: String,
 			url: String,
 			isSquare: {
+				type: Boolean,
+				default: false
+			},
+			isSmall: {
 				type: Boolean,
 				default: false
 			}

@@ -34,87 +34,27 @@
 				</view>
 			</view>
 		</view>
-		<template v-if="recommend !== 1">
-			<navigator class="padding bg-white solids-top" v-for="(i, inx) in bean.baobei_project" :key="inx" :url="`/pages/project/channel/index?id=${i.id}`">
-				<view class="flex justify-between margin-bottom-sm">
-					<text class="text-lg">{{i.company.name}}</text>
-					<text class="text-red">
-						<text>{{i.fee.fee}}{{i.fee.fee_type_name}}</text>
-						<text v-if="i.sell_prize">&nbsp;+&nbsp;{{i.sell_prize}}元</text>
-					</text>
-				</view>
-				<view class="margin-bottom-sm">
-					<view class="cu-tag radius" :class="i.kan_prize?'line-yellow':'line-gray'">带看奖</view>
-					<view class="cu-tag radius" :class="i.is_zhiding_jiedai_zhence?'line-yellow':'line-gray'">可指定接待</view>
-					<view class="cu-tag radius" :class="i.is_dianzi_zhence?'line-yellow':'line-gray'">垫资结佣</view>
-				</view>
-				<view class="flex justify-between">
-					<text class="text-cyan">{{i.baobei_remark}}</text>
-					<button class="cu-btn radius bg-blue shadow" v-if="listType==='cooperation'" @click.stop="handleBaobei(i, bean)">报备</button>
-					<button class="cu-btn radius bg-green shadow" v-else-if="listType==='public'" @click.stop="handleCooperation(i.id)">合作</button>
-				</view>
-			</navigator>
-
-			<view class="cu-bar tabbar"></view>
-		</template>
-		<template v-else>
-			<view class="recommend">
-				<view class="title">
-					<text>详情</text>
-				</view>
-				<view class="detail">
-					<view>
-						<text>占地面积: </text>
-						<text>{{bean.zhandi}}</text>
-					</view>
-					<view>
-						<text>建筑面积: </text>
-						<text>{{bean.zongmianji}}</text>
-					</view>
-					<view>
-						<text>产权年限: </text>
-						<text>{{bean.chanquan}}</text>
-					</view>
-					<view>
-						<text>规划户数: </text>
-						<text>{{bean.hushu}}</text>
-					</view>
-					<view>
-						<text>物业费: </text>
-						<text>{{bean.wuyefei}}</text>
-					</view>
-					<view>
-						<text>容积率: </text>
-						<text>{{bean.rongji}}</text>
-					</view>
-					<view>
-						<text>绿化率: </text>
-						<text>{{bean.lvhua}}</text>
-					</view>
-					<view>
-						<text>停车位: </text>
-						<text>{{bean.chewei}}</text>
-					</view>
-					<view class="nowrap">
-						<text>建筑类型: </text>
-						<text>{{bean.jianzhu_type}}</text>
-					</view>
-					<view class="nowrap">
-						<text>物业公司: </text>
-						<text>{{bean.wuye_company}}</text>
-					</view>
-				</view>
-				<view class="title">
-					<text>户型</text>
-				</view>
-				<view class="house-types">
-					<view v-for="(item, index) of bean.house_types" :key="index">
-						<image :src="item.img" class="img" mode="aspectFit"></image>
-						<text>{{huose(item)}}</text>
-					</view>
-				</view>
+		<navigator class="padding bg-white solids-top" v-for="(i, inx) in bean.baobei_project" :key="inx" :url="`/pages/project/channel/index?id=${i.id}`">
+			<view class="flex justify-between margin-bottom-sm">
+				<text class="text-lg">{{i.company.name}}</text>
+				<text class="text-red">
+					<text>{{i.fee.fee}}{{i.fee.fee_type_name}}</text>
+					<text v-if="i.sell_prize">&nbsp;+&nbsp;{{i.sell_prize}}元</text>
+				</text>
 			</view>
-		</template>
+			<view class="margin-bottom-sm">
+				<view class="cu-tag radius" :class="i.kan_prize?'line-yellow':'line-gray'">带看奖</view>
+				<view class="cu-tag radius" :class="i.is_zhiding_jiedai_zhence?'line-yellow':'line-gray'">可指定接待</view>
+				<view class="cu-tag radius" :class="i.is_dianzi_zhence?'line-yellow':'line-gray'">垫资结佣</view>
+			</view>
+			<view class="flex justify-between">
+				<text class="text-cyan">{{i.baobei_remark}}</text>
+				<button class="cu-btn radius bg-blue shadow" v-if="listType==='cooperation'" @click.stop="handleBaobei(i, bean)">报备</button>
+				<button class="cu-btn radius bg-green shadow" v-else-if="listType==='public'" @click.stop="handleCooperation(i.company_id)">合作</button>
+			</view>
+		</navigator>
+
+		<view class="cu-bar tabbar"></view>
 		<view class="cu-bar bg-white tabbar border shop foot">
 			<view class="action">
 				<view class="cuIcon cuIcon-list"></view>
@@ -140,18 +80,42 @@
 	} from 'vuex'
 
 	export default {
+		onNavigationBarButtonTap({
+			index
+		}) {
+			switch (index) {
+				case 0:
+					console.log('menu')
+					break;
+				case 1:
+					console.log('share')
+					break
+				default:
+					break;
+			}
+		},
 		onLoad(opt) {
-			this.id = opt.id;
-			// recommend为1表示是从名片(推荐楼盘)这里跳转过去的, 因为在详情页里有些不显示户型图片, 地图, 详情
-			this.recommend = Number(opt.recommend);
-			this.$http(`project/${this.id}`).then(r => {
+			this.id = opt.id
+			let data = null
+			if (this.listType === 'cooperation') {
+				data = {
+					baobei_projects_sub: JSON.stringify({
+						route_type: 'cooperation'
+					})
+				}
+			}
+			this.$http(`project/${this.id}`, data).then(r => {
 				this.bean = r.data
-				this.bean.banners = [
-					'http://st.fangxiaoke.com/1/company/project/fm/201908/156585356573826.jpg',
-					'http://st.fangxiaoke.com/1/company/project/huxing/201908/156585365660132.jpg',
-					'http://st.fangxiaoke.com/1/company/project/fm/201908/156585356573826.jpg',
-				]
-				this.bean.c = ['商铺', '写字楼'];
+				let banners = []
+				for (let i of r.data.albums) {
+					banners = [...banners, ...i.photos.map(i => i.uri)]
+				}
+				this.bean.banners = banners
+				let c = new Set()
+				for (let i of this.bean.house_types) {
+					c.add(i.house_using_type.title)
+				}
+				this.bean.c = [...c]
 			})
 		},
 		data() {

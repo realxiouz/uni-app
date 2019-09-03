@@ -1,5 +1,5 @@
 <template>
-	<view style="height: 100vh;">
+	<view class="q-fixed" :style="{top: isH5?'44px':'0', bottom: isH5?'50px':'0'}">
 		<data-list r-url="message_window" ref="list" @data="handleList" :r-data="rData">
 			<item :bean="i"  v-for="(i, inx) in list" :key="inx"/>
 		</data-list>
@@ -35,13 +35,12 @@
 			}
 		},
 		computed: {
-			...mapState(['userInfo']),
-			...mapState('message', ['chats'])
+			...mapState(['userInfo', 'isH5']),
+			...mapState('message', ['new'])
 		},
 		methods: {
 			...mapMutations('message', ['setChats']),
 			handleList(list) {
-				// this.setChats(list)
 				this.list = list
 			},
 			handleSearch() {
@@ -50,6 +49,12 @@
 				}
 			}
 		},
-		watch: {}
+		watch: {
+			new(val) {
+				if (val.id) {
+					this.$refs.list.getData(true)
+				}
+			}
+		}
 	}
 </script>
