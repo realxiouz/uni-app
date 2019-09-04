@@ -27,10 +27,5 @@
 </script>
 
 <style>
-	.cardtemplate .tm_2 .user-img {
-		left: 190rpx !important;
-	}
-	.cardtemplate .tm_2 .cardcontent {
-		padding-right: 35rpx !important;
-	}
+	
 </style>

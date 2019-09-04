@@ -51,7 +51,7 @@
 					uni.setStorageSync('apiToken', r.access_token);
 					this.login(r.user);
 					uni.switchTab({
-						url: '/pages/ucenter/index/index'
+						url: '/pages/work/index/index'
 					})
 				}).catch(e => {
 					// console.log(e);

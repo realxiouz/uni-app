@@ -1,6 +1,7 @@
 <template>
 	<view class="q-fixed" :style="{top: isH5?'44px':'0', bottom: isH5?'50px':'0'}">
-		<data-list r-url="message_window" ref="list" @data="handleList" :r-data="rData">
+		<!-- :r-data="rData" message_window下有可能不需要了, 用组件传参往下传-->
+		<data-list r-url="message_window" ref="list" @data="handleList">
 			<item :bean="i"  v-for="(i, inx) in list" :key="inx"/>
 		</data-list>
 	</view>

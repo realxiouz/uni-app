@@ -252,7 +252,7 @@
 			toDetail(id) {
 				// recommend为1表示是从名片推荐楼盘这里跳转过去的, 因为在详情页里有些不显示户型图片, 地图, 详情
 				uni.navigateTo({
-				  url: `/pages/project/detail/index?id=${id}&recommend=1`
+				  url: `/pages/project/project-dev/index?id=${id}`
 				})
 		    },
 			bindViewTap: function() {

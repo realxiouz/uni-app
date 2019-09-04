@@ -11,11 +11,18 @@
 						<text class="text-bold text-black text-lg margin-right-xs">{{bean.name}}</text>
 						<text class="text-red">{{bean.city.name}}</text>
 					</view>
-					<view>
+					<!-- <view>
 						<view>
 							<text class="text-gray">报备渠道：</text>
 							<text>{{bean.baobei_project_infos.join('、')}}</text>
 						</view>
+					</view> -->
+					<view class="flex margin-top-xs">
+						<view class="cu-tag line-blue small margin-right-xs radius" v-for="(i, inx) in label(bean)" :key="inx">{{i}}</view>
+					</view>
+					<view class="text-gray margin-top-xs">
+						<text class="cuIcon cuIcon-locationfill margin-right-xs"></text>
+						<text>{{bean.address}}</text>
 					</view>
 				</view>
 				<view class="text-red">
@@ -45,15 +52,28 @@
 		props: {
 			bean: {
 				type: Object
+			},
+			type: {
+				type: String
 			}
 		},
 		data: _ => ({}),
 		methods: {
 			toDetail(id){
 				uni.navigateTo({
-					url: `/pages/project/detail/index?id=${id}`
+					url: `/pages/project/detail/index?id=${id}&type=${this.type}`
 				})
+			},
+			label(item) {
+				let c = new Set()
+				for (let i of item.house_types) {
+					c.add(i.house_using_type.title)
+				}
+				return [...c].slice(0, 3);
 			}
+		},
+		mounted() {
+			
 		}
 	}
 </script>

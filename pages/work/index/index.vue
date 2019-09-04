@@ -1,24 +1,26 @@
 <template>
 	<view>
 		<!-- #ifndef H5  -->
-		<view class="cu-bar bg-white solid-bottom margin-top">
-			<view class="action">
-				<text class="cuIcon-title text-orange "></text> 智能考勤
-			</view>
-			<!-- <view class="action">
-				<button class="cu-btn bg-green shadow" @tap="showModal" data-target="gridModal">设置</button>
-			</view> -->
-		</view>
-		<view class="cu-list grid col-4 no-border">
-			<view class="cu-item" v-for="(item,index) in attendanceList" :key="index">
-				<view :class="['cuIcon-' + item.cuIcon,'text-' + item.color]" @click="handleNav(item.path)">
-					<view class="cu-tag badge" v-if="item.badge">
-						<block v-if="item.badge!=1">{{item.badge>99?'99+':item.badge}}</block>
-					</view>
+		<template v-if="hasFeature('attendance')">
+			<view class="cu-bar bg-white solid-bottom margin-top">
+				<view class="action">
+					<text class="cuIcon-title text-orange "></text> 智能考勤
 				</view>
-				<text>{{item.name}}</text>
+				<!-- <view class="action">
+					<button class="cu-btn bg-green shadow" @tap="showModal" data-target="gridModal">设置</button>
+				</view> -->
 			</view>
-		</view>
+			<view class="cu-list grid col-4 no-border">
+				<view class="cu-item" v-for="(item,index) in attendanceList" :key="index">
+					<view :class="['cuIcon-' + item.cuIcon,'text-' + item.color]" @click="handleNav(item.path)">
+						<view class="cu-tag badge" v-if="item.badge">
+							<block v-if="item.badge!=1">{{item.badge>99?'99+':item.badge}}</block>
+						</view>
+					</view>
+					<text>{{item.name}}</text>
+				</view>
+			</view>
+		</template>
 		<!-- #endif -->
 		<view class="cu-bar bg-white solid-bottom margin-top">
 			<view class="action">
@@ -26,7 +28,7 @@
 			</view>
 		</view>
 		<view class="cu-list grid col-4 no-border">
-			<view class="cu-item" v-for="(item,index) in projectList" :key="index">
+			<view class="cu-item" v-for="(item,index) in projectList" :key="index" v-if="item.name === '云端楼盘' || hasFeature(item.hasFeatures)">
 				<view :class="['cuIcon-' + item.cuIcon,'text-' + item.color]" @click="handleNav(item.path)">
 					<view class="cu-tag badge" v-if="item.badge">
 						<block v-if="item.badge!=1">{{item.badge>99?'99+':item.badge}}</block>
@@ -39,7 +41,7 @@
 		<template v-if="hasFeature('customer sales')">
 			<view class="cu-bar bg-white solid-bottom margin-top">
 				<view class="action">
-					<text class="cuIcon-title text-orange "></text>客户列表
+					<text class="cuIcon-title text-orange "></text>客户管理
 				</view>
 			</view>
 			<view class="cu-list grid col-4 no-border">
@@ -51,6 +53,20 @@
 			</view>
 		</template>
 		
+		<template v-if="hasFeature('baobei up') || hasFeature('customer distribution')">
+			<view class="cu-bar bg-white solid-bottom margin-top">
+				<view class="action">
+					<text class="cuIcon-title text-orange "></text>客户管理
+				</view>
+			</view>
+			<view class="cu-list grid col-4 no-border">
+				<view class="cu-item" v-for="(i, inx) in customer2" :key="inx" @click="handleNav(i.path)">
+					<view :class="['cuIcon-' + i.cuIcon,'text-' + i.color]">
+					</view>
+					<text>{{i.name}}</text>
+				</view>
+			</view>
+		</template>
 		<!-- <template v-if="">
 			<view class="cu-bar bg-white solid-bottom margin-top">
 				<view class="action">
@@ -75,12 +91,12 @@
 		data() {
 			return {
 				cuIconList: [{
-					cuIcon: 'cardboardfill',
+					cuIcon: 'vipcard',
 					color: 'red',
 					badge: 0,
 					name: '打卡'
 				}, {
-					cuIcon: 'recordfill',
+					cuIcon: 'settingsfill',
 					color: 'orange',
 					badge: 0,
 					name: '设置',
@@ -89,7 +105,7 @@
 
 				attendanceList: [
 					{
-						cuIcon: 'locationfill',
+						cuIcon: 'vipcard',
 						color: 'green',
 						badge: 0,
 						name: '打卡',
@@ -106,21 +122,23 @@
 				
 				projectList: [
 					{
-						cuIcon: 'locationfill',
+						cuIcon: 'read',
 						color: 'green',
 						badge: 0,
 						name: '报备楼盘',
-						path: '/pages/project/list/index?type=cooperation'
+						path: '/pages/project/list/index?type=cooperation',
+						hasFeatures: 'baobei up'
 					},
 					{
-						cuIcon: 'locationfill',
+						cuIcon: 'list',
 						color: 'green',
 						badge: 0,
 						name: '报备列表',
-						path: '/pages/baobei/list/index'
+						path: '/pages/baobei/list/index',
+						hasFeatures: 'baobei up'
 					},
 					{
-						cuIcon: 'locationfill',
+						cuIcon: 'circlefill',
 						color: 'green',
 						badge: 0,
 						name: '云端楼盘',
@@ -130,25 +148,44 @@
 				
 				customer1: [
 					{
-						cuIcon: 'locationfill',
+						cuIcon: 'peoplelist',
 						color: 'green',
 						name: '客户列表',
 						path: '/pages/customer/index/index?type=新房'
 					},
 					{
-						cuIcon: 'locationfill',
+						cuIcon: 'share',
 						color: 'green',
 						name: '共享客户',
 						path: '/pages/customer/index/index?type=新房&is_share=true'
 					},
 					{
-						cuIcon: 'locationfill',
+						cuIcon: 'profile',
 						color: 'green',
 						name: '客户公池',
 						path: '/pages/customer/index/index?type=新房&private=false'
-					},
+					}
 				],
-				customer2: [],
+				customer2: [
+					{
+						cuIcon: 'peoplelist',
+						color: 'green',
+						name: '客户列表',
+						path: '/pages/customer/index/index?type=分销'
+					},
+					{
+						cuIcon: 'share',
+						color: 'green',
+						name: '共享客户',
+						path: '/pages/customer/index/index?type=分销&is_share=true'
+					},
+					{
+						cuIcon: 'profile',
+						color: 'green',
+						name: '客户公池',
+						path: '/pages/customer/index/index?type=分销&private=false'
+					}
+				]
 			};
 		},
 		onShow() {

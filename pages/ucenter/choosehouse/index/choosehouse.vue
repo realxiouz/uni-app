@@ -2,7 +2,7 @@
     <view>
         <form @submit="submitHouse">
             <view class='chooseseach'>
-                <form action="">
+                <form>
                     <view class="search">
                         <text class="cuIcon-search"></text>
                         <input placeholder="请输入楼盘编号" v-model="keywords" @focus="showSearchBtn = true" @blur="showSearchBtn = !!keywords"></input>
@@ -15,7 +15,8 @@
                     <image :src="item" mode="aspectFit"></image>
                 </view>
             </view>
-            <view class="choosehouse" :style="{'padding-top': isShowTem? '95rpx': ''}">
+			<view v-else class="showchoose" style="font-size: 18px;">请选择楼盘...</view>
+            <view class="choosehouse" style="padding-top: 95rpx">
                 <view class="chooselist">
                     <view @tap="pushToTem" v-for="(item, index) of houseList"
                           :data-item="index" :key="index" :data-imgsrc="item.img" :data-id="item.id">
@@ -84,11 +85,7 @@
 			this.getDate();
 			
         },
-		watch: {
-			keywords(data) {
-				console.log(data);
-			}
-		},
+		watch: {},
         computed: {
             ...mapState('ucenter', [
                 'houseArr',
@@ -247,4 +244,20 @@
 
 <style lang="scss">
     @import "choosehouse";
+	.chooseseach {
+		// #ifndef H5
+		top: 0,
+		// #endif
+		// #ifdef H5
+		top: 88rpx;
+		// #endif
+	}
+	.showchoose {
+		// #ifndef H5
+		top: 90rpx;
+		// #endif
+		// #ifdef H5
+		top: 179rpx;
+		// #endif
+	}
 </style>

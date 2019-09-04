@@ -31,7 +31,9 @@
                 style: {
                     height: 0
                 },
-                selectedHouse: []
+                selectedHouse: [],
+				recommendht: '',
+				list: ''
             }
         },
 		onShow() {
@@ -71,7 +73,7 @@
                     title: '删除中...',
                     mask: true
                 })
-				this.$http('geren/deRecommend', {houseid: id}).then(res => {
+				this.$http('geren/deRecommend', {houseid: id}, 'post').then(res => {
 					self.selectedHouse.splice(deleteIndex, 1);
 					uni.hideLoading();
 					uni.showToast({
@@ -83,24 +85,6 @@
 				}).catch(err => {
 					uni.hideLoading();
 				})
-                /*temp.forEach((ele, index) => {
-                    if (deletindex == index) {
-                    	// 删除项目, 但是不知道这里的交互怎么弄
-                        uni.request({
-                            url: BASE_URL + '/api/geren/deRecommend',
-                            header: header(self.token),
-                            method: "POST",
-                            data: {
-                                houseid: ele.id
-                            },
-                            success(res) {
-                                console.log(res)
-                            }
-                        });
-                        temp.splice(index, 1);
-                    }
-                });
-                this.selectedHouse = temp;*/
             }
         },
         computed: {},

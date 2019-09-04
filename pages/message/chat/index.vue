@@ -61,10 +61,10 @@
 			},
 			getData(message_id_start) {
 				this.isLoading = true
+				// user_id: this.userInfo.id,
 				let data = {
 					both_id: this.bothId,
-					both_type: this.bothType,
-					user_id: this.userInfo.id,
+					both_type: this.bothType
 				}
 				if (message_id_start) {
 					data.message_id_start = message_id_start

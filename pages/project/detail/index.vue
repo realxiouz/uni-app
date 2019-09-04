@@ -49,14 +49,15 @@
 			</view>
 			<view class="flex justify-between">
 				<text class="text-cyan">{{i.baobei_remark}}</text>
-				<button class="cu-btn radius bg-blue shadow" v-if="listType==='cooperation'" @click.stop="handleBaobei(i, bean)">报备</button>
-				<button class="cu-btn radius bg-green shadow" v-else-if="listType==='public'" @click.stop="handleCooperation(i.company_id)">合作</button>
+				<button class="cu-btn radius bg-blue shadow" v-if="cooperation === 'cooperation'" @click.stop="handleBaobei(i, bean)">报备</button>
+				<button class="cu-btn radius bg-blue shadow" v-else-if="i.cooperationed" :disabled="true">已签约</button>
+				<button class="cu-btn radius bg-green shadow" v-else-if="cooperation === 'public' && i.company.id !== userInfo.company.id" @click.stop="handleCooperation(i.company_id)">合作</button>
 			</view>
 		</navigator>
 
 		<view class="cu-bar tabbar"></view>
 		<view class="cu-bar bg-white tabbar border shop foot">
-			<view class="action">
+			<view class="action" @tap="toDetail">
 				<view class="cuIcon cuIcon-list"></view>
 				详情
 			</view>
@@ -78,7 +79,7 @@
 		mapMutations,
 		mapState
 	} from 'vuex'
-
+	// v-if="!(listType === 'public' && i.company.id === userInfo.company.id)"
 	export default {
 		onNavigationBarButtonTap({
 			index
@@ -96,21 +97,29 @@
 		},
 		onLoad(opt) {
 			this.id = opt.id
-			let data = null
-			if (this.listType === 'cooperation') {
+			this.cooperation = opt.type;
+			let data = null;
+			// listType已被我换成cooperation
+			if (/(cooperation|public)/.test(opt.type)) {
 				data = {
 					baobei_projects_sub: JSON.stringify({
-						route_type: 'cooperation'
+						route_type: opt.type
 					})
 				}
 			}
 			this.$http(`project/${this.id}`, data).then(r => {
 				this.bean = r.data
 				let banners = []
-				for (let i of r.data.albums) {
-					banners = [...banners, ...i.photos.map(i => i.uri)]
+				let hx = [];
+				for (let item of r.data.house_types) {
+					hx.push(item.img);
 				}
-				this.bean.banners = banners
+				let albums = []
+				for (let i of r.data.albums) {
+					albums = [...albums,  ...i.photos.map(i => i.uri)];
+				}
+				banners = [...banners, r.data.img, ...albums, ...hx];
+				this.bean.banners = banners;
 				let c = new Set()
 				for (let i of this.bean.house_types) {
 					c.add(i.house_using_type.title)
@@ -122,7 +131,8 @@
 			return {
 				id: '',
 				bean: {},
-				recommend: 0
+				recommend: 0,
+				cooperation: ''
 			}
 		},
 		methods: {
@@ -152,70 +162,20 @@
 				this.$http('cooperation_log', data, 'post').then(r => {
 
 				})
+			},
+			toDetail() {
+				uni.navigateTo({
+					url: '/pages/project/project-dev/index?id='+this.id
+				})
 			}
 		},
 		computed: {
-			...mapState(['userInfo']),
-			...mapState('project', ['listType']),
-			huose() {
-				return item => {
-					return item.shi + '室' + item.ting + '厅' + item.wei + '卫' + item.tai + '台' + item.size + 'm²';
-				}
-			}
+			...mapState(['userInfo'])
 		},
 		mounted() {}
 	}
 </script>
 
-<style lang="scss">
-	.recommend {
-		background: #fff;
-		padding: 0 30rpx 100rpx 30rpx;
-
-		.title {
-			font-size: 40rpx;
-			font-weight: bold;
-		}
-
-		.detail {
-			display: flex;
-			flex-wrap: wrap;
-
-			view {
-				width: 50%;
-				margin: 5rpx 0;
-				font-size: 28rpx;
-			}
-
-			.nowrap {
-				width: 100%;
-
-			}
-		}
-
-		.house-types {
-			display: flex;
-			justify-content: space-around;
-			flex-wrap: wrap;
-			margin-top: 10rpx;
-			view {
-				width: 200rpx;
-				margin: 15rpx 0 10rpx 0;
-			}
-
-			.img {
-				width: 100%;
-				height: 100rpx;
-			}
-
-			text {
-				display: block;
-				background: #ccc;
-				padding: 0 5rpx;
-				border-radius: 10px;
-				font-size: 19rpx;
-				text-align: center;
-			}
-		}
-	}
+<style>
+	
 </style>

@@ -15,7 +15,12 @@ const store = new Vuex.Store({
 	state: {
 		isH5: false,
 		hasLogin: false,
-		userInfo: {},// 用户的相关信息, 登录
+		userInfo: {
+			department: {},
+			company: {
+				features: []
+			}	
+		},// 用户的相关信息, 登录
 		statusBarHeight: 0, //状态栏的高度，单位px
 	},
 	mutations: {
@@ -26,7 +31,12 @@ const store = new Vuex.Store({
 		logout(state) {
 			state.hasLogin = false;
 			uni.removeStorage({key: 'apiToken'});
-			state.userInfo = {};
+			state.userInfo = {
+				department: {},
+				company: {
+					features: []
+				}	
+			};
 		},
 		changeToken(state, token) {
 			state.token = token;

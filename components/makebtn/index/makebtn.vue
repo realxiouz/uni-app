@@ -33,7 +33,6 @@
 					for (let i=0; i<=pages.length-1; i++) {
 						if (pages[i]['route'] === 'pages/ucenter/businesscard/index/businesscard') {
 							len = i;
-							console.log(pages[i]['route'], i);
 							break;
 						}
 						
