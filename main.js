@@ -7,6 +7,7 @@ import './utils/index.css'
 Vue.config.productionTip = false
 Vue.prototype.$store = store
 
+
 import { http } from '@/utils/request.js'
 Vue.prototype.$http = http;
 import 'static/foots/iconfont.css';

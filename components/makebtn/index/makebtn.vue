@@ -28,13 +28,15 @@
 						url: url
 					})
 				} else {
-					let pages = getCurrentPages();
+					let pages = getCurrentPages().reverse();
 					let len = 0;
-					for (let i=pages.length-1; i>=0; i++) {
+					for (let i=0; i<=pages.length-1; i++) {
 						if (pages[i]['route'] === 'pages/ucenter/businesscard/index/businesscard') {
-							len = i+1;
+							len = i;
+							console.log(pages[i]['route'], i);
 							break;
 						}
+						
 					}
 					len = Math.max(1, len);
 					// 判断是否要回到首页

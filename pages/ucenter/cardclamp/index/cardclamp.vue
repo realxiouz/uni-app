@@ -45,7 +45,7 @@
 
 <script>
     import makeBtn from "../../../../components/makebtn/index/makebtn";
-    import {mapState} from 'vuex';
+    import {mapState, mapGetters} from 'vuex';
     import {BASE_URL} from '../../../../utils/const';
     import {header} from '../../../../utils/global-data';
     import {childCom} from '../../../../components/cardtemplate/child-com';
@@ -70,7 +70,7 @@
                 ]*/
                 onMyEvent: {
                     title: '返回首页',
-                    imgSrc: '/static/images/img/card.png',
+                    imgSrc: '',
                     url: '../../businesscard/index/businesscard',
                     isRedirect: true
                 }
@@ -81,7 +81,9 @@
             childCom
         },
         computed: {
-            ...mapState(['userInfo', 'token', 'currentuserinfo'])
+            ...mapState('ucenter', ['currentuserinfo']),
+			...mapGetters('ucenter', ['imgSrcGetters']),
+			...mapState(['userInfo'])
         },
         methods: {
             formSubmit() {
@@ -117,16 +119,9 @@
         },
         onLoad() {
             const self = this;
-            uni.request({
-                data: {},
-                url: BASE_URL + '/api/geren/cardlist',
-                method: "GET",
-                dataType: 'json',
-                header: header(self.token),
-                success(res) {
-                    self.users = res.data.data;
-                }
-            });
+			this.$http('geren/cardlist').then(res => {
+				self.users = res.data;
+			})
             this.userData = this.userInfo;
             this.cardBox.forEach((item, index) => {
                 Object.defineProperty(item, 'isShow', {
@@ -135,7 +130,8 @@
                     enumerable: true,
                     value: false
                 })
-            })
+            });
+			this.$set(this.onMyEvent, 'imgSrc', this.imgSrcGetters('card.png'));
         }
     }
 </script>

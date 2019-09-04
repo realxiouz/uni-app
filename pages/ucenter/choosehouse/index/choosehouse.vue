@@ -5,28 +5,29 @@
                 <form action="">
                     <view class="search">
                         <text class="cuIcon-search"></text>
-                        <input placeholder="请输入楼盘编号" value=""></input>
+                        <input placeholder="请输入楼盘编号" v-model="keywords" @focus="showSearchBtn = true" @blur="showSearchBtn = !!keywords"></input>
+						<button type="primary" size="mini" v-if="showSearchBtn" @tap="searchKeywords">搜索</button>
                     </view>
                 </form>
             </view>
             <view v-if="isShowTem" class="showchoose">
-                <view v-for="(item, i) of temarr" :key="i">
+                <view v-for="(item, i) of temArr" :key="i">
                     <image :src="item" mode="aspectFit"></image>
                 </view>
             </view>
             <view class="choosehouse" :style="{'padding-top': isShowTem? '95rpx': ''}">
                 <view class="chooselist">
-                    <view @tap="pushToTem" v-for="(item, index) of houselist" :class="[item.istrue? 'on': '']"
-                          :data-item="index" :key="index" :data-imgsrc="item.project.img" :data-id="item.id">
+                    <view @tap="pushToTem" v-for="(item, index) of houseList"
+                          :data-item="index" :key="index" :data-imgsrc="item.img" :data-id="item.id">
                         <view class="selectbox">
-                            <text class="noselect iconfont iconxuanze"></text>
-                            <text class="selected iconfont iconxianshi_xuanzetianchong" style="color: #15a2e0"></text>
+                            <text class="noselect iconfont iconxuanze" v-if="!item.isTrue"></text>
+                            <text class="selected iconfont iconxianshi_xuanzetianchong" v-else style="color: #15a2e0"></text>
                         </view>
                         <view class="selecimg">
-                            <image :src="item.project.img" mode="aspectFit"></image>
+                            <image :src="item.img" mode="aspectFit"></image>
                         </view>
                         <view class="selectxt">
-                            <text>{{item.project.name}}</text>
+                            <text>{{item.name}}</text>
                         </view>
                     </view>
                 </view>
@@ -41,7 +42,6 @@
 </template>
 
 <script>
-    import {BASE_URL} from "../../../../utils/const";
     import {header} from "../../../../utils/global-data";
     import {mapState, mapMutations} from 'vuex';
     //操作数组
@@ -57,9 +57,16 @@
             return {
                 recommendHt: '',
                 ofIsShowTem: [],
-                houselist: [],
+                houseList: [],
                 isShowTem: false,
-                temarr: []
+                temArr: [],
+				page: 1,
+				per_page: 10,
+				total: '',
+				last_page: '',
+				showSearchBtn: false,
+				keywords: '',
+				isSearch: false
             }
         },
         onLoad() {
@@ -74,79 +81,67 @@
 
                 }
             })
-            uni.request({
-                url: BASE_URL + '/api/guestProjects',
-                header: header(self.token),
-                method: "GET",
-                success(res) {
-                    const data = res.data.data;
-                    self.changeHouseArr(data);
-                    self.houselist = data;
-                    self.houselist.forEach((ele, index) => {
-                        ele.istrue = false;
-                        Object.defineProperty(ele, 'istrue', {
-                            configurable: false,
-                            writable: true,
-                            enumerable: true,
-                            value: false
-                        });
-                    });
-                }
-            })
+			this.getDate();
+			
         },
+		watch: {
+			keywords(data) {
+				console.log(data);
+			}
+		},
         computed: {
-            ...mapState([
-				'token',
-                'housearr',
-                'houseid'
+            ...mapState('ucenter', [
+                'houseArr',
+                'houseId'
             ])
         },
+		onReachBottom() {
+			if (this.page < this.last_page) {
+				++this.page;
+				this.getDate();
+			} else {
+				uni.showToast({
+					title: '数据已加载完毕',
+					duration: 2000
+				})
+			}
+		},
         methods: {
-            ...mapMutations([
+            ...mapMutations('ucenter', [
                 'changeHouseArr',
                 'changeHouseId'
             ]),
             submitHouse() {
-                // this.onReady(),
+                // this.onReady(),	
                 const self = this;
-                uni.request({
-                    url: BASE_URL + '/api/geren/recommendHouse',
-                    header: header(self.token),
-                    data: {
-                        houseid: self.houseid
-                    },
-                    success(res) {
-                        if (res.data.code === 100) {
-                            //返回上一页面
-                            uni.navigateBack({
-                                delta: 1
-                            });
-                        } else {
-                            uni.showToast({
-                                title: '提交失败, 请检查网络重试',
-                                mask: true,
-                                duration: 2000
-                            })
-                        }
-                    }
-                });
-                // wx.redirectTo({
-                //     url:'../recommend/recommend'
-                // });
-
-                //刷新当前页面的数据
-                /*if (getCurrentPages().length != 0) {
-                    getCurrentPages()[getCurrentPages().length - 1].onLoad()
-                }*/
-
+				let params = '';
+				let len = self.houseId.length-1;
+				for (let i=0; i<=len; i++) {
+					let until = i === len? '': ',';
+					params += self.houseId[i] + until;
+				}
+				this.$http('geren/recommendHouse', {houseid: params}).then(res => {
+					if (res.code === 100) {
+					    //返回上一页面
+					    uni.navigateBack({
+					        delta: 1
+					    });
+					} else {
+					    uni.showToast({
+					        title: '提交失败, 请检查网络重试',
+					        mask: true,
+					        duration: 2000
+					    })
+					}
+				})
             },
 			pushToTem(e, i) {
 				// const self = this;
 				const target = e.currentTarget.dataset;
 				const index = target.item;
-                const isTrue = this.houselist[index]['istrue'];
+                const isTrue = this.houseList[index]['isTrue'];
                 const imgSrc = target.imgsrc;
-                if (this.temarr.length >= 10 && !isTrue) {
+                if (this.temArr.length >= 10 && !isTrue) {
                     uni.showToast({
                         title: '最多只能选择10个楼盘！',
                         icon: 'none',
@@ -154,25 +149,23 @@
                     });
                     return false;
                 }
-                this.houselist[index]['istrue'] = !isTrue;
+                this.houseList[index]['isTrue'] = !isTrue;
                 if (!isTrue) {
                     const id = target.id;
-                    this.temarr.unshift(imgSrc);
+                    this.temArr.unshift(imgSrc);
                     this.changeHouseId({
                         id: id,
                         isAdd: true
                     });
-                    console.log(id);
                     this.isShowTem = true;
                 } else {
-                    let i = this.temarr.findIndex(val => val === imgSrc);
-                    this.temarr.splice(i, 1);
-                    console.log(i);
+                    let i = this.temArr.findIndex(val => val === imgSrc);
+                    this.temArr.splice(i, 1);
                     this.changeHouseId({
                         index: i,
                         isAdd: false
                     });
-                    this.isShowTem = Boolean(this.temarr.length >= 1);
+                    this.isShowTem = Boolean(this.temArr.length >= 1);
                 }
                 /*this.houselist.forEach((ele, index) => {
                     if (e.currentTarget.dataset.item == index) {
@@ -217,6 +210,36 @@
 					}
 				}
 				return r;
+			},
+			getDate() {
+				const self = this;
+				let url =  `guestProjects?page=${this.page}&per_page=${this.per_page}`;
+				url = this.isSearch? url+ `&keywords=${this.keywords}`: url;
+				this.$http(url).then(res => {
+					const data = res.data;
+					self.total = res.total;
+					self.last_page = res.last_page;
+					self.changeHouseArr(data);
+					if (this.isSearch && this.page === 1) {
+						self.houseList = [...data];
+					} else {
+						self.houseList = [...self.houseList, ...data];
+					}
+					self.houseList.forEach((ele, index) => {
+					    ele.isTrue = false;
+					    Object.defineProperty(ele, 'isTrue', {
+					        configurable: false,
+					        writable: true,
+					        enumerable: true,
+					        value: false
+					    });
+					});
+				})
+			},
+			searchKeywords() {
+				this.isSearch = true;
+				this.page = 1;
+				this.getDate();
 			}
         }
     }

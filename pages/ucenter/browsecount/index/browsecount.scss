@@ -88,41 +88,6 @@
     color: #9c9c9c;
     padding-bottom: $space_1;
 }
-
-.brows-list, .transmit {
-    > view {
-        padding:0 $space_1*1.2 $space_1 $space_1*1.2;
-        @include box-x;
-        margin-bottom: $space_1;
-        &:not(:last-child) {
-            border-bottom: solid $border $bordercl;
-        }
-
-        .brows-middle {
-            @include flex-x(1);
-
-            .brows-content {
-                padding-left: $space_1;
-                @include relativecenter(centerY, -50%);
-
-                .username {
-                    padding-bottom: rpx(10);
-                }
-
-                .browstime {
-                    color: var(--gray);
-                }
-            }
-        }
-
-        .brows-both {
-            .brows-cunt {
-                color: #4f4f4f;
-                @include relativecenter(centerY, -50%);
-            }
-        }
-    }
-}
 .cordecunt{
     color: var(--blue);
 }

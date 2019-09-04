@@ -60,22 +60,23 @@ export default {
     canvas(e, ctx, cardSm, bgSm, roundRect) {
         const self = this;
         // 小图标地址
+		// /static/images/publicimg/companyicon_white.png
         let icon = {
-            companyIconWhite: '/static/images/publicimg/companyicon_white.png',
-            companyIconBlack: '/static/images/publicimg/companyicon_black.png',
-            phoneWhite: '/static/images/publicimg/phone_white.png',
-            phoneBlack: '/static/images/publicimg/phone_black.png',
-            ewm: '/static/images/publicimg/ewm.jpg',
-            ewmUrl: "http://www.t.com/storage/qrCode/156144383447.png"
+            companyIconWhite: this.imgSrcGetters('companyicon_white.png'),
+            companyIconBlack: this.imgSrcGetters('companyicon_black.png'),
+            phoneWhite: this.imgSrcGetters('phone_white.png'),
+            phoneBlack: this.imgSrcGetters('phone_black.png'),
+            ewm: '',
+            ewmUrl: ""
         }
         // 背景路径
         let bgPath = [
-            "/static/images/img/template_0.png",
-            "/static/images/img/template_1.png",
-            "/static/images/img/template_2.png",
-            "/static/images/img/template_3.png"
+            this.imgSrcGetters('template_0.png'),
+            this.imgSrcGetters('template_1.png'),
+            this.imgSrcGetters('template_2.png'),
+            this.imgSrcGetters('template_3.png')
         ];
-        let userInfo = this.currentuserinfo;
+        let userInfo = this.currentUserInfo;
         let cardInfo = {
             "userImg": this.testUserInfo.avatar,// 头像
             "name": this.testUserInfo.name,// 名称
@@ -115,17 +116,17 @@ export default {
             case 0:
             {
                 ctx.drawImage(bgPath[0], 0, 0, this.canvasWidth, this.canvasHeight);
-                ctx.drawImage(cardInfo.ewm, this.canvasWidth * .85, this.canvasHeight * .66, 50, 50);
+                // ctx.drawImage(cardInfo.ewm, this.canvasWidth * .85, this.canvasHeight * .66, 50, 50);
                 ctx.drawImage(cardInfo.userImg, this.canvasWidth - 80, 30, 50, 50);
                 ctx.setFontSize(17);
                 ctx.fillText(cardInfo.name, 30, this.canvasHeight / 2.3);
                 ctx.setFontSize(13);
                 ctx.fillText(cardInfo.position, 30, this.canvasHeight / 1.8);
                 ctx.setFontSize(13);
-                ctx.fillText(cardInfo.companyname, 50, this.canvasHeight / 1.3);
+                ctx.fillText(cardInfo.companyname, 50, this.canvasHeight / 1.32);
                 ctx.drawImage(icon.companyIconWhite, 30, this.canvasHeight / 1.45, 14, 14);
                 ctx.drawImage(icon.phoneWhite, 30, this.canvasHeight / 1.22, 15, 15);
-                ctx.fillText(cardInfo.phone, 50, this.canvasHeight / 1.12);
+                ctx.fillText(cardInfo.phone, 50, this.canvasHeight / 1.1);
 
                 // 绘制头像
                 ctx.save(); // 先保存状态 已便于画完圆再用
@@ -142,7 +143,7 @@ export default {
             case 1:
             {
                 ctx.drawImage(bgPath[1], 0, 0, this.canvasWidth, this.canvasHeight);
-                ctx.drawImage(cardInfo.ewm, 2, this.canvasWidth / 1.3, this.canvasHeight - 60, 50);
+                // ctx.drawImage(cardInfo.ewm, 2, this.canvasWidth / 1.3, this.canvasHeight - 60, 50);
                 ctx.drawImage(cardInfo.userImg, this.canvasWidth / 1.3, 10, 50, 50);
                 ctx.setFontSize(17);
                 ctx.fillText(cardInfo.name, this.canvasWidth / 1.6, this.canvasHeight / 1.9);
@@ -158,7 +159,7 @@ export default {
             case 2:
             {
                 ctx.drawImage(bgPath[2], 0, 0, this.canvasWidth, this.canvasHeight);
-                ctx.drawImage(cardInfo.ewm, this.canvasWidth * .005, this.canvasHeight * .66, 50, 50);
+                // ctx.drawImage(cardInfo.ewm, this.canvasWidth * .005, this.canvasHeight * .66, 50, 50);
                 ctx.drawImage(cardInfo.userImg, this.canvasWidth * .33, this.canvasHeight / 2 - 20, 50, 50);
                 console.log(cardInfo.userImg);
                 ctx.setFontSize(17);
@@ -166,17 +167,17 @@ export default {
                 ctx.setFontSize(13);
                 ctx.fillText(cardInfo.position, this.canvasWidth * .58, this.canvasHeight / 2.1);
                 ctx.setFontSize(13);
-                ctx.fillText(cardInfo.companyname, this.canvasWidth * .63, this.canvasHeight / 1.39);
+                ctx.fillText(cardInfo.companyname, this.canvasWidth * .63, this.canvasHeight / 1.37);
                 ctx.drawImage(icon.companyIconWhite, this.canvasWidth * .58, this.canvasHeight / 1.5, 14, 14);
                 ctx.drawImage(icon.phoneWhite, this.canvasWidth * .58, this.canvasHeight / 1.24, 15, 15);
-                ctx.fillText(cardInfo.phone, this.canvasWidth * .63, this.canvasHeight / 1.16);
+                ctx.fillText(cardInfo.phone, this.canvasWidth * .63, this.canvasHeight / 1.148);
                 // ctx.draw()
             }
                 break;
             case 3:
             {
                 ctx.drawImage(bgPath[3], 0, 0, this.canvasWidth, this.canvasHeight);
-                ctx.drawImage(cardInfo.ewm, this.canvasWidth * .85, this.canvasHeight * .10, 50, 50);
+                // ctx.drawImage(cardInfo.ewm, this.canvasWidth * .85, this.canvasHeight * .10, 50, 50);
                 ctx.drawImage(cardInfo.userImg, this.canvasWidth * .45, this.canvasHeight / 2 - 30, 50, 50);
                 ctx.setFontSize(17);
                 ctx.fillStyle = 'black';
@@ -189,7 +190,7 @@ export default {
                 ctx.fillText(cardInfo.companyname, 45, this.canvasHeight / 1.32);
                 ctx.drawImage(icon.companyIconBlack, 27, this.canvasHeight / 1.47, 14, 14);
                 ctx.drawImage(icon.phoneBlack, 27, this.canvasHeight / 1.24, 15, 15);
-                ctx.fillText(cardInfo.phone, 45, this.canvasHeight / 1.138);
+                ctx.fillText(cardInfo.phone, 45, this.canvasHeight / 1.135);
                 ctx.fillStyle = 'black'
                 // ctx.draw()
             }

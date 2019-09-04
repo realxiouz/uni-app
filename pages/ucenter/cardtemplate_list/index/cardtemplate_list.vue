@@ -28,9 +28,9 @@
 
 <style>
 	.cardtemplate .tm_2 .user-img {
-		left: 190upx !important;
+		left: 190rpx !important;
 	}
 	.cardtemplate .tm_2 .cardcontent {
-		padding-right: 80upx !important;
+		padding-right: 35rpx !important;
 	}
 </style>

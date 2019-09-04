@@ -121,7 +121,8 @@
 		data() {
 			return {
 				id: '',
-				bean: {}
+				bean: {},
+				recommend: 0
 			}
 		},
 		methods: {
@@ -156,9 +157,65 @@
 		computed: {
 			...mapState(['userInfo']),
 			...mapState('project', ['listType']),
-		}
+			huose() {
+				return item => {
+					return item.shi + '室' + item.ting + '厅' + item.wei + '卫' + item.tai + '台' + item.size + 'm²';
+				}
+			}
+		},
+		mounted() {}
 	}
 </script>
 
-<style>
+<style lang="scss">
+	.recommend {
+		background: #fff;
+		padding: 0 30rpx 100rpx 30rpx;
+
+		.title {
+			font-size: 40rpx;
+			font-weight: bold;
+		}
+
+		.detail {
+			display: flex;
+			flex-wrap: wrap;
+
+			view {
+				width: 50%;
+				margin: 5rpx 0;
+				font-size: 28rpx;
+			}
+
+			.nowrap {
+				width: 100%;
+
+			}
+		}
+
+		.house-types {
+			display: flex;
+			justify-content: space-around;
+			flex-wrap: wrap;
+			margin-top: 10rpx;
+			view {
+				width: 200rpx;
+				margin: 15rpx 0 10rpx 0;
+			}
+
+			.img {
+				width: 100%;
+				height: 100rpx;
+			}
+
+			text {
+				display: block;
+				background: #ccc;
+				padding: 0 5rpx;
+				border-radius: 10px;
+				font-size: 19rpx;
+				text-align: center;
+			}
+		}
+	}
 </style>

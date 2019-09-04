@@ -8,29 +8,34 @@ $liht:95;
     width: 100%;
     height: rpx(90);
     padding: rpx(15) $space_1;
-    background: rgba($gray, .2);
+    background: #ccc;
     z-index: 100;
 }
 
 //搜索框
 .search {
-    position: relative;
+    display: flex;
+	flex-wrap: nowrap;
+	align-items: center;
+	height: rpx(60);
+	background: $white;
+	@include boderradius($radius);
     color: var(--darkGray);
     > text {
-        @include center(centerY, -55%);
-        left: rpx(15);
+       margin-left: 0.5rem;
         font-size: $bigfont;
         color: rgba($gray, .5);
     }
 
     > input {
-        width: 100%;
-        padding: 0 $space_1 *2.5;
-        @include boderradius($radius);
-        background: $white;
-        height: rpx(60);
+		flex: 1;
+        padding: 0 0.1rem;
+        heidth: 100%;
         line-height: rpx(60);
     }
+	> button{
+		padding: 0 0.5rem;
+	}
 }
 
 .showchoose {
@@ -93,7 +98,6 @@ $liht:95;
                 }
 
                 &.selected {
-                    display: none;
                     color: var(--blue);
                 }
             }
@@ -126,9 +130,9 @@ $liht:95;
             }
         }
 
-        &.on {
+        /* &.on {
             .selectbox {
-                > text {
+                text {
                     &.noselect {
                         display: none;
                     }
@@ -142,6 +146,6 @@ $liht:95;
                     }
                 }
             }
-        }
+        } */
     }
 }

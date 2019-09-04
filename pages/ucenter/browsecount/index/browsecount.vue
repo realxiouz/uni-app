@@ -58,8 +58,8 @@
             </view>
             <view class="pubpdtop">
                 <!-- 这里不是互斥判断, 因为在一开始请求没有浏览器的加载速度快, 所以要先判断是否加载完成, 才可以加载该html-->
-                <child-com v-if="isLoaded && num === 1" :recording="countbs" :userArr="Browse" classType="brows-list"></child-com>
-                <child-com v-if="isLoaded && num === 2" :recording="countzf" :userArr="zfuser"></child-com>
+                <child-com v-if="isLoaded && num === 1" :recording="countbs" :userArr="Browse" classType="brows-list" :num="num"></child-com>
+                <child-com v-if="isLoaded && num === 2" :recording="countzf" :userArr="zfuser" :num="num"></child-com>
             </view>
         </view>
     </view>
@@ -68,7 +68,6 @@
 <script>
     import {BASE_URL} from "../../../../utils/const";
     import {header} from "../../../../utils/global-data";
-    import {mapState} from 'vuex';
     import childCom from '../child-com/child-com.vue';
 
     export default {
@@ -89,18 +88,13 @@
         },
         onLoad() {
             const self = this;
-            uni.request({
-                url: BASE_URL+ '/api/browse/fwbrowse',
-                header: header(self.token),
-                method: 'GET',
-                success(res) {
-                    self.recordlist = res.data;
-                    self.countbs = res.data.countbs; // 浏览合计
-                    self.Browse = res.data.Browseuser;// 浏览的人
-                    self.countzf = res.data.countzf;// 转发记录
-                    self.zfuser = res.data.zfuser;// 转发的人
-                }
-            });
+			this.$http('browse/fwbrowse').then(res => {
+				self.recordlist = res;
+				self.countbs = res.countbs; // 浏览合计
+				self.Browse = res.Browseuser;// 浏览的人
+				self.countzf = res.countzf;// 转发记录
+				self.zfuser = res.zfuser;// 转发的人
+			})
         },
         methods: {
             recordClick() {
@@ -108,7 +102,6 @@
             }
         },
         computed: {
-            ...mapState(['token']),
             isLoaded() {
                 return this.Browse.length >= 1 || this.zfuser.length >= 1;
             }
@@ -117,5 +110,5 @@
 </script>
 
 <style lang="scss">
-	@import "browsecount";
+	@import "./browsecount.scss";
 </style>
