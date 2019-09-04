@@ -1,8 +1,7 @@
 <template>
 	<picker mode="multiSelector" :value="value" :range="range" range-key="text" @columnchange="handleColumnChange" @change="handleChange">
 		<view class="picker">
-			<!-- {{`${value[0]}-${value[1]}${unit}`}} -->
-			{{range[0][value[0]].text}}-{{range[1][value[1]].text}}
+			{{ value.length == 2 ?  `${range[0][value[0]].text}-${range[1][value[1]].text}` : '还未选择'}}
 		</view>
 	</picker>
 </template>
@@ -24,7 +23,7 @@
 		data() {
 			return {
 				firstColumnInx: 0,
-				value: [0,1]
+				value: []
 			}
 		},
 		methods: {
@@ -36,6 +35,7 @@
 			},
 			handleChange(e) {
 				this.value = e.detail.value
+				this.$emit('change', [this.range[0][this.value[0]].value, this.range[1][this.value[1]].value])
 			}
 		},
 		computed: {
@@ -44,14 +44,8 @@
 					text: `${i}${this.unit}`,
 					value: i
 				}))
-				
-				console.log([
-					temp,
-					temp.slice(this.firstColumnInx)
-				])
-				
 				return [
-					temp,
+					temp.slice(0, temp.length-1),
 					temp.slice(this.firstColumnInx)
 				]
 			}
@@ -63,7 +57,6 @@
 					this.range[1].findIndex(i => i.value == val[1])
 				]
 				this.firstColumnInx = this.range[0].findIndex(i => i.value == val[0])
-				console.log(this.value)
 			}
 		}
 	}
