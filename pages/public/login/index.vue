@@ -29,7 +29,7 @@
 	import { mapMutations} from 'vuex';
 	export default {
 		onLoad() {
-			this.wechatlogin()
+			// this.wechatlogin()
 		},
 		data: _ => ({
 			formBean: {

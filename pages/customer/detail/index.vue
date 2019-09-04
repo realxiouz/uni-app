@@ -142,8 +142,15 @@
 						})
 						break;
 					case 3:
-						uni.navigateTo({
-							url: '/pages/customer/need/index'
+						
+						let itemList = ['住宅']
+						uni.showActionSheet({
+							itemList,
+							success: r => {
+								uni.navigateTo({
+									url: `/pages/customer/need/index?type=CustomerDemand sales&subType=${itemList[r.tapIndex]}&cId=${this.id}`
+								})
+							}
 						})
 						break
 					default:
