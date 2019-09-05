@@ -20,8 +20,28 @@
 			"path": "pages/customer/need-list/index",
 			"style": {}
 		}, {
-			"path": "pages/customer/need/index",
-			"style": {}
+			"path": "pages/customer/need/zhuzhai1",
+			"style": {
+				"navigationBarTitleText": "新房-住宅"
+			}
+		},
+		{
+			"path": "pages/customer/need/gongyu1",
+			"style": {
+				"navigationBarTitleText": "新房-公寓"
+			}
+		},
+		{
+			"path": "pages/customer/need/shangpu1",
+			"style": {
+				"navigationBarTitleText": "新房-商铺"
+			}
+		},
+		{
+			"path": "pages/customer/need/xiezilou1",
+			"style": {
+				"navigationBarTitleText": "新房-写字楼"
+			}
 		},
 		{
 			"path": "pages/ucenter/businesscard/index/businesscard",

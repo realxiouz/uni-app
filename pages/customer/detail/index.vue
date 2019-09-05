@@ -24,11 +24,11 @@
 			</swiper-item>
 			<swiper-item>
 				<data-list ref="list3" @data="handleList3" r-url="customerDemand" :r-data="rData">
-					<baobei v-for="(i, inx) in list3" :key="inx" :bean="i" />
+					<need v-for="(i, inx) in list3" :key="inx" :bean="i" />
 				</data-list>
 			</swiper-item>
 			<swiper-item>
-				<bean :c-id="id" ref="list4"/>
+				<bean :c-id="id" ref="list4" />
 			</swiper-item>
 		</swiper>
 		<float-button @go="handleGo" />
@@ -40,6 +40,7 @@
 	import Genjin from './components/genjin'
 	import Daofang from './components/daofang'
 	import Baobei from './components/baobei'
+	import Need from './components/need'
 	import Bean from './components/bean'
 	import FloatButton from '@/components/float-button'
 	import {
@@ -53,7 +54,9 @@
 				this.top = 44 + uni.upx2px(90)
 			}
 			this.id = opt.id
-			this.rData = {customer_id: this.id}
+			this.rData = {
+				customer_id: this.id
+			}
 			// this.customerDetail()
 
 			this.$nextTick(_ => {
@@ -147,14 +150,34 @@
 						})
 						break;
 					case 3:
-						
-						let itemList = ['住宅']
+
+						let itemList = ['住宅', '公寓', '商铺', '写字楼']
 						uni.showActionSheet({
 							itemList,
 							success: r => {
-								uni.navigateTo({
-									url: `/pages/customer/need/index?type=CustomerDemand sales&subType=${itemList[r.tapIndex]}&cId=${this.id}`
-								})
+								switch (itemList[r.tapIndex]) {
+									case '住宅':
+										uni.navigateTo({
+											url: `/pages/customer/need/zhuzhai1?cId=${this.id}`
+										})
+										break
+									case '公寓':
+										uni.navigateTo({
+											url: `/pages/customer/need/gongyu1?cId=${this.id}`
+										})
+										break
+									case '商铺':
+										uni.navigateTo({
+											url: `/pages/customer/need/shangpu1?cId=${this.id}`
+										})
+										break
+									case '写字楼':
+										uni.navigateTo({
+											url: `/pages/customer/need/xiezilou1?cId=${this.id}`
+										})
+										break
+								}
+
 							}
 						})
 						break
@@ -169,7 +192,8 @@
 			FloatButton,
 			Daofang,
 			Baobei,
-			Bean
+			Bean,
+			Need
 		},
 		computed: {
 			...mapState(['userInfo', 'isH5']),
