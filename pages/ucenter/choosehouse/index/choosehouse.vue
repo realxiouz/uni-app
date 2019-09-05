@@ -43,7 +43,6 @@
 </template>
 
 <script>
-    import {header} from "../../../../utils/global-data";
     import {mapState, mapMutations} from 'vuex';
     //操作数组
     Array.prototype.remove = function (val) {

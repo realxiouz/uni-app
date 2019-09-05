@@ -34,7 +34,6 @@
 
 <script>
 	import {mapState, mapGetters} from 'vuex';
-	import {getElSize} from '../../utils/global-data.js'
     export default {
         props: {
             num: {
@@ -69,7 +68,7 @@
 </script>
 
 <style lang="scss">
-    @import "../../static/publicscss/scss/_link.scss";
+    @import "../../common/publicscss/scss/_link.scss";
     .template {
         @include flex-x(1);
         position: relative;

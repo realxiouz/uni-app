@@ -47,7 +47,6 @@
     import makeBtn from "../../../../components/makebtn/index/makebtn";
     import {mapState, mapGetters} from 'vuex';
     import {BASE_URL} from '../../../../utils/const';
-    import {header} from '../../../../utils/global-data';
     import {childCom} from '../../../../components/cardtemplate/child-com';
     export default {
         data() {

@@ -21,7 +21,6 @@
 </template>
 
 <script>
-    import {header} from "../../../../utils/global-data";
     import {mapState} from 'vuex';
     import {BASE_URL} from "../../../../utils/const";
 

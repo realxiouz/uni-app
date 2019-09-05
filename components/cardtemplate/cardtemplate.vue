@@ -24,7 +24,6 @@
 <script>
 	import {BASE_URL} from '../../utils/const.js';
 	import childCom from './child-com.vue';
-	import {header} from '../../utils/global-data';
 	import {mapState, mapMutations} from 'vuex';
 	export default {
 		props: {
