@@ -27,7 +27,7 @@
 		</view>
 
 		<radio-group class="cu-list menu" @change="handleEChange">
-			<view class="cu-item" v-for="(i, inx) in employees" :key="inx">
+			<label class="cu-item" v-for="(i, inx) in employees" :key="i.id">
 				<view class="content padding-tb-sm">
 					<view class="flex">
 						<radio class='blue margin-right' :class="i.checked?'checked':''" :checked="i.checked" :value="i.id+''"></radio>
@@ -36,7 +36,7 @@
 						<view class='cu-tag radius bg-blue'>{{i.role_name}}</view>
 					</view>
 				</view>
-			</view>
+			</label>
 		</radio-group>
 
 		<save @save="handleSave" />
@@ -84,9 +84,9 @@
 					let items = r.employees
 					for (let i = 0, lenI = items.length; i < lenI; ++i) {
 						items[i].checked = false;
-						if (items[i].id == this.selEmployee.id) {
-							items[i].checked = true
-						}
+						// if (items[i].id == this.selEmployee.id) {
+						// 	items[i].checked = true
+						// }
 					}
 					this.employees = items
 				})
@@ -95,6 +95,7 @@
 				this.selE = e.detail.value
 			},
 			toSubPerson(i) {
+				this.selE = ''
 				this.breadcrumb.push({
 					name: i.name,
 					dId: i.id
@@ -103,6 +104,7 @@
 			},
 			handleNav(i) {
 				if (i.id != this.dId) {
+					this.selE = ''
 					let inx = this.breadcrumb.findIndex(item => item.dId == i.dId)
 					this.breadcrumb = this.breadcrumb.slice(0, inx + 1)
 					this.getDepartById(i.dId)

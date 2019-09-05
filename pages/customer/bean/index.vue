@@ -8,6 +8,7 @@
 			<view class="cu-form-group">
 				<view class="title">电话</view>
 				<input placeholder="输入电话号码" v-model="formBean.phone" :maxlength="11"></input>
+				<button class="cu-btn bg-green shadow" :disabled="formBean.phone.length<11" @click="checkPhone">检测</button>
 			</view>
 			<view class="cu-form-group">
 				<view class="title">性别</view>
@@ -320,6 +321,17 @@
 					}
 				}
 				return true
+			},
+			checkPhone() {
+				this.$http('customer/owner', {
+					type: this.customerType == 0 ? '分销':'新房',
+					phone: this.formBean.phone
+				}).then(r => {
+					uni.showToast({
+						icon: 'none',
+						title: r.name ? `手机号与(${r.name})重复` : '手机号码可用'
+					})
+				})
 			}
 		},
 		components: {
@@ -330,26 +342,6 @@
 		},
 		computed: {
 			...mapState('customer', ['selEmployee'])
-		},
-		watch: {
-			'formBean.phone': {
-				handler(val) {
-					if (val.length == 11) {
-						this.$http('customer/owner', {
-							type: this.customerType == 0 ? '分销':'新房',
-							phone: val
-						}).then(r => {
-							if(r.id) {
-								uni.showToast({
-									title: '客户已存在,重新输入',
-									icon: 'none'
-								})
-								this.formBean.phone = ''
-							}
-						})
-					}
-				}
-			}
 		}
 	}
 </script>

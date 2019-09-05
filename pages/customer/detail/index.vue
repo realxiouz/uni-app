@@ -57,8 +57,6 @@
 			this.rData = {
 				customer_id: this.id
 			}
-			// this.customerDetail()
-
 			this.$nextTick(_ => {
 				this.$refs.list0.init()
 			})
@@ -94,11 +92,6 @@
 		},
 		methods: {
 			...mapMutations('baobei', ['setDaikan', 'setSelProject', 'setSelCustomer']),
-			customerDetail() {
-				this.$http(`customer/${this.id}`).then(r => {
-					this.bean = r.data[0]
-				})
-			},
 			handleList(inx, l) {
 				console.log(inx)
 				console.log(l)
@@ -151,7 +144,7 @@
 						break;
 					case 3:
 
-						let itemList = ['住宅', '公寓', '商铺', '写字楼']
+						let itemList = ['住宅', '公寓', '商铺', '写字楼', '新房', '租房', '二手房']
 						uni.showActionSheet({
 							itemList,
 							success: r => {
@@ -176,6 +169,14 @@
 											url: `/pages/customer/need/xiezilou1?cId=${this.id}`
 										})
 										break
+									case '新房':
+									case '租房':
+									case '二手房':
+										uni.navigateTo({
+											url: `/pages/customer/need/select?type=${itemList[r.tapIndex]}`
+										})
+										break
+									
 								}
 
 							}
