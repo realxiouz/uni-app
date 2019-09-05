@@ -101,10 +101,7 @@ import { mapState, mapMutations } from 'vuex'
 			
 		},
 		onShow() {
-			if (!this.hasLogin) {
-				uni.navigateTo({url: '/pages/public/login/index'})
-				return false;
-			}
+			
 		},
 		methods: {
 			...mapMutations(['logout']),
@@ -122,6 +119,9 @@ import { mapState, mapMutations } from 'vuex'
 					success(res) {
 						if (res.confirm) {
 							self.logout();
+							uni.navigateTo({
+								url: '/pages/public/login/index'
+							})
 						}
 					}
 				})
@@ -159,7 +159,7 @@ import { mapState, mapMutations } from 'vuex'
 				}
 				.position {
 					padding: 3rpx 10rpx;
-					background: #dc3463;
+					background: #C6F3EA;
 					border-radius: 20rpx;
 				}
 			}

@@ -117,4 +117,8 @@
 	.uni-input-form{
 		height: 100%;
 	}
+	
+	.padding-25 {
+	    padding: 25rpx;
+	}
 </style>

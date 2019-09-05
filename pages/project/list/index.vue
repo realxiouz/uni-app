@@ -1,7 +1,7 @@
 <template>
 	<view style="height:100vh;">
 		<data-list ref="list" @data="handleList" r-url="project" :r-data="rData">
-			<project v-for="(i, inx) in list" :key="inx" :bean="i" />
+			<project v-for="(i, inx) in list" :key="inx" :bean="i" :type="rData.route_type"/>
 		</data-list>
 	</view>
 </template>

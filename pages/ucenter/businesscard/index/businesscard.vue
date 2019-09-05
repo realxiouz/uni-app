@@ -162,7 +162,6 @@
 	import {BASE_URL} from '../../../../utils/const.js';
 	import share from '../../../../utils/share.js';
 	import {mapMutations, mapState, mapGetters} from 'vuex';
-	import {header, getElSize} from "../../../../utils/global-data";
 
 	export default {
 		data() {
@@ -230,12 +229,12 @@
 		},
 		watch: {
 			readNumber(data) {
+				const self = this;
 				// 这里是因为数据都是一起修改的, 所以监听它可以省去无限调用的麻烦, 还有此时页面也已经挂载上去, 可以正常获取到宽度
 				// 这个方法是获取宽高的, 目前只可以传id, 且不带#, 需要改成标签名或者是class的可以去global-data.js下修改
-				const self = this;
 				async function getSize() {
-					let widthP = await getElSize('browse-user');
-					let imgWidthP = await getElSize('img_width');
+					let widthP = await self.getElSize('browse-user');
+					let imgWidthP = await self.getElSize('img_width');
 					let imgW = imgWidthP.width + 5;
 					return Math.floor(widthP.width / imgW);
 				}
@@ -252,7 +251,7 @@
 			toDetail(id) {
 				// recommend为1表示是从名片推荐楼盘这里跳转过去的, 因为在详情页里有些不显示户型图片, 地图, 详情
 				uni.navigateTo({
-				  url: `/pages/project/detail/index?id=${id}&recommend=1`
+				  url: `/pages/project/project-dev/index?id=${id}`
 				})
 		    },
 			bindViewTap: function() {
@@ -369,8 +368,17 @@
 				uni.navigateTo({
 					url: `/pages/message/chat/index?id=${this.currentUserInfo.uid}&type=App\\User`
 				});
+			},
+			getElSize(id) { //得到元素的size
+			    return new Promise((res, rej) => {
+			        uni.createSelectorQuery().select('#' + id).fields({
+			            size: true,
+			            scrollOffset: true
+			        }, (data) => {
+			            res(data);
+			        }).exec();
+			    });
 			}
-			
 		},
 		onShareAppMessage() {
 			return {

@@ -75,9 +75,6 @@
 	} from "../../../../utils/const";
 	import share from '../../../../utils/share.js';
 	import {
-		header
-	} from "../../../../utils/global-data";
-	import {
 		mapState,
 		mapGetters
 	} from 'vuex';

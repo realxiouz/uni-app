@@ -54,7 +54,6 @@
 
 <script>
     import {BASE_URL} from "../../../../utils/const";
-    import {header} from '../../../../utils/global-data';
     import {mapState, mapMutations} from 'vuex';
     export default {
         data() {

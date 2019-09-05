@@ -67,7 +67,6 @@
 
 <script>
     import {BASE_URL} from "../../../../utils/const";
-    import {header} from "../../../../utils/global-data";
     import childCom from '../child-com/child-com.vue';
 
     export default {

@@ -34,7 +34,6 @@
 
 <script>
 	import {mapState, mapGetters} from 'vuex';
-	import {getElSize} from '../../utils/global-data.js'
     export default {
         props: {
             num: {
@@ -51,15 +50,11 @@
 		watch: {},
 		computed: {
 			...mapState('ucenter', ['currentUserInfo']),
-			...mapGetters('ucenter', ['imgSrcGetters']),
-			isList() {
-				return this.$route.path === '/pages/ucenter/cardtemplate_list/index/cardtemplate_list';
-			}
+			...mapGetters('ucenter', ['imgSrcGetters'])
 		},
 		created() {
 			// #ifdef H5
 			if (this.$route.path === '/pages/ucenter/cardtemplate_list/index/cardtemplate_list') {
-				console.log(22222222);
 				this.userImg = {
 					'left': 190 + 'rpx !important'
 				};
@@ -68,13 +63,12 @@
 				}
 			}
 			// #endif
-			console.log(this.$router);
 		}
     };
 </script>
 
 <style lang="scss">
-    @import "../../static/publicscss/scss/_link.scss";
+    @import "../../common/publicscss/scss/_link.scss";
     .template {
         @include flex-x(1);
         position: relative;
@@ -155,15 +149,21 @@
 
         &.tm_2 {
             .user-img {
-                @include center(centerY, -50%);
-                left: 220rpx;
+                // @include center(centerY, -50%);
+                // left: 220rpx;
+				position: absolute;
+				top: 35%;
+				left: 28%;
             }
 
             .cardcontent {
-                @include center(centerY, -50%);
+                // @include center(centerY, -50%);
+				position: absolute;
+				top: 10%;
+				left: 49%;
                 color: $white;
-                right: 0;
-                padding-right: 60rpx;
+                // right: 0;
+                // padding-right: 60rpx;
             }
         }
 

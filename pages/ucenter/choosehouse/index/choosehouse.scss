@@ -1,8 +1,7 @@
-@import "../../../../static/publicscss/scss/_link.scss";
+@import "../../../../common/publicscss/scss/_link.scss";
 $liht:95;
 .chooseseach {
     position: fixed;
-    top: 0;
     left: 0;
     right: 0;
     width: 100%;
@@ -11,7 +10,9 @@ $liht:95;
     background: #ccc;
     z-index: 100;
 }
-
+form {
+	display: block;
+}
 //搜索框
 .search {
     display: flex;
@@ -40,7 +41,6 @@ $liht:95;
 
 .showchoose {
     position: fixed;
-    top: rpx(90);
     left: 0;
     padding-top: rpx(8);
     width: 750rpx;
