@@ -27,6 +27,9 @@
 					<baobei v-for="(i, inx) in list3" :key="inx" :bean="i" />
 				</data-list>
 			</swiper-item>
+			<swiper-item>
+				<bean :c-id="id" ref="list4"/>
+			</swiper-item>
 		</swiper>
 		<float-button @go="handleGo" />
 	</view>
@@ -37,6 +40,7 @@
 	import Genjin from './components/genjin'
 	import Daofang from './components/daofang'
 	import Baobei from './components/baobei'
+	import Bean from './components/bean'
 	import FloatButton from '@/components/float-button'
 	import {
 		mapMutations,
@@ -50,7 +54,7 @@
 			}
 			this.id = opt.id
 			this.rData = {customer_id: this.id}
-			this.customerDetail()
+			// this.customerDetail()
 
 			this.$nextTick(_ => {
 				this.$refs.list0.init()
@@ -74,6 +78,9 @@
 					{
 						text: '客户需求'
 					},
+					{
+						text: '客户详情'
+					},
 				],
 				list0: [],
 				list1: [],
@@ -85,9 +92,7 @@
 		methods: {
 			...mapMutations('baobei', ['setDaikan', 'setSelProject', 'setSelCustomer']),
 			customerDetail() {
-				this.$http('customer', {
-					id: this.id
-				}).then(r => {
+				this.$http(`customer/${this.id}`).then(r => {
 					this.bean = r.data[0]
 				})
 			},
@@ -163,7 +168,8 @@
 			Genjin,
 			FloatButton,
 			Daofang,
-			Baobei
+			Baobei,
+			Bean
 		},
 		computed: {
 			...mapState(['userInfo', 'isH5']),
