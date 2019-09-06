@@ -8,7 +8,12 @@
 	export default {
 		data() {
 			return {
-				range: []
+				range: [
+					[],
+					[],
+					[],
+					[]
+				]
 			}
 		}
 	}

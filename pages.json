@@ -50,6 +50,12 @@
 			}
 		},
 		{
+			"path": "pages/customer/need/zhuzhai2",
+			"style": {
+				"navigationBarTitleText": "分销-住宅"
+			}
+		},
+		{
 			"path": "pages/ucenter/businesscard/index/businesscard",
 			"style": {
 				"navigationBarTitleText": "我的名片"

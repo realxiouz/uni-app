@@ -22,43 +22,39 @@
 				<rang-picker :list="[0, 50, 80, 100, 150, 200, 300, 500]" unit="㎡" v-model="sRange" />
 			</view>
 			<view class="cu-form-group">
-				<view class="title">{{showStar('intention')}}意向程度</view>
+				<view class="title">意向程度</view>
 				<single-picker :range="intentions" v-model="selIntention" />
 			</view>
 			<view class="cu-form-group">
-				<view class="title">{{showStar('transaction')}}置业目的</view>
+				<view class="title">置业目的</view>
 				<single-picker :range="transactions" v-model="selTransaction" />
 			</view>
 			<view class="cu-form-group">
-				<view class="title">{{showStar('intention_house_type')}}意向户型</view>
-				<multi-picker class="show-arrow" :range="intention_house_types" v-model="selHouse" />
-			</view>
-			<view class="cu-form-group">
-				<view class="title">{{showStar('guanzhu')}}关注重点</view>
+				<view class="title">关注重点</view>
 				<multi-picker class="show-arrow" :range="guanzhus" v-model="selGuanzhu" />
 			</view>
 			<view class="cu-form-group">
-				<view class="title">{{showStar('kangixng')}}抗性</view>
+				<view class="title">抗性</view>
 				<multi-picker class="show-arrow" :range="kangxings" v-model="selKangxing" />
 			</view>
 			<view class="cu-form-group">
-				<view class="title">{{showStar('payment_type')}}付款方式</view>
+				<view class="title">付款方式</view>
 				<single-picker :range="payment_types" v-model="selPay" />
 			</view>
 			<view class="cu-form-group">
-				<view class="title">{{showStar('term')}}期限</view>
+				<view class="title">期限</view>
 				<single-picker value-key="value" range-key="text" :range="terms" v-model="selTerm" />
 			</view>
 			<view class="cu-form-group">
-				<view class="title">{{showStar('renovation')}}装修</view>
+				<view class="title">装修</view>
 				<single-picker range-key="title" :range="renovations" v-model="selRenovation" />
 			</view>
 			<view class="cu-form-group">
-				<view class="title">{{showStar('orientation')}}朝向</view>
+				<view class="title">朝向</view>
 				<single-picker range-key="title" :range="orientations" v-model="selOrientation" />
 			</view>
 			<view class="cu-form-group">
-				<view class="title">{{showStar('floor')}}楼层</view>
+				<view class="title">楼层</view>
 				<single-picker range-key="title" :range="floors" v-model="selFloor" />
 			</view>
 			<view class="cu-form-group">
@@ -82,22 +78,23 @@
 				this.id = opt.id
 				this.getNeed()
 			}
+			this.type = opt.type
 			this.customerId = opt.cId
 			this.$http('path').then(r => {
-				this.rules = r.data.find(i => i.field == 'CustomerDemand sales').values.filter(i => i.mapping == '住宅').filter(i => i.required)
+				this.rules = r.data.find(i => i.field == 'CustomerDemand sales').values.filter(i => i.mapping == '住宅')
 			})
 			this.$http('attribute').then(r => {
-				this.allSels = r.data['CustomerDemand sales']
-				this.kangxings = this.allSels.kangxing.filter(i => i.mapping == '住宅')
-				this.guanzhus = this.allSels.guanzhu.filter(i => i.mapping == '住宅')
-				this.intentions = this.allSels.intention.filter(i => i.mapping == '住宅')
-				this.transactions = this.allSels.transaction.filter(i => i.mapping == '住宅')
-				this.payment_types = this.allSels.payment_type.filter(i => i.mapping == '住宅')
-				this.intention_house_types = this.allSels.intention_house_type.filter(i => i.mapping == '住宅')
+				this.allSels = r.data['CustomerDemand']
+				this.kangxings = this.allSels.kangxing.filter(i => i.mapping == this.type)
+				this.guanzhus = this.allSels.guanzhu.filter(i => i.mapping == this.type)
+				this.intentions = this.allSels.intention.filter(i => i.mapping == this.type)
+				this.transactions = this.allSels.transaction.filter(i => i.mapping == this.type)
+				this.payment_types = this.allSels.payment_type.filter(i => i.mapping == this.type)
 			})
 		},
 		data: _ => ({
 			id: '',
+			type: '',
 			rules: [],
 			multiTypes: [
 				[{
@@ -182,10 +179,10 @@
 				]
 			],
 			multiInx: [0, 0, 0, 0],
-
-			typeInx: 0,
-
-			v: [],
+			
+			vRange: [],
+			uRange: [],
+			sRange: [],
 
 			allSels: {},
 
@@ -203,9 +200,6 @@
 
 			payment_types: [],
 			selPay: '',
-
-			intention_house_types: [],
-			selHouse: [],
 
 			terms: [{
 				text: '2天内',
@@ -400,11 +394,7 @@
 
 			customerId: '',
 
-			remark: '',
-			
-			vRange: [],
-			uRange: [],
-			sRange: []
+			remark: ''
 		}),
 		methods: {
 			textareaInput(e) {
@@ -415,7 +405,8 @@
 			},
 			handleSave() {
 				let data = {
-					type: '住宅',
+					house_using_type_name: "住宅",
+					type: this.type,
 					guanzhu: this.selGuanzhu,
 					intention: this.selIntention,
 					kangxing: this.selKangxing,
@@ -440,8 +431,7 @@
 					term: this.selTerm,
 					floor: this.selFloor,
 					renovation: this.selRenovation,
-					orientation: this.selOrientation,
-					intention_house_type: this.selHouse
+					orientation: this.selOrientation
 				}
 				if (!this.validateForm(data)) {
 					return
@@ -462,10 +452,9 @@
 					})
 				}
 			},
-			
 			validateForm(data) {
-				// let requires = this.rules.filter(i => i.required)
-				for (let i of this.rules) {
+				let requires = this.rules.filter(i => i.required)
+				for (let i of requires) {
 					if (!data[i.field]) {
 						uni.showToast({
 							title: `${i.name}是必须的`,
@@ -475,9 +464,6 @@
 					}
 				}
 				return true
-			},
-			showStar(field) {
-				return this.rules.findIndex(i => i.field == field) > -1 ? '*' : ''
 			},
 			getNeed() {
 				this.$http(`customerDemand/${this.id}`).then(r => {
@@ -492,7 +478,6 @@
 					this.selRenovation = d.renovation
 					this.selTransaction = d.transaction
 					this.remark = d.remark
-					this.selHouse = d.intention_house_type ? d.intention_house_type : []
 					
 					this.multiInx = [
 						d.shi - 1,

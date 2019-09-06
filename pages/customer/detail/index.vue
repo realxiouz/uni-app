@@ -1,10 +1,10 @@
 <template>
 	<view>
-		<view class="fixed bg-white nav" :style="{top: isH5?'44px':'0'}">
-			<view class="cu-item" :class="inx==selTab?'text-blue cur':''" v-for="(i,inx) in tabs" :key="inx" @click="handleNavChange(inx)">
+		<scroll-view scroll-x class="fixed bg-white nav" :style="{top: isH5?'44px':'0'}"  :scroll-into-view="vId" scroll-with-animation>
+			<view class="cu-item" :id="`nav-${inx}`" :class="inx==selTab?'text-blue cur':''" v-for="(i,inx) in tabs" :key="inx" @click="handleNavChange(inx)">
 				{{i.text}}
 			</view>
-		</view>
+		</scroll-view>
 		<swiper :style="[{position:'fixed',left:0,right:0,bottom:'0',top:top+'px',height:'auto'}]" @change="tabChange"
 		 :current="selTab">
 			<swiper-item>
@@ -63,6 +63,7 @@
 		},
 		data() {
 			return {
+				vId: 'nav-0',
 				top: uni.upx2px(90),
 				id: '',
 				bean: {},
@@ -110,10 +111,14 @@
 				this.list3 = l
 			},
 			tabChange(e) {
+				let temp = e.detail.current - 2 < 0 ? 0 : e.detail.current - 2
+				this.vId = `nav-${temp}`
 				this.selTab = e.detail.current
 				this.$refs[`list${this.selTab}`].init()
 			},
 			handleNavChange(inx) {
+				let temp = inx - 2 < 0 ? 0 : inx - 2
+				this.vId = `nav-${temp}`
 				this.selTab = inx
 			},
 			handleGo() {
@@ -173,7 +178,7 @@
 									case '租房':
 									case '二手房':
 										uni.navigateTo({
-											url: `/pages/customer/need/select?type=${itemList[r.tapIndex]}`
+											url: `/pages/customer/need/select?type=${itemList[r.tapIndex]}&cId=${this.id}`
 										})
 										break
 									
