@@ -149,7 +149,7 @@
 						break;
 					case 3:
 
-						let itemList = ['住宅', '公寓', '商铺', '写字楼', '新房', '租房', '二手房']
+						let itemList = ['住宅', '新房', '租房', '二手房']
 						uni.showActionSheet({
 							itemList,
 							success: r => {

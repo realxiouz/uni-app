@@ -22,39 +22,43 @@
 				<rang-picker :list="[0, 50, 80, 100, 150, 200, 300, 500]" unit="㎡" v-model="sRange" />
 			</view>
 			<view class="cu-form-group">
-				<view class="title">意向程度</view>
+				<view class="title">需求省市</view>
+				<pcd v-model="pcd" />
+			</view>
+			<view class="cu-form-group">
+				<view class="title">{{showStar('intention')}}意向程度</view>
 				<single-picker :range="intentions" v-model="selIntention" />
 			</view>
 			<view class="cu-form-group">
-				<view class="title">置业目的</view>
+				<view class="title">{{showStar('transaction')}}置业目的</view>
 				<single-picker :range="transactions" v-model="selTransaction" />
 			</view>
 			<view class="cu-form-group">
-				<view class="title">关注重点</view>
+				<view class="title">{{showStar('guanzhu')}}关注重点</view>
 				<multi-picker class="show-arrow" :range="guanzhus" v-model="selGuanzhu" />
 			</view>
 			<view class="cu-form-group">
-				<view class="title">抗性</view>
+				<view class="title">{{showStar('kangxing')}}抗性</view>
 				<multi-picker class="show-arrow" :range="kangxings" v-model="selKangxing" />
 			</view>
 			<view class="cu-form-group">
-				<view class="title">付款方式</view>
+				<view class="title">{{showStar('payment_type')}}付款方式</view>
 				<single-picker :range="payment_types" v-model="selPay" />
 			</view>
 			<view class="cu-form-group">
-				<view class="title">期限</view>
+				<view class="title">{{showStar('term')}}期限</view>
 				<single-picker value-key="value" range-key="text" :range="terms" v-model="selTerm" />
 			</view>
 			<view class="cu-form-group">
-				<view class="title">装修</view>
+				<view class="title">{{showStar('renovation')}}装修</view>
 				<single-picker range-key="title" :range="renovations" v-model="selRenovation" />
 			</view>
 			<view class="cu-form-group">
-				<view class="title">朝向</view>
+				<view class="title">{{showStar('orientation')}}朝向</view>
 				<single-picker range-key="title" :range="orientations" v-model="selOrientation" />
 			</view>
 			<view class="cu-form-group">
-				<view class="title">楼层</view>
+				<view class="title">{{showStar('floor')}}楼层</view>
 				<single-picker range-key="title" :range="floors" v-model="selFloor" />
 			</view>
 			<view class="cu-form-group">
@@ -71,6 +75,7 @@
 	import MultiPicker from '@/components/multi-picker'
 	import SinglePicker from '@/components/single-picker'
 	import Save from '@/components/buttom-button'
+	import Pcd from '@/components/pcd'
 
 	export default {
 		onLoad(opt) {
@@ -81,7 +86,7 @@
 			this.type = opt.type
 			this.customerId = opt.cId
 			this.$http('path').then(r => {
-				this.rules = r.data.find(i => i.field == 'CustomerDemand sales').values.filter(i => i.mapping == '住宅')
+				this.rules = r.data.find(i => i.field == 'CustomerDemand sales').values.filter(i => i.mapping == '住宅').filter(i => i.required)
 			})
 			this.$http('attribute').then(r => {
 				this.allSels = r.data['CustomerDemand']
@@ -95,6 +100,7 @@
 		data: _ => ({
 			id: '',
 			type: '',
+			
 			rules: [],
 			multiTypes: [
 				[{
@@ -394,7 +400,9 @@
 
 			customerId: '',
 
-			remark: ''
+			remark: '',
+			
+			pcd: []
 		}),
 		methods: {
 			textareaInput(e) {
@@ -431,7 +439,12 @@
 					term: this.selTerm,
 					floor: this.selFloor,
 					renovation: this.selRenovation,
-					orientation: this.selOrientation
+					orientation: this.selOrientation,
+					
+					province_id : this.pcd.length ? this.pcd[0] : null,
+					city_id : this.pcd.length ? this.pcd[1] : null,
+					district_id : this.pcd.length ? this.pcd[2] : null,
+					area_id : this.pcd.length ? this.pcd[3] : null
 				}
 				if (!this.validateForm(data)) {
 					return
@@ -453,8 +466,7 @@
 				}
 			},
 			validateForm(data) {
-				let requires = this.rules.filter(i => i.required)
-				for (let i of requires) {
+				for (let i of this.rules) {
 					if (!data[i.field]) {
 						uni.showToast({
 							title: `${i.name}是必须的`,
@@ -464,6 +476,9 @@
 					}
 				}
 				return true
+			},
+			showStar(field) {
+				return this.rules.findIndex(i => i.field == field) > -1 ? '*' : ''
 			},
 			getNeed() {
 				this.$http(`customerDemand/${this.id}`).then(r => {
@@ -480,25 +495,29 @@
 					this.remark = d.remark
 					
 					this.multiInx = [
-						d.shi - 1,
-						d.ting - 1,
-						d.wei - 1,
-						d.tai - 1
+						d.shi ? d.shi - 1 : 0,
+						d.ting ? d.ting - 1 : 0,
+						d.wei ? d.wei - 1 : 0,
+						d.tai ? d.tai - 1 : 0
 					]
 					
 					this.vRange = [
-						d.price_start,
-						d.price_end
+						d.price_start ? d.price_start : 0,
+						d.price_end ? d.price_end : 0
 					]
 					
 					this.uRange = [
-						d.unit_price_start,
-						d.unit_price_end
+						d.unit_price_start ? d.unit_price_start : 0,
+						d.unit_price_end ? d.unit_price_end : 0
 					]
 					
 					this.sRange = [
-						d.area_start,
-						d.area_end
+						d.area_start ? d.area_start : 0,
+						d.area_end ? d.area_end : 0
+					]
+					
+					this.pcd = [
+						d.province_id, d.city_id, d.district_id, d.area_id
 					]
 				})
 			}
@@ -507,7 +526,8 @@
 			RangPicker,
 			Save,
 			MultiPicker,
-			SinglePicker
+			SinglePicker,
+			Pcd
 		}
 	}
 </script>

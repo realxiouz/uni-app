@@ -495,25 +495,25 @@
 					this.selHouse = d.intention_house_type ? d.intention_house_type : []
 					
 					this.multiInx = [
-						d.shi - 1,
-						d.ting - 1,
-						d.wei - 1,
-						d.tai - 1
+						d.shi ? d.shi - 1 : 0,
+						d.ting ? d.ting - 1 : 0,
+						d.wei ? d.wei - 1 : 0,
+						d.tai ? d.tai - 1 : 0
 					]
 					
 					this.vRange = [
-						d.price_start,
-						d.price_end
+						d.price_start ? d.price_start : 0,
+						d.price_end ? d.price_end : 0
 					]
 					
 					this.uRange = [
-						d.unit_price_start,
-						d.unit_price_end
+						d.unit_price_start ? d.unit_price_start : 0,
+						d.unit_price_end ? d.unit_price_end : 0
 					]
 					
 					this.sRange = [
-						d.area_start,
-						d.area_end
+						d.area_start ? d.area_start : 0,
+						d.area_end ? d.area_end : 0
 					]
 				})
 			}
