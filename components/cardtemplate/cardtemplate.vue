@@ -2,7 +2,7 @@
 	<view>
 		<view class="cardtemplate" v-if="!isShowList">
 			<!-- :user="currentUserInfo" -->
-			<child-com style="width: 700rpx" :num="currentUserInfo.template_id || 0"></child-com>
+			<child-com style="width: 700rpx" :current-user-info="currentInfo" :num="currentInfo.template_id || 0"></child-com>
 		</view>
 
 		<form v-else style="display: block;">
@@ -13,7 +13,7 @@
 						<label class="radiu">
 							<radio class="rd" :checked="item.checked" value="index"></radio>
 						</label>
-						<child-com style="width: 650rpx;" :num="index"></child-com>
+						<child-com style="width: 650rpx;" :current-user-info="currentInfo" :num="index"></child-com>
 					</view>
 				</radio-group>
 			</view>
@@ -22,7 +22,6 @@
 </template>
 
 <script>
-	import {BASE_URL} from '../../utils/const.js';
 	import childCom from './child-com.vue';
 	import {mapState, mapMutations} from 'vuex';
 	export default {
@@ -30,7 +29,11 @@
 			isShowList: {
 				type: Boolean,
 				required: true
-			}
+			},
+            isPreview: {
+			    type: Boolean,
+                default: false
+            }
 		},
 		components: {
 			childCom
@@ -48,8 +51,30 @@
 				index: 0
 			}
 		},
-		watch: {},
+		watch: {
+            isPreview(data) {
+                if (data) {
+                    // 只有是在预览下这里才会赋值
+                    this.changeCurrentInfo(this.currentUserInfo);
+                    this.changeImg({key: 'img_avatar', url: ''});
+                    this.changeImg({key: 'img_bg', url: ''});
+                }/* else {
+                    this.changeCurrentInfo(this.currentUserInfo);
+                    this.changeImg({key: 'img_avatar', url: ''});
+                    this.changeImg({key: 'img_bg', url: ''});
+                }*/
+            }
+        },
 		beforeMount() {
+		    let route = this.getCurPage().route;
+            if (/pages\/ucenter\/page_makecard\/index\/page_makecard/.test(route)) {
+                this.changeCurrentInfo(this.currentLoginUserInfo);
+            } else if (/pages\/ucenter\/businesscard\/index\/businesscard/.test(route)) {
+                this.changeCurrentInfo(this.currentLoginUserInfo);
+            } else {
+                // 这里比如在选择模板哪里需要
+                this.changeCurrentInfo(this.currentLoginUserInfo);
+            }
 			if (!this.isShowList) return false;
 			for (let i = 0; i < this.templateNum; i++) {
 				this.curr.push({
@@ -57,34 +82,40 @@
 					checked: false
 				})
 			}
-			let num = this.currentUserInfo.template_id;
+			let num = this.currentLoginUserInfo.template_id;
 			this.tem = JSON.parse(JSON.stringify(this.curr));
 			this.tem[num]['checked'] = true;
 			// 设置当前背景为已选中状态
 		},
 		methods: {
-			...mapMutations('ucenter', ['changeCurrentUserInfo']),
+			...mapMutations('ucenter', ['changeCurrentInfo', 'changeImg', 'changeCurrentLoginUserInfo']),
 			changed(e) {
 				let index = e.detail.value || e.currentTarget.dataset.list;
-				const self = this;
 				this.tem[index].checked  = true;
 				uni.showLoading({
 					title: '保存中',
 					mask: true
-				})
+				});
 				this.$http('geren/uptemplate', {templateId: index}).then(res => {
-					this.changeCurrentUserInfo({template_id: index});
-					uni.hideLoading();
+                    this.changeCurrentLoginUserInfo({template_id: index});
+                    this.changeCurrentInfo(Object.assign({}, this.currentInfo, {template_id: index}));
+					this.changeImg({key: 'img_bg', url: ''});
 					uni.navigateBack({
 						delta: 1
-					})
-				}).catch(err => {
-					uni.hideLoading();
+					});
+                    uni.hideLoading();
+                }).catch(err => {
+                    console.log(err);
+                    uni.hideLoading();
 				})
-			}
+			},
+            getCurPage() {
+			    let pages = getCurrentPages();
+			    return pages[pages.length -1];
+            }
 		},
 		computed: {
-			...mapState('ucenter', ['currentUserInfo'])
+			...mapState('ucenter', ['currentLoginUserInfo', 'currentUserInfo', 'currentInfo'])
 		},
 		mounted() {}
 	}

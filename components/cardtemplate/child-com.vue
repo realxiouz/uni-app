@@ -33,9 +33,13 @@
 </template>
 
 <script>
-	import {mapState, mapGetters} from 'vuex';
+	import {mapGetters} from 'vuex';
     export default {
         props: {
+            currentUserInfo: {
+                type: Object,
+                required: true
+            },
             num: {
                 type: [String, Number],
                 default: 0
@@ -43,26 +47,15 @@
         },
 		data() {
 			return {
-				userImg: {},
-				style: {}
+				userImg: {}
 			}
 		},
 		watch: {},
 		computed: {
-			...mapState('ucenter', ['currentUserInfo']),
 			...mapGetters('ucenter', ['imgSrcGetters'])
 		},
-		created() {
-			// #ifdef H5
-			if (this.$route.path === '/pages/ucenter/cardtemplate_list/index/cardtemplate_list') {
-				this.userImg = {
-					'left': 190 + 'rpx !important'
-				};
-				this.style = {
-					'padding-right': '35rpx !important'
-				}
-			}
-			// #endif
+		mounted() {
+
 		}
     };
 </script>

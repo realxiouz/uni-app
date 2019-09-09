@@ -65,7 +65,7 @@
 		},
 		methods: {
 			getData(resetPage = false) {
-				this.isLoading = true
+				this.isLoading = true;
 				if (resetPage) {
 					this.page = 1
 				}
@@ -75,13 +75,13 @@
 				})
 				this.$http(this.rUrl, data, this.rMethod)
 					.then(r => {
-						this.hasLoaded = true
+						this.hasLoaded = true;
 						if (this.page === 1) {
-							this.list = []
+							this.list = [];
 							this.isEnd = false
 						}
-						this.list = this.list.concat(r.data)
-						this.$emit('data', this.list)
+						this.list = this.list.concat(r.data);
+						this.$emit('data', this.list);
 						
 						if (r.data.length < this.per_page) {
 							this.isEnd = true

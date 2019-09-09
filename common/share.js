@@ -1,18 +1,50 @@
+// 绘制canvas图片 end
+function roundRect(ctx, x, y, w, h, r) {
+    ctx.beginPath();
+    ctx.setFillStyle('#fff');
+    // ctx.setStrokeStyle('transparent')
+    // 左上角
+    ctx.arc(x + r, y + r, r, Math.PI, Math.PI * 1.5);
+    // border-top
+    ctx.moveTo(x + r, y);
+    ctx.lineTo(x + w - r, y);
+    ctx.lineTo(x + w, y + r);
+    // 右上角
+    ctx.arc(x + w - r, y + r, r, Math.PI * 1.5, Math.PI * 2);
+
+    // border-right
+    ctx.lineTo(x + w, y + h - r);
+    ctx.lineTo(x + w - r, y + h);
+    // 右下角
+    ctx.arc(x + w - r, y + h - r, r, 0, Math.PI * 0.5);
+
+    // border-bottom
+    ctx.lineTo(x + r, y + h);
+    ctx.lineTo(x, y + h - r);
+    // 左下角
+    ctx.arc(x + r, y + h - r, r, Math.PI * 0.5, Math.PI);
+
+    // border-left
+    ctx.lineTo(x, y + r);
+    ctx.lineTo(x + r, y);
+
+    // 这里是使用 fill 还是 stroke都可以，二选一即可，但是需要与上面对应
+    ctx.fill();
+    // ctx.stroke()
+    ctx.closePath();
+    // 剪切
+    ctx.clip();
+}
 export default {
-    loading(userInfo) {
+    loading(url) {
         // 这里调用注意this指向, 需要call或apply亦或是bind
         // 分享触发
-        uni.showLoading({
-            title: '生成中...',
-            mask: true
-        });
         return new Promise ((response, reject) => {
             uni.downloadFile({
-                url: userInfo.avatar,// 网络路径
+                url: url,// 网络路径
                 success(res) {
                     // 这里拿到临时路径, 存到本地
                     response(res);
-                    uni.hideLoading();
                 },
                 fail(err) {
                     reject(err);
@@ -20,74 +52,32 @@ export default {
             });
         })
     },
-    // 绘制canvas图片 end
-    roundRect(ctx, x, y, w, h, r) {
-        ctx.beginPath();
-        ctx.setFillStyle('#fff');
-        // ctx.setStrokeStyle('transparent')
-        // 左上角
-        ctx.arc(x + r, y + r, r, Math.PI, Math.PI * 1.5);
-        // border-top
-        ctx.moveTo(x + r, y);
-        ctx.lineTo(x + w - r, y);
-        ctx.lineTo(x + w, y + r);
-        // 右上角
-        ctx.arc(x + w - r, y + r, r, Math.PI * 1.5, Math.PI * 2);
-
-        // border-right
-        ctx.lineTo(x + w, y + h - r);
-        ctx.lineTo(x + w - r, y + h);
-        // 右下角
-        ctx.arc(x + w - r, y + h - r, r, 0, Math.PI * 0.5);
-
-        // border-bottom
-        ctx.lineTo(x + r, y + h);
-        ctx.lineTo(x, y + h - r);
-        // 左下角
-        ctx.arc(x + r, y + h - r, r, Math.PI * 0.5, Math.PI);
-
-        // border-left
-        ctx.lineTo(x, y + r);
-        ctx.lineTo(x + r, y);
-
-        // 这里是使用 fill 还是 stroke都可以，二选一即可，但是需要与上面对应
-        ctx.fill();
-        // ctx.stroke()
-        ctx.closePath();
-        // 剪切
-        ctx.clip();
-    },
-    canvas(e, ctx, cardSm, bgSm, roundRect) {
+    canvas(e, ctx, cardSm) {
         const self = this;
         // 小图标地址
 		// /static/images/publicimg/companyicon_white.png
         let icon = {
-            companyIconWhite: this.imgSrcGetters('companyicon_white.png'),
-            companyIconBlack: this.imgSrcGetters('companyicon_black.png'),
-            phoneWhite: this.imgSrcGetters('phone_white.png'),
-            phoneBlack: this.imgSrcGetters('phone_black.png'),
+            companyIconWhite: this.downLoadImg.img_company,
+            companyIconBlack: this.downLoadImg.img_company_black,
+            phoneWhite: this.downLoadImg.img_phone,
+            phoneBlack: this.downLoadImg.img_phone_black,
             ewm: '',
             ewmUrl: ""
-        }
-        // 背景路径
-        let bgPath = [
-            this.imgSrcGetters('template_0.png'),
-            this.imgSrcGetters('template_1.png'),
-            this.imgSrcGetters('template_2.png'),
-            this.imgSrcGetters('template_3.png')
-        ];
-        let userInfo = this.currentUserInfo;
+        };
+        let bg = this.downLoadImg.img_bg;
+        let userInfo = this.currentInfo;
+        this.testUserInfo = userInfo;
         let cardInfo = {
-            "userImg": this.testUserInfo.avatar,// 头像
+            "userImg": this.downLoadImg.img_avatar,// 头像
             "name": this.testUserInfo.name,// 名称
             "companyname": this.testUserInfo.companyname,// 公司
             "phone": this.testUserInfo.phone,// 电话
             "position": this.testUserInfo.position,// 职位
-            "ewm": icon.ewm // 二维码
+            // "ewm": icon.ewm // 二维码
         };
         // 分享缩略名片
         let smCardInfo = {
-            "userImg": userInfo.avatar,// 头像
+            "userImg": this.downLoadImg.img_avatar,// 头像
             "name": userInfo.name,// 名称
             "companyname": userInfo.companyname,// 公司
             "phone": userInfo.phone,// 电话
@@ -101,21 +91,20 @@ export default {
         if (cardInfo.name.length > 10) {
             cardInfo.name = cardInfo.name.substring(0, 9) + '...'; //控制显示9个字符+....；
         }
-        if (smCardInfo.companyname.length > 8) {
+        if (smCardInfo.companyname.length > 7) {
             smCardInfo.companyname = cardInfo.companyname.substring(0, 6) + '...'; //控制显示6个字符+....；
         }
-        if (smCardInfo.name.length > 8) {
+        if (smCardInfo.name.length > 7) {
             smCardInfo.name = cardInfo.name.substring(0, 6) + '...'; //控制显示6个字符+....；
         }
-        this.canvasWidth = this.canvasWidth;
         this.canvasHeight = (3*this.canvasWidth) / 5;
-        cardInfo.userImg = this.qrCode;
+        // cardInfo.userImg = this.qrCode;
         roundRect(ctx, 0, 0, this.canvasWidth, this.canvasHeight, 5);
-        // 绘制文本
-        switch (Number(this.currentbgnum)) {
+        // 绘制文本 大图
+        switch (Number(this.currentBgNum)) {
             case 0:
             {
-                ctx.drawImage(bgPath[0], 0, 0, this.canvasWidth, this.canvasHeight);
+                ctx.drawImage(bg, 0, 0, this.canvasWidth, this.canvasHeight);
                 // ctx.drawImage(cardInfo.ewm, this.canvasWidth * .85, this.canvasHeight * .66, 50, 50);
                 ctx.drawImage(cardInfo.userImg, this.canvasWidth - 80, 30, 50, 50);
                 ctx.setFontSize(17);
@@ -142,7 +131,7 @@ export default {
                 break;
             case 1:
             {
-                ctx.drawImage(bgPath[1], 0, 0, this.canvasWidth, this.canvasHeight);
+                ctx.drawImage(bg, 0, 0, this.canvasWidth, this.canvasHeight);
                 // ctx.drawImage(cardInfo.ewm, 2, this.canvasWidth / 1.3, this.canvasHeight - 60, 50);
                 ctx.drawImage(cardInfo.userImg, this.canvasWidth / 1.3, 10, 50, 50);
                 ctx.setFontSize(17);
@@ -158,10 +147,9 @@ export default {
                 break;
             case 2:
             {
-                ctx.drawImage(bgPath[2], 0, 0, this.canvasWidth, this.canvasHeight);
+                ctx.drawImage(bg, 0, 0, this.canvasWidth, this.canvasHeight);
                 // ctx.drawImage(cardInfo.ewm, this.canvasWidth * .005, this.canvasHeight * .66, 50, 50);
                 ctx.drawImage(cardInfo.userImg, this.canvasWidth * .33, this.canvasHeight / 2 - 20, 50, 50);
-                console.log(cardInfo.userImg);
                 ctx.setFontSize(17);
                 ctx.fillText(cardInfo.name, this.canvasWidth * .58, this.canvasHeight / 2.8);
                 ctx.setFontSize(13);
@@ -176,7 +164,7 @@ export default {
                 break;
             case 3:
             {
-                ctx.drawImage(bgPath[3], 0, 0, this.canvasWidth, this.canvasHeight);
+                ctx.drawImage(bg, 0, 0, this.canvasWidth, this.canvasHeight);
                 // ctx.drawImage(cardInfo.ewm, this.canvasWidth * .85, this.canvasHeight * .10, 50, 50);
                 ctx.drawImage(cardInfo.userImg, this.canvasWidth * .45, this.canvasHeight / 2 - 30, 50, 50);
                 ctx.setFontSize(17);
@@ -202,9 +190,9 @@ export default {
                 y: 0,
                 width: self.canvasWidth,
                 height: self.canvasHeight,
-                canvasId: 'sharecard',
+                canvasId: 'share-card',
                 success(res) {
-                    self.shareImg = res.tempFilePath;
+                    self.saveImgSrc = res.tempFilePath;
                     self.modalName = e.currentTarget.dataset.target;
                 },
                 fail(err) {
@@ -212,55 +200,59 @@ export default {
                 }
             })
         }, 500));
-        if (!this.isShowShare) return false;
-        // 绘制小图片
-        let smWd = 157;
-        let	smHt = 140;
-        // console.log(typeof this.currentbgnum)
-        switch (this.currentbgnum) {
+        // 绘制小图片 smWd / smHt = 1.2
+        let smWd = 168; // canvas的宽
+        let	smHt = 140; // canvas的高
+        let h = 9*smWd / 16; // 背景图的高度 16: 9
+        let y = (smHt - h)/2; // 背景图的位置
+        // console.log(typeof this.currentBgNum)
+        let largeBg = this.downLoadImg.img_large_bg;
+        switch (Number(this.currentBgNum)) {
             case 0:
             {
-                cardSm.drawImage(bgSm[0], 0, 0, smWd, smHt);
-                cardSm.drawImage(smCardInfo.ewm, 130, 26, 25, 25);
+                // cardSm.drawImage(largeBg, 0, 0, smWd, smHt);
+                cardSm.drawImage(bg, 0, y, smWd, h);
+                // cardSm.drawImage(smCardInfo.ewm, 130, 26, 25, 25);
                 cardSm.fillStyle = 'white';
                 cardSm.setFontSize(10);
-                cardSm.fillText(smCardInfo.name, 15, 50);
+                cardSm.fillText(smCardInfo.name, 10, 50);
                 cardSm.setFontSize(8);
-                cardSm.fillText(smCardInfo.position, 15, 63)
-                cardSm.drawImage(icon.companyIconWhite, 10, 70, 8, 8);
-                cardSm.drawImage(icon.phoneWhite, 10, 86, 8, 8);
+                cardSm.fillText(smCardInfo.position, 10, 63);
+                cardSm.drawImage(icon.companyIconWhite, 10, 85, 8, 8);
+                cardSm.drawImage(icon.phoneWhite, 10, 100, 8, 8);
                 cardSm.setFontSize(8);
-                cardSm.fillText(smCardInfo.phone, 25, 80)
-                cardSm.fillText(smCardInfo.companyname, 25, 95);
+                cardSm.fillText(smCardInfo.companyname, 20, 92);
+                cardSm.fillText(smCardInfo.phone, 20, 107);
                 // 绘制头像
                 cardSm.save(); // 先保存状态 已便于画完圆再用
                 cardSm.beginPath(); //开始绘制
                 //先画个圆
-                cardSm.arc(90 + 15, 30 + 15, 15, 0, 2 * Math.PI, false)
+                cardSm.arc(90 + 40, 30 + 15, 15, 0, 2 * Math.PI, false);
                 cardSm.clip(); //画了圆 再剪切 原始画布中剪切任意形状和尺寸。一旦剪切了某个区域，则所有之后的绘图都会被限制在被剪切的区域内
-                cardSm.drawImage(smCardInfo.userImg, 90, 30, 30, 30); // 推进去图片
+                cardSm.drawImage(smCardInfo.userImg, 115, 30, 30, 30); // 推进去图片
                 cardSm.restore(); //恢复之前保存的绘图上下文
             }
                 break;
             case 1:
             {
-                cardSm.drawImage(bgSm[1], 0, 0, smWd, smHt);
-                cardSm.drawImage(smCardInfo.ewm, 130, 26, 24, 24);
+                // cardSm.drawImage(largeBg, 0, 0, smWd, smHt);
+                cardSm.drawImage(bg, 0, y, smWd, h);
+                // cardSm.drawImage(smCardInfo.ewm, 130, 26, 24, 24);
                 cardSm.fillStyle = 'white';
                 cardSm.setFontSize(10);
-                cardSm.fillText(smCardInfo.name, 90, 62);
+                cardSm.fillText(smCardInfo.name, 85, 67);
                 cardSm.setFontSize(8);
-                cardSm.fillText(smCardInfo.position, 90, 72)
-                cardSm.drawImage(icon.companyIconWhite, 80, 82, 8, 8);
-                cardSm.drawImage(icon.phoneWhite, 80, 96, 8, 8);
+                cardSm.fillText(smCardInfo.position, 85, 80);
+                cardSm.drawImage(icon.companyIconWhite, 85, 92, 8, 8);
+                cardSm.drawImage(icon.phoneWhite, 85, 105, 8, 8);
                 cardSm.setFontSize(8);
-                cardSm.fillText(smCardInfo.phone, 95, 92)
-                cardSm.fillText(smCardInfo.companyname, 95, 102);
+                cardSm.fillText(smCardInfo.companyname, 95, 99.5);
+                cardSm.fillText(smCardInfo.phone, 95, 112.5);
                 // 绘制头像
                 cardSm.save(); // 先保存状态 已便于画完圆再用
                 cardSm.beginPath(); //开始绘制
                 //先画个圆
-                cardSm.arc(15 + 15, 46 + 15, 15, 0, 2 * Math.PI, false)
+                cardSm.arc(15 + 15, 46 + 15, 15, 0, 2 * Math.PI, false);
                 cardSm.clip(); //画了圆 再剪切 原始画布中剪切任意形状和尺寸。一旦剪切了某个区域，则所有之后的绘图都会被限制在被剪切的区域内
                 cardSm.drawImage(smCardInfo.userImg, 15, 46, 30, 30); // 推进去图片
                 cardSm.restore(); //恢复之前保存的绘图上下文
@@ -269,48 +261,49 @@ export default {
                 break;
             case 2:
             {
-                cardSm.drawImage(bgSm[2], 0, 0, smWd, smHt);
-                cardSm.drawImage(smCardInfo.ewm, 2, 87, 24, 24);
+                // cardSm.drawImage(largeBg, 0, 0, smWd, smHt);
+                cardSm.drawImage(bg, 0, y, smWd, h);
+                // cardSm.drawImage(smCardInfo.ewm, 2, 87, 24, 24);
                 cardSm.fillStyle = 'white';
                 cardSm.setFontSize(10);
-                cardSm.fillText(smCardInfo.name, 90, 52);
+                cardSm.fillText(smCardInfo.name, 95, 52);
                 cardSm.setFontSize(8);
-                cardSm.fillText(smCardInfo.position, 90, 65)
-                cardSm.drawImage(icon.companyIconWhite, 90, 82, 8, 8);
-                cardSm.drawImage(icon.phoneWhite, 90, 96, 8, 8);
+                cardSm.fillText(smCardInfo.position, 95, 65);
+                cardSm.drawImage(icon.companyIconWhite, 95, 82, 8, 8);
+                cardSm.drawImage(icon.phoneWhite, 95, 96, 8, 8);
                 cardSm.setFontSize(7);
-                cardSm.fillText(smCardInfo.companyname, 100, 89)
-                cardSm.fillText(smCardInfo.phone, 100, 103);
+                cardSm.fillText(smCardInfo.companyname, 105, 89);
+                cardSm.fillText(smCardInfo.phone, 105, 103);
                 // 绘制头像
                 cardSm.save(); // 先保存状态 已便于画完圆再用
                 cardSm.beginPath(); //开始绘制
                 //先画个圆
-                cardSm.arc(48 + 15, 50 + 15, 15, 0, 2 * Math.PI, false)
+                cardSm.arc(48 + 15, 50 + 20, 15, 0, 2 * Math.PI, false);
                 cardSm.clip(); //画了圆 再剪切 原始画布中剪切任意形状和尺寸。一旦剪切了某个区域，则所有之后的绘图都会被限制在被剪切的区域内
-                cardSm.drawImage(smCardInfo.userImg, 48, 50, 30, 30); // 推进去图片
+                cardSm.drawImage(smCardInfo.userImg, 48, 55, 30, 30); // 推进去图片
                 cardSm.restore(); //恢复之前保存的绘图上下文
 
             }
                 break;
             case 3:
             {
-                cardSm.drawImage(bgSm[3], 0, 0, smWd, smHt);
-                cardSm.drawImage(smCardInfo.ewm, 130, 26, 25, 25);
-
+                // cardSm.drawImage(largeBg, 0, 0, smWd, smHt);
+                cardSm.drawImage(bg, 0, y, smWd, h);
+                // cardSm.drawImage(smCardInfo.ewm, 130, 26, 25, 25);
                 cardSm.setFontSize(10);
                 cardSm.fillText(smCardInfo.name, 5, 50);
                 cardSm.setFontSize(7);
-                cardSm.fillText(smCardInfo.position, 5, 63)
-                cardSm.drawImage(icon.companyIconBlack, 5, 75, 8, 8);
-                cardSm.drawImage(icon.phoneBlack, 5, 86, 8, 8);
+                cardSm.fillText(smCardInfo.position, 5, 63);
+                cardSm.drawImage(icon.companyIconBlack, 5, 85, 8, 8);
+                cardSm.drawImage(icon.phoneBlack, 5, 95, 8, 8);
                 cardSm.setFontSize(7);
-                cardSm.fillText(smCardInfo.phone, 15, 83)
-                cardSm.fillText(smCardInfo.companyname, 15, 95);
+                cardSm.fillText(smCardInfo.companyname, 15, 92);
+                cardSm.fillText(smCardInfo.phone, 15, 103);
                 // 绘制头像
                 cardSm.save(); // 先保存状态 已便于画完圆再用
                 cardSm.beginPath(); //开始绘制
                 //先画个圆
-                cardSm.arc(65 + 15, 40 + 15, 15, 0, 2 * Math.PI, false)
+                cardSm.arc(65 + 15, 40 + 15, 15, 0, 2 * Math.PI, false);
                 cardSm.clip(); //画了圆 再剪切 原始画布中剪切任意形状和尺寸。一旦剪切了某个区域，则所有之后的绘图都会被限制在被剪切的区域内
                 cardSm.drawImage(smCardInfo.userImg, 65, 40, 30, 30); // 推进去图片
                 cardSm.restore(); //恢复之前保存的绘图上下文
@@ -324,9 +317,9 @@ export default {
                 y: 0,
                 width: smWd,
                 height: smHt,
-                canvasId: 'sharesm',
+                canvasId: 'share-sm',
                 success(res) {
-                    this.shareimg = res.tempFilePath;
+                    self.shareImg = res.tempFilePath;
                 }
             })
         }, 400))

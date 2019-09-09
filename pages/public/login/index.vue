@@ -28,9 +28,10 @@
 <script>
 	import { mapMutations} from 'vuex';
 	export default {
-		onLoad() {
+		onLoad(opt) {
 			// this.wechatlogin()
-		},
+            this.setShopId(opt.shop_id);
+        },
 		data: _ => ({
 			formBean: {
 				mobile: '10000000000',
@@ -39,6 +40,7 @@
 		}),
 		methods: {
 			...mapMutations(['login', 'changeToken']),
+            ...mapMutations('work', ['setShopId']),
 			handleLogin() {
 				this.$http('auth/login', this.formBean, 'post').then(r => {
 					// console.log(r);
@@ -132,7 +134,7 @@
 			}
 		},
 		computed: {
-			// ...MapState(['hasLogin'])
+			// ...mapState('work', ['shopId'])
 		}
 	}
 </script>

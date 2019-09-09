@@ -9,20 +9,22 @@
 <script>
 	import DataList from '@/components/data-list'
 	import Project from './components/project'
-	import { mapMutations } from 'vuex'
+	import { mapMutations, mapState } from 'vuex'
 	
 	export default {
 		onLoad(opt) {
 			let titleObj = {
 				cooperation: '报备楼盘',
-				public: '云端楼盘'
-			}
+				public: '云端楼盘',
+                shop: '报备楼盘'
+			};
 			uni.setNavigationBarTitle({
 			    title: titleObj[opt.type]
-			})
-			this.setListType(opt.type)
-			this.rData.route_type = opt.type
-			this.$nextTick(_ => {
+			});
+			this.setListType(opt.type);
+			if (this.shopId) this.rData.shop_id = this.shopId;
+			this.rData.route_type = opt.type;
+            this.$nextTick(_ => {
 				this.$refs.list.init()
 			})
 		},
@@ -41,6 +43,9 @@
 				this.list = list
 			}
 		},
+        computed: {
+		    ...mapState('work', ['shopId'])
+        },
 		components: {
 			DataList, Project
 		}

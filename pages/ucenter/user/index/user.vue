@@ -71,12 +71,12 @@
             }
         },
         onLoad() {
-            let centerLet = JSON.stringify(this.currentUserInfo);
+            let centerLet = JSON.stringify(this.currentLoginUserInfo);
             this.editUserInfo = JSON.parse(centerLet);
 
         },
         methods: {
-            ...mapMutations('ucenter', ['changeCurrentUserInfo']),
+            ...mapMutations('ucenter', ['changeCurrentLoginUserInfo']),
             submitForm() {
                 const self = this;
                 const editUserInfo = this.editUserInfo;
@@ -119,13 +119,13 @@
                 }
 				uni.showLoading({
 					title: '提交中'
-				})
+				});
 				this.$http('geren/addcard', this.editUserInfo).then(res => {
 					// 保存成功
-					self.changeCurrentUserInfo(res.data);
+					self.changeCurrentLoginUserInfo(res.data);
 					uni.navigateBack({
 					    delta: 1
-					})
+					});
 					uni.hideLoading();
 				}).catch(err => {
 					uni.hideLoading();
@@ -133,7 +133,7 @@
             }
         },
         computed: {
-			...mapState('ucenter', ['token', 'currentUserInfo'])
+			...mapState('ucenter', ['token', 'currentLoginUserInfo'])
         }
     }
 </script>

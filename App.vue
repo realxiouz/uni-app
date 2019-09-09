@@ -7,16 +7,17 @@
 	import { mapState, mapMutations } from 'vuex'
 	
 	export default {
-		onLaunch: function() {
-			// #ifdef H5
-			this.setH5()
+		onLaunch: function(e) {
+            const query = e.query;
+            // #ifdef H5
+			this.setH5();
 			// #endif
 			uni.getSystemInfo({
 				success: e => {
 					console.log(e)
 				}
-			})
-			let token = uni.getStorageSync('apiToken')
+			});
+			let token = uni.getStorageSync('apiToken');
 			if (token) {
 				this.$http('auth/user').then(r => {
 					this.login(r)			
@@ -44,8 +45,9 @@
 					})
 				})
 			} else {
+                let until = !/(object|undefined)/.test(typeof query.shop_id)? `?type=${query.type}&shop_id=${query.shop_id}`: '';
 				uni.navigateTo({
-					url: '/pages/public/login/index',
+					url: '/pages/public/login/index' + until,
 				})
 			}
 			

@@ -3,55 +3,11 @@
         <card-template :is-show-list="false"></card-template>
         <!--导航栏列表 start-->
         <view class="radiusbox pubmgtop cardlist">
-            <view @tap="toPages" data-page="../../user/index/user">
+            <view @tap="toPages" v-for="(item, i) of list" :data-page="item.path" v-if="item.isShow" :key="i">
                 <view>
-                    <text class="cuIcon-edit"></text>
+                    <text :class="item.icon"></text>
                 </view>
-                <text>编辑名片</text>
-            </view>
-            <view @tap="toPages" data-page="../../cardtemplate_list/index/cardtemplate_list">
-                <view>
-                    <text class="cuIcon-list"></text>
-                </view>
-                <text>模板</text>
-            </view>
-            <view @tap="toPages" data-page="../../businesscard/index/businesscard?previewB=1">
-                <view>
-                    <text class="cuIcon-card"></text>
-                </view>
-                <text>预览名片</text>
-            </view>
-            <view @tap="toPages" data-page="../../browsecount/index/browsecount">
-                <view>
-                    <text class="cuIcon-text"></text>
-                </view>
-                <text>浏览记录</text>
-            </view>
-            <view @tap="toPages" data-page="../../recommend/index/recommend">
-                <view>
-                    <text class="iconfont icongongsi"></text>
-                </view>
-                <text>推荐楼盘</text>
-            </view>
-			<!-- #ifdef MP-WEIXIN -->
-            <view @tap="toPages" data-page="../../share/index/share">
-                <view>
-                    <text class="cuIcon-evaluate_fill"></text>
-                </view>
-                <text>分享名片</text>
-            </view>
-			<!-- #endif -->
-            <view @tap="toPages" data-page="../../cardclamp/index/cardclamp">
-                <view>
-                    <text class="cuIcon-file"></text>
-                </view>
-                <span>名片夹</span>
-            </view>
-            <view @tap="toPages" data-page="../../explain/index/explain">
-                <view>
-                    <text class="cuIcon-forward"></text>
-                </view>
-                <span>操作指南</span>
+                <text>{{item.name}}</text>
             </view>
         </view>
         <!--导航栏列表 end-->
@@ -64,7 +20,7 @@
 <script>
     import cardTemplate from "../../../../components/cardtemplate/cardtemplate";
     import makeBtn from "../../../../components/makebtn/index/makebtn";
-    import {mapState} from 'vuex';
+    import {mapState, mapMutations} from 'vuex';
     export default {
         data() {
             return {
@@ -72,10 +28,61 @@
                     title: '返回首页',
                     url: '../../businesscard/index/businesscard',
                     isRedirect: true
-                }
+                },
+                list : [
+                    {
+                        name: '编辑名片',
+                        path: '../../user/index/user',
+                        isShow: true,
+                        icon: 'cuIcon-edit'
+                    },
+                    {
+                        name: '模板',
+                        path: '../../cardtemplate_list/index/cardtemplate_list',
+                        isShow: true,
+                        icon: 'cuIcon-list'
+                    },
+                    {
+                        name: '预览名片',
+                        path: '../../businesscard/index/businesscard?previewB=1',
+                        isShow: true,
+                        icon: 'cuIcon-card'
+                    },
+                    {
+                        name: '浏览记录',
+                        path: '../../browsecount/index/browsecount',
+                        isShow: true,
+                        icon: 'cuIcon-text'
+                    },
+                    {
+                        name: '推荐楼盘',
+                        path: '../../recommend/index/recommend',
+                        isShow: true,
+                        icon: 'iconfont icongongsi'
+                    },
+                    {
+                        name: '分享名片',
+                        path: '../../share/index/share',
+                        // #ifdef MP-WEIXIN
+                        isShow: true,
+                        // #endif
+                        icon: 'cuIcon-evaluate_fill'
+                    },
+                    {
+                        name: '名片夹',
+                        path: '../../cardclamp/index/cardclamp',
+                        isShow: true,
+                        icon: 'cuIcon-file'
+                    },
+                    {
+                        name: '操作指南',
+                        path: '../../explain/index/explain',
+                        isShow: true,
+                        icon: 'cuIcon-forward'
+                    }
+                ]
             }
         },
-        onLoad() {},
         methods: {
             toPages(e) {
                 const url = e.currentTarget.dataset.page;
@@ -88,9 +95,7 @@
             cardTemplate,
             makeBtn
         },
-        computed: {
-            ...mapState('ucenter', ['currentUserInfo'])
-        }
+        computed: {}
     }
 </script>
 

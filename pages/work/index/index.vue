@@ -102,7 +102,6 @@
 					name: '设置',
 					path: '/pages/test/index/index'
 				}],
-
 				attendanceList: [
 					{
 						cuIcon: 'vipcard',
@@ -119,7 +118,6 @@
 						path: '/pages/attendance/setting/index'
 					}
 				],
-				
 				projectList: [
 					{
 						cuIcon: 'read',
@@ -145,7 +143,6 @@
 						path: '/pages/project/list/index?type=public'
 					}
 				],
-				
 				customer1: [
 					{
 						cuIcon: 'peoplelist',
@@ -188,15 +185,17 @@
 				]
 			};
 		},
-		onShow() {
-			if (!this.hasLogin) {
-				uni.navigateTo({url: '/pages/public/login/index'})
-				return
-			}
-		},
+		onShow() {},
+        onLoad() {
+
+        },
 		methods: {
 			handleNav(url) {
-				if (url) {
+                if (this.shopId && /type=cooperation/.test(url)) {
+                    uni.navigateTo({
+                        url: `/pages/project/list/index?type=shop&shop_id=${this.shopId}`
+                    });
+                } else if (url) {
 					uni.navigateTo({ url })
 				}
 			},
@@ -205,8 +204,9 @@
 			}
 		},
 		computed: {
-			...mapState(['hasLogin', 'userInfo'])
-		},
+			...mapState(['hasLogin', 'userInfo']),
+            ...mapState('work', ['shopId'])
+		}
 	}
 </script>
 

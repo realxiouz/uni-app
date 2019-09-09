@@ -18,7 +18,7 @@
 		</view> -->
 		<view class="user">
 			<view class="avatar">
-				<image :src="userInfo.avatar" mode="aspectFit"></image>
+				<image :src="userInfo.avatar"></image>
 			</view>
 			<view class="userInfo">
 				<view class="title">
@@ -78,7 +78,7 @@ import { mapState, mapMutations } from 'vuex'
 		},
 		onLoad() {
 			//#ifdef MP-WEIXIN
-			uni.startWifi({
+			/*uni.startWifi({
 				success(res) {
 					console.log(res)
 					uni.getWifiList({
@@ -96,7 +96,7 @@ import { mapState, mapMutations } from 'vuex'
 			})
 			uni.onGetWifiList(function(r) {
 				console.log(r.wifiList);
-			})
+			})*/
 			//#endif
 			
 		},

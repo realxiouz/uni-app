@@ -86,21 +86,27 @@
 		}) {
 			switch (index) {
 				case 0:
-					console.log('menu')
+					console.log('menu');
 					break;
 				case 1:
-					console.log('share')
+					console.log('share');
 					break
 				default:
 					break;
 			}
 		},
 		onLoad(opt) {
-			this.id = opt.id
+			this.id = opt.id;
 			this.cooperation = opt.type;
 			let data = null;
 			// listType已被我换成cooperation
-			if (/(cooperation|public)/.test(opt.type)) {
+            if (/shop/.test(opt.type)) {
+                data = {
+                    baobei_projects_sub: JSON.stringify({
+                        company_id: opt.company_id
+                    })
+                }
+            } else if (/(cooperation|public)/.test(opt.type)) {
 				data = {
 					baobei_projects_sub: JSON.stringify({
 						route_type: opt.type
@@ -108,8 +114,8 @@
 				}
 			}
 			this.$http(`project/${this.id}`, data).then(r => {
-				this.bean = r.data
-				let banners = []
+				this.bean = r.data;
+				let banners = [];
 				let hx = [];
 				for (let item of r.data.house_types) {
 					hx.push(item.img);

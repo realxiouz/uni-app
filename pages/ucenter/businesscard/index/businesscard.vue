@@ -1,5 +1,5 @@
 <template>
-	<view class="padding-25" v-cloak>
+	<view class="padding-25" v-cloak style="height: 3000px;">
 		<!-- cardtemplate 组件start -->
 		<!-- :user="currentUserInfo"  -->
 		<card-template :is-show-list="false"></card-template>
@@ -16,11 +16,11 @@
 			</view>
 			<view class="isshow-content" v-if="isShowCardContent">
 				<view class="card-details">
-					<text>公司名称：{{currentUserInfo.companyname || ''}}</text>
-					<text>电话：{{currentUserInfo.phone || ''}}</text>
-					<text>微信手机号：{{currentUserInfo.mobile || ''}}</text>
-					<text>微信号：{{currentUserInfo.weixin || ''}}</text>
-					<text>邮箱：{{currentUserInfo.email || ''}}</text>
+					<text>公司名称：{{currentInfo.companyname || ''}}</text>
+					<text>电话：{{currentInfo.phone || ''}}</text>
+					<text>微信手机号：{{currentInfo.mobile || ''}}</text>
+					<text>微信号：{{currentInfo.weixin || ''}}</text>
+					<text>邮箱：{{currentInfo.email || ''}}</text>
 				</view>
 			</view>
 		</view>
@@ -48,7 +48,7 @@
 								<text>分享给好友</text>
 							</view>
 							<view class="sharetoobj-list">
-								<button @tap="showcard" data-target="bottomModal-0"></button>
+								<button @tap="showCard" data-target="bottomModal-0"></button>
 								<view>
 									<image :src="imgSrcGetters('pyq.png')"></image>
 								</view>
@@ -61,26 +61,24 @@
 					</view>
 				</view>
 			</view>
-			<view :class="['cu-modal', 'bottom-modal', modalName ==='bottomModal-0'? 'show': '']">
-				<view class="cu-dialog">
-					<view class="pd-left-right">
-						<view class="canvas-share" :style="{width:canvasWidth + 'px'}">
-							<canvas class="shadow" canvas-id="sharecard" :style="{'width': canvasWidth + 'px', 'height': canvasHeight + 'px'}">
-
-							</canvas>
-						</view>
-						<!-- 分享小图 start-->
-						<canvas v-if="isShowShare" canvas-id="sharesm" style="width: 157px;height: 140px">
-						</canvas>
-						<!-- 分享小图 end-->
-						<view class="pd-top-bottom">
-							<button @tap="saveImage" class="btnwd cu-btn block bg-cyan" :data-temp="shareImg">保存到相册</button>
-						</view>
-					</view>
-					<view class="pd-top-bottom bg-white btn-center" @tap="canclesavepic">
-						取消
-					</view>
-				</view>
+			<view :class="['cu-modal', 'bottom-modal', modalName === 'bottomModal-0'? 'show': '']">
+                    <view class="cu-dialog">
+                        <view class="pd-left-right">
+                            <view class="canvas-share" :style="{width:canvasWidth + 'px'}">
+                                <canvas class="shadow" canvas-id="share-card" v-if="!showImage" :style="{'width': canvasWidth + 'px', 'height': canvasHeight + 'px'}"></canvas>
+                                <image :src="saveImgSrc" v-else :style="{'width': canvasWidth + 'px', 'height': canvasHeight + 'px'}"></image>
+                            </view>
+                            <!-- 分享小图 这里不需要显示, 直接通过onShare函数分享, 需要处理在显示大图也显示小图的情况 start-->
+                            <canvas v-if="!showSmallImage && isShowShare" canvas-id="share-sm" style="width: 157px;height: 140px"></canvas>
+                            <!-- 分享小图 end-->
+                            <view class="pd-top-bottom">
+                                <button @tap="saveImage" class="btnwd cu-btn block bg-cyan" :data-temp="shareImg">保存到相册</button>
+                            </view>
+                        </view>
+                        <view class="pd-top-bottom bg-white btn-center" @tap="canclesavepic">
+                            取消
+                        </view>
+                    </view>
 			</view>
 			<button @tap="addPhoneNumber" class="cu-btn round bg-blue">存入手机通讯录</button>
 		</view>
@@ -112,7 +110,7 @@
 				我的签名
 			</view>
 			<view class="Module-content">
-				{{currentUserInfo.signature || ''}}
+				{{currentInfo.signature || ''}}
 			</view>
 			<view class="Module-title pubpdtop">
 				推荐房源
@@ -151,7 +149,7 @@
 		<!-- 底部 end -->
 
 		<!--制作名片按钮 start-->
-		<make-btn :on-event="onMyEvent" v-if="!showMakeBth"></make-btn>
+		<make-btn :on-event="onMyEvent" v-if="!showMakeBtn"></make-btn>
 		<!--制作名片按钮 end-->
 	</view>
 </template>
@@ -159,8 +157,7 @@
 <script>
 	import cardTemplate from '../../../../components/cardtemplate/cardtemplate.vue';
 	import makeBtn from '../../../../components/makebtn/index/makebtn.vue';
-	import {BASE_URL} from '../../../../utils/const.js';
-	import share from '../../../../utils/share.js';
+	import share from '../../../../common/share.js';
 	import {mapMutations, mapState, mapGetters} from 'vuex';
 
 	export default {
@@ -178,10 +175,10 @@
 				canvasHeight: '', //canvas高
 				currentBgNum: 0, //当前名片索引
 				shareImg: '', // 分享img
+                saveImgSrc: '', // 保存img
 				modalName: '',// 用户授权时使用, 打开分享界面时也使用
 				ifShowRZbt: false,// 用户授权使用
 				showBrowseEllipsis: false,// 显示浏览名片人的头像的省略号
-				isShowShare: false,
 				testUserInfo: {},// 分享是绘制canvas需要
 				qrCode: '', // 图片的src(头像)
 				bg_gradual_blue: 'bg-gradual-blue',
@@ -191,8 +188,13 @@
 					title: '制作名片',
 					imgSrc: ''
 				},
-				showMakeBth: false, // 这里true显示makebtn, false反之
-				cardTop: ''// 名片信息
+				showMakeBtn: false, // 这里true显示make-btn, false反之
+				cardTop: '',// 名片信息
+                smallImg : '', // 小图src
+                showImage: false,
+                showSmallImage: false,
+                isRepeatDraw: true,
+                isShowShare: true
 			}
 		},
 		components: {
@@ -201,34 +203,29 @@
 		},
 		onLoad(options) {
 			const self = this;
-			self.showMakeBth = options.previewB === '1';
+            self.showMakeBtn = options.previewB === '1';
+			let uidx = options.uidx;
+            if (this.currentUserInfo.name) {// 这个是被分享人的名片信息
+                this.changeCurrentInfo(this.currentUserInfo);
+            } else if (uidx){
+                this.getUserMsg(uidx);
+            }
+            if (this.currentLoginUserInfo.name) {// 在已经获取了就不要再去请求了
+                this.changeCurrentInfo(this.currentLoginUserInfo);
+            } else {
+                this.getUserMsg();
+            }
 			// canvas
-			let screenwd = uni.getSystemInfoSync().windowWidth;
-			this.canvasWd = this.canvasWidth = screenwd - 20 * 1.9;
-			this.currentbgnum = this.currentUserInfo.template_id || 1;
-			
-			// this.canvasHeight = canvasht;
-            uni.showLoading({
-                title: '加载中',
-                mask: true
-            });
-			this.$http('geren/userinfo').then(res => {
-				self.readNumber = res.readnumber;
-				self.BrowseUser = res.Browseuser;
-				self.house = res.house.data;
-				self.changeCurrentUserInfo(res.data);// 用户相关信息, 在vuex中
-				self.testUserInfo = self.currentUserInfo;
-				uni.hideLoading();
-			}).catch(err => {
-				uni.hideLoading();
-			})
+			let screenWd = uni.getSystemInfoSync().windowWidth;
+			this.canvasWd = this.canvasWidth = screenWd - 20 * 1.9;
+			this.currentBgNum = this.currentInfo.template_id || 1;
 			this.onMyEvent.imgSrc = this.imgSrcGetters('card.png');
 		},
 		onHide() {
 			uni.hideLoading();
 		},
 		watch: {
-			readNumber(data) {
+			readNumber() {
 				const self = this;
 				// 这里是因为数据都是一起修改的, 所以监听它可以省去无限调用的麻烦, 还有此时页面也已经挂载上去, 可以正常获取到宽度
 				// 这个方法是获取宽高的, 目前只可以传id, 且不带#, 需要改成标签名或者是class的可以去global-data.js下修改
@@ -243,11 +240,17 @@
 					self.BrowseUser = self.BrowseUser.slice(0, data);
 					self.showBrowseEllipsis = true;
 				})
-			}
+			},
+            saveImgSrc(data) {
+                this.showImage = Boolean(data);
+            },
+            shareImg(data) {
+                this.showSmallImage = Boolean(data);
+            }
 		},
 		methods: {
 			...mapMutations(['login']),
-			...mapMutations('ucenter', ['changeCurrentUserInfo']),
+			...mapMutations('ucenter', ['changeCurrentLoginUserInfo', 'changeImg', 'changeCurrentUserInfo', 'changeCurrentInfo']),
 			toDetail(id) {
 				// recommend为1表示是从名片推荐楼盘这里跳转过去的, 因为在详情页里有些不显示户型图片, 地图, 详情
 				uni.navigateTo({
@@ -273,39 +276,79 @@
 					this.isShowCardContent = false;
 				}
 			},
-
 			/* 名片分享到朋友圈*/
-			generateCard(e) {
-				share.loading(this.currentUserInfo).then(data => {
-					// 为画布设置宽高
-					this.canvasWidth = this.canvasWd;
-					
-					this.qrCode = data.tempFilePath;
-					this.modalName = e.currentTarget.dataset.target;
-					// 绘制canvas图片
-					const ctx = uni.createCanvasContext('sharecard');
-					const cardSm = uni.createCanvasContext('sharesm');
-					let bgSm = [
-						this.imgSrcGetters('sm_0.png'),
-						this.imgSrcGetters('sm_1.png'),
-						this.imgSrcGetters('sm_2.png'),
-						this.imgSrcGetters('sm_3.png'),
-					];
-					this.currentbgnum = this.currentUserInfo.template_id;
-					share.canvas.call(this, e, ctx, cardSm, bgSm, share.roundRect);
-				}).catch(err => {
-					console.log(err);
-				})
+            async generateCard(e) {
+                uni.showLoading({
+                    title: '生成中...',
+                    mask: true
+                });
+                let avatar = this.currentInfo.avatar;
+                avatar = avatar.replace('http:', 'https:');
+                let imgDownload = [
+                    {
+                        key: 'img_avatar',
+                        src: avatar
+                    },
+                    {
+                        key: 'img_phone',
+                        src: this.imgSrcGetters('phone_white.png')
+                    },
+                    {
+                        key: 'img_company',
+                        src: this.imgSrcGetters('companyicon_white.png')
+                    },
+                    {
+                        key: 'img_bg',
+                        src: this.imgSrcGetters(`template_${this.currentInfo.template_id}.png`)
+                    },
+                    {
+                        key: 'img_company_black',
+                        src: this.imgSrcGetters(`companyicon_black.png`)
+                    },
+                    {
+                        key: 'img_phone_black',
+                        src: this.imgSrcGetters('phone_back.png')
+                    },
+                    {
+                        key: 'img_large_bg',
+                        src: this.imgSrcGetters('card-mask.png')
+                    }
+                ];
+                for (let item of Object.values(imgDownload)) {
+                    let _key = item.key;
+                    if (!this.downLoadImg[_key]) {
+                        await share.loading(item.src).then(res => {
+                            this.isRepeatDraw = true;
+                            this.changeImg({key: _key, url: res.tempFilePath});
+                        })
+                    }
+                }
+                uni.hideLoading();
+                // 为画布设置宽高, 在点击取消的时候会清除
+                this.canvasWidth = this.canvasWd;
+                this.modalName = e.currentTarget.dataset.target;
+                if (!this.isRepeatDraw) {
+                    this.saveImgSrc = true;
+                    this.showSmallImage = true;
+                    this.isShowShare = true;
+                    return false;
+                }
+                // 绘制canvas图片
+                const ctx = uni.createCanvasContext('share-card');
+                const cardSm = uni.createCanvasContext('share-sm');
+                this.currentBgNum = this.currentInfo.template_id;
+                share.canvas.call(this, e, ctx, cardSm);
 			},
 			/* 点击隐藏到分享图标 */
 			hideModal() {
 				this.modalName = null;
-				this.userImg = '';
+				this.isShowShare = false;
+                this.saveImgSrc = false;
+                this.showSmallImage = false;
 			},
 			/*隐藏已打开的分享界面*/
 			canclesavepic() {
 				this.modalName = null;
-				this.isShowShare = false;
 				this.canvasWidth = 0;
 				this.canvasHeight = 0;
 				this.shareImg = '';
@@ -313,33 +356,71 @@
 			/*拨打电话*/
 			tel() {
 				uni.makePhoneCall({
-					phoneNumber: this.currentUserInfo.mobile
+					phoneNumber: this.currentInfo.mobile
 				})
 			},
 			/* 新建联系人 */
 			addPhoneNumber() {
 				uni.addPhoneContact({
-					firstName: this.currentUserInfo.name,
-					mobilePhoneNumber: this.currentUserInfo.mobile
+					firstName: this.currentInfo.name,
+					mobilePhoneNumber: this.currentInfo.mobile
 				})
 			},
-			showcard(e) {
+			showCard(e) {
 				// 分享到朋友圈
 				this.modalName = e.currentTarget.dataset.target;
 			},
 			saveImage() {
 				// 保存图片
 				const self = this;
-				if (this.shareImg) {
+				if (this.saveImgSrc) {
 					uni.saveImageToPhotosAlbum({
-						filePath: self.shareImg,
+						filePath: self.saveImgSrc,
 						success(res) {
 							if (/saveImageToPhotosAlbum:ok/.test(res.errMsg)) {
-								uni.navigateBack({
-									delta: 1
-								})
+                                uni.showToast({
+                                    title: '保存成功',
+                                    duration: 1000
+                                });
+                                self.hideModal();
 							}
-						}
+						},
+                        fail(err) {
+                            if (err.errMsg === "saveImageToPhotosAlbum:fail:auth denied" || err.errMsg === "saveImageToPhotosAlbum:fail auth deny") {
+                                // 这边微信做过调整，必须要在按钮中触发，因此需要在弹框回调中进行调用
+                                uni.showModal({
+                                    title: '提示',
+                                    content: '需要您授权保存相册',
+                                    showCancel: false,
+                                    success: modalSuccess => {
+                                        uni.openSetting({
+                                            success(settingdata) {
+                                                console.log("settingdata", settingdata);
+                                                if (settingdata.authSetting['scope.writePhotosAlbum']) {
+                                                    uni.showModal({
+                                                        title: '提示',
+                                                        content: '获取权限成功,再次点击图片即可保存',
+                                                        showCancel: false,
+                                                    })
+                                                } else {
+                                                    uni.showModal({
+                                                        title: '提示',
+                                                        content: '获取权限失败，将无法保存到相册哦~',
+                                                        showCancel: false,
+                                                    })
+                                                }
+                                            },
+                                            fail(failData) {
+                                                console.log("failData", failData)
+                                            },
+                                            complete(finishData) {
+                                                console.log("finishData", finishData)
+                                            }
+                                        })
+                                    }
+                                })
+                            }
+                        }
 					})
 				}
 			},
@@ -358,7 +439,7 @@
 						console.log(res);
 					},
 					fail(error) {
-						console.log(erros)
+						console.log(error);
 					}
 				});
 			},
@@ -366,7 +447,7 @@
 			messageInformation() {
 				// 留言咨询
 				uni.navigateTo({
-					url: `/pages/message/chat/index?id=${this.currentUserInfo.uid}&type=App\\User`
+					url: `/pages/message/chat/index?id=${this.currentInfo.uid}&type=App\\User`
 				});
 			},
 			getElSize(id) { //得到元素的size
@@ -378,23 +459,45 @@
 			            res(data);
 			        }).exec();
 			    });
-			}
+			},
+            getUserMsg(uidx) {
+			    const self = this;
+                uni.showLoading({
+                    title: '加载中',
+                    mask: true
+                });
+                let boo = !!uidx;
+                uidx = uidx || this.userInfo.id;
+                this.$http('geren/userinfo', {uidx: uidx}).then(res => {
+                    self.readNumber = res.readnumber;
+                    self.BrowseUser = res.Browseuser;
+                    self.house = res.house.data;
+                    this.changeCurrentInfo(res.data);
+                    self[boo? 'changeCurrentUserInfo': 'changeCurrentLoginUserInfo'](res.data);
+                    console.log(this.currentUserInfo, 'c');
+                    console.log(this.currentLoginUserInfo, 'nc');
+                    uni.hideLoading();
+                }).catch(err => {
+                    console.log(err);
+                    uni.hideLoading();
+                });
+            }
 		},
 		onShareAppMessage() {
-			return {
-				title: '房销客管理系统',
-				desc: '房销客管理系统，管理您的客户，提高您的业绩！',
-				path: '/pages/attendance/businesscard/index/businesscard',
-			}
+            return {
+			    title: `您好，我是${this.currentInfo.name}。这是我的名片，请惠存`,
+                imageUrl: this.shareImg,
+                path: '/pages/ucenter/businesscard/index/businesscard?uidx='+ this.userInfo.id
+            }
 		},
 		computed: {
-			...mapState('ucenter', ['currentUserInfo']),
+			...mapState('ucenter', ['currentUserInfo', 'downLoadImg', 'currentLoginUserInfo', 'currentInfo']),
 			...mapState(['userInfo']),
 			...mapGetters('ucenter', ['imgSrcGetters'])
 		},
 		mounted() {
-			
-		}
+
+        }
 	}
 </script>
 
