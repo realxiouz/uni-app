@@ -4,11 +4,9 @@ import {BASE_URL} from "../../utils/const";
 export default {
 	namespaced: true,
 	state: {
-		currentUserInfo: {// 用户相关信息, 非登录
+		currentUserInfo: {// 被分享用户相关信息, 非登录
 			template_id: '0'
 		},
-		LoginUserHouseArr: [], // 当前登录用户的推荐楼盘楼盘
-        currentUserHouseArr: [], // 被分享人用户的推荐楼盘
 		statusBarHeight: 0, //状态栏的高度，单位px
 		houseId: [],//保存被选中的楼盘ID,
 		imgSrc: BASE_URL + '/storage/vicard/',
@@ -21,17 +19,17 @@ export default {
             img_company_black: '',
             img_large_bg: ''
         },
-        currentLoginUserInfo: {},
-        currentInfo: {}
+        currentLoginUserInfo: {},// 登录用户的信息
+        currentInfo: {}// 当前显示使用的信息(登录或被分享的)
 	},
 	mutations: {
 		changeCurrentUserInfo(state, data) {
 			for (const [key, val] of Object.entries(data)) {
-				Vue.set(state.checkUserInfo, key, val);
+				Vue.set(state.currentLoginUserInfo, key, val);
 			}
 		},
 		changeLoginUserHouseArr(state, data) {
-			state.LoginUserHouseArr = data;
+			state.loginUserHouseArr = data;
 		},
         changeCurrentUserHouseArr(state, data) {
 		    state.currentUserHouseArr = data;

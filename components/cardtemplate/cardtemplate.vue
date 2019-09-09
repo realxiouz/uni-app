@@ -55,8 +55,7 @@
             isPreview(data) {
                 if (data) {
                     // 只有是在预览下这里才会赋值
-                    this.changeCurrentInfo(this.currentUserInfo);
-                    this.changeImg({key: 'img_avatar', url: ''});
+                    this.changeCurrentInfo(this.currentLoginUserInfo);
                     this.changeImg({key: 'img_bg', url: ''});
                 }/* else {
                     this.changeCurrentInfo(this.currentUserInfo);
@@ -69,11 +68,8 @@
 		    let route = this.getCurPage().route;
             if (/pages\/ucenter\/page_makecard\/index\/page_makecard/.test(route)) {
                 this.changeCurrentInfo(this.currentLoginUserInfo);
-            } else if (/pages\/ucenter\/businesscard\/index\/businesscard/.test(route)) {
-                this.changeCurrentInfo(this.currentLoginUserInfo);
-            } else {
-                // 这里比如在选择模板哪里需要
-                this.changeCurrentInfo(this.currentLoginUserInfo);
+                this.changeImg({key: 'img_bg', url: ''});
+                this.changeImg({key: 'img_avatar', url: ''});
             }
 			if (!this.isShowList) return false;
 			for (let i = 0; i < this.templateNum; i++) {
