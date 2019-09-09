@@ -37,7 +37,7 @@
 		},
 		computed: {
 			title() {
-				return this.value ? this.range.find(i => i[this.valueKey] == this.value)[this.rangeKey] : this.placeholder
+				return this.value && this.range.length ? this.range.find(i => i[this.valueKey] == this.value)[this.rangeKey] : this.placeholder
 			},
 			valueAsync() {
 				return this.range.findIndex(i => i[this.valueKey] == this.value)

@@ -1,10 +1,10 @@
 <template>
 	<view>
-		<view class="fixed bg-white nav" :style="{top: isH5?'44px':'0'}">
-			<view class="cu-item" :class="inx==selTab?'text-blue cur':''" v-for="(i,inx) in tabs" :key="inx" @click="handleNavChange(inx)">
+		<scroll-view scroll-x class="fixed bg-white nav" :style="{top: isH5?'44px':'0'}"  :scroll-into-view="vId" scroll-with-animation>
+			<view class="cu-item" :id="`nav-${inx}`" :class="inx==selTab?'text-blue cur':''" v-for="(i,inx) in tabs" :key="inx" @click="handleNavChange(inx)">
 				{{i.text}}
 			</view>
-		</view>
+		</scroll-view>
 		<swiper :style="[{position:'fixed',left:0,right:0,bottom:'0',top:top+'px',height:'auto'}]" @change="tabChange"
 		 :current="selTab">
 			<swiper-item>
@@ -24,8 +24,11 @@
 			</swiper-item>
 			<swiper-item>
 				<data-list ref="list3" @data="handleList3" r-url="customerDemand" :r-data="rData">
-					<baobei v-for="(i, inx) in list3" :key="inx" :bean="i" />
+					<need v-for="(i, inx) in list3" :key="inx" :bean="i" />
 				</data-list>
+			</swiper-item>
+			<swiper-item>
+				<bean :c-id="id" ref="list4" />
 			</swiper-item>
 		</swiper>
 		<float-button @go="handleGo" />
@@ -37,6 +40,8 @@
 	import Genjin from './components/genjin'
 	import Daofang from './components/daofang'
 	import Baobei from './components/baobei'
+	import Need from './components/need'
+	import Bean from './components/bean'
 	import FloatButton from '@/components/float-button'
 	import {
 		mapMutations,
@@ -49,15 +54,16 @@
 				this.top = 44 + uni.upx2px(90)
 			}
 			this.id = opt.id
-			this.rData = {customer_id: this.id}
-			this.customerDetail()
-
+			this.rData = {
+				customer_id: this.id
+			}
 			this.$nextTick(_ => {
 				this.$refs.list0.init()
 			})
 		},
 		data() {
 			return {
+				vId: 'nav-0',
 				top: uni.upx2px(90),
 				id: '',
 				bean: {},
@@ -74,6 +80,9 @@
 					{
 						text: '客户需求'
 					},
+					{
+						text: '客户详情'
+					},
 				],
 				list0: [],
 				list1: [],
@@ -84,13 +93,6 @@
 		},
 		methods: {
 			...mapMutations('baobei', ['setDaikan', 'setSelProject', 'setSelCustomer']),
-			customerDetail() {
-				this.$http('customer', {
-					id: this.id
-				}).then(r => {
-					this.bean = r.data[0]
-				})
-			},
 			handleList(inx, l) {
 				console.log(inx)
 				console.log(l)
@@ -109,10 +111,14 @@
 				this.list3 = l
 			},
 			tabChange(e) {
+				let temp = e.detail.current - 2 < 0 ? 0 : e.detail.current - 2
+				this.vId = `nav-${temp}`
 				this.selTab = e.detail.current
 				this.$refs[`list${this.selTab}`].init()
 			},
 			handleNavChange(inx) {
+				let temp = inx - 2 < 0 ? 0 : inx - 2
+				this.vId = `nav-${temp}`
 				this.selTab = inx
 			},
 			handleGo() {
@@ -142,14 +148,42 @@
 						})
 						break;
 					case 3:
-						
-						let itemList = ['住宅']
+
+						let itemList = ['住宅', '新房', '租房', '二手房']
 						uni.showActionSheet({
 							itemList,
 							success: r => {
-								uni.navigateTo({
-									url: `/pages/customer/need/index?type=CustomerDemand sales&subType=${itemList[r.tapIndex]}&cId=${this.id}`
-								})
+								switch (itemList[r.tapIndex]) {
+									case '住宅':
+										uni.navigateTo({
+											url: `/pages/customer/need/zhuzhai1?cId=${this.id}`
+										})
+										break
+									case '公寓':
+										uni.navigateTo({
+											url: `/pages/customer/need/gongyu1?cId=${this.id}`
+										})
+										break
+									case '商铺':
+										uni.navigateTo({
+											url: `/pages/customer/need/shangpu1?cId=${this.id}`
+										})
+										break
+									case '写字楼':
+										uni.navigateTo({
+											url: `/pages/customer/need/xiezilou1?cId=${this.id}`
+										})
+										break
+									case '新房':
+									case '租房':
+									case '二手房':
+										uni.navigateTo({
+											url: `/pages/customer/need/select?type=${itemList[r.tapIndex]}&cId=${this.id}`
+										})
+										break
+									
+								}
+
 							}
 						})
 						break
@@ -163,7 +197,9 @@
 			Genjin,
 			FloatButton,
 			Daofang,
-			Baobei
+			Baobei,
+			Bean,
+			Need
 		},
 		computed: {
 			...mapState(['userInfo', 'isH5']),

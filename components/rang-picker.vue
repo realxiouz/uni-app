@@ -1,7 +1,7 @@
 <template>
-	<picker mode="multiSelector" :value="value" :range="range" range-key="text" @columnchange="handleColumnChange" @change="handleChange">
+	<picker mode="multiSelector" :value="valueSync" :range="range" range-key="text" @change="handleChange">
 		<view class="picker">
-			{{ value.length == 2 ?  `${range[0][value[0]].text}-${range[1][value[1]].text}` : '还未选择'}}
+			{{ valueSync.length == 2 ?  `${range[0][valueSync[0]].text}-${range[1][valueSync[1]].text}` : '还未选择'}}
 		</view>
 	</picker>
 </template>
@@ -16,26 +16,19 @@
 				type: String,
 				default: '元'
 			},
-			v: {
+			value: {
 				type: Array
 			}
 		},
 		data() {
 			return {
-				firstColumnInx: 0,
-				value: []
+				valueSync: []
 			}
 		},
 		methods: {
-			handleColumnChange(e) {
-				let {column, value} = e.detail
-				if (column === 0) {
-					this.firstColumnInx = value
-				}
-			},
 			handleChange(e) {
-				this.value = e.detail.value
-				this.$emit('change', [this.range[0][this.value[0]].value, this.range[1][this.value[1]].value])
+				let val = e.detail.value
+				this.$emit('input', [this.range[0][val[0]].value, this.range[1][val[1]].value])
 			}
 		},
 		computed: {
@@ -45,18 +38,20 @@
 					value: i
 				}))
 				return [
-					temp.slice(0, temp.length-1),
-					temp.slice(this.firstColumnInx)
+					temp,
+					temp
 				]
 			}
 		},
 		watch: {
-			v(val) {
-				this.value = [
-					this.range[0].findIndex(i => i.value == val[0]),
-					this.range[1].findIndex(i => i.value == val[1])
-				]
-				this.firstColumnInx = this.range[0].findIndex(i => i.value == val[0])
+			value(val) {
+				if (val.length == 2) {
+					this.valueSync = [
+						this.range[0].findIndex(i => i.value == val[0]),
+						this.range[1].findIndex(i => i.value == val[1])
+					]
+				}
+				
 			}
 		}
 	}
