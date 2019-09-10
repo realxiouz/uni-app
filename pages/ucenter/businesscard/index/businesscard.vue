@@ -1,8 +1,8 @@
 <template>
-	<view class="padding-25" v-cloak style="height: 3000px;">
+	<view class="padding-25" v-cloak>
 		<!-- cardtemplate 组件start -->
 		<!-- :user="currentUserInfo"  -->
-		<card-template :is-show-list="false"></card-template>
+		<card-template :is-show-list="false" :is-preview="showMakeBtn"></card-template>
 		<!-- cardtemplate 组件end -->
 
 		<!-- 名片详情start -->
@@ -201,8 +201,8 @@
 			cardTemplate,
 			makeBtn
 		},
-		onLoad(options) {
-			const self = this;
+		onLoad(options){
+            const self = this;
             self.showMakeBtn = options.previewB === '1';
 			let uidx = options.uidx;
             if (this.currentUserInfo.name) {// 这个是被分享人的名片信息
@@ -215,6 +215,7 @@
             } else {
                 this.getUserMsg();
             }
+            self.readNumber = self.currentInfo.readNumber;
 			// canvas
 			let screenWd = uni.getSystemInfoSync().windowWidth;
 			this.canvasWd = this.canvasWidth = screenWd - 20 * 1.9;
@@ -227,6 +228,12 @@
 		watch: {
 			readNumber() {
 				const self = this;
+				let BrowseUser = self.currentInfo.BrowseUser;
+                if (BrowseUser) {
+                    self.BrowseUser = self.currentInfo.BrowseUser;
+                } else {
+                    return false;
+                }
 				// 这里是因为数据都是一起修改的, 所以监听它可以省去无限调用的麻烦, 还有此时页面也已经挂载上去, 可以正常获取到宽度
 				// 这个方法是获取宽高的, 目前只可以传id, 且不带#, 需要改成标签名或者是class的可以去global-data.js下修改
 				async function getSize() {
@@ -472,8 +479,9 @@
                     self.readNumber = res.readnumber;
                     self.BrowseUser = res.Browseuser;
                     self.house = res.house.data;
+                    const data = Object.assign({}, {readNumber: res.readnumber}, {BrowseUser: res.Browseuser}, {house: res.house.data}, res.data);
                     this.changeCurrentInfo(res.data);
-                    self[boo? 'changeCurrentUserInfo': 'changeCurrentLoginUserInfo'](res.data);
+                    self[boo? 'changeCurrentUserInfo': 'changeCurrentLoginUserInfo'](data);
                     console.log(this.currentUserInfo, 'c');
                     console.log(this.currentLoginUserInfo, 'nc');
                     uni.hideLoading();
@@ -483,6 +491,12 @@
                 });
             }
 		},
+        onShow() {
+            console.log(this.currentUserInfo, 'on');
+            if (!this.showMakeBtn && this.currentUserInfo.name) {
+                this.changeCurrentUserInfo(this.currentUserInfo);
+            }
+        },
 		onShareAppMessage() {
             return {
 			    title: `您好，我是${this.currentInfo.name}。这是我的名片，请惠存`,

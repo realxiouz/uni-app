@@ -67,6 +67,20 @@
 				</view>
 			</view>
 		</template>
+        <template v-if="hasFeature('second house')">
+            <view class="cu-bar bg-white solid-bottom margin-top">
+                <view class="action">
+                    <text class="cuIcon-title text-orange "></text>二手房管理
+                </view>
+            </view>
+            <view class="cu-list grid col-4 no-border">
+                <view class="cu-item" v-for="(i, inx) in secondHouseList" :key="inx" @click="handleNav(i.path)">
+                    <view :class="['cuIcon-' + i.cuIcon,'text-' + i.color]">
+                    </view>
+                    <text>{{i.name}}</text>
+                </view>
+            </view>
+        </template>
 		<!-- <template v-if="">
 			<view class="cu-bar bg-white solid-bottom margin-top">
 				<view class="action">
@@ -182,7 +196,22 @@
 						name: '客户公池',
 						path: '/pages/customer/index/index?type=分销&private=false'
 					}
-				]
+				],
+                secondHouseList: [
+                    {
+                        cuIcon: 'goods',
+                        color: 'green',
+                        name: '房源管理',
+                        path: ''
+                    },
+                    {
+                        cuIcon: 'shop',
+                        color: 'green',
+                        name: '合同管理',
+                        path: ''
+                    }
+
+                ]
 			};
 		},
 		onShow() {},
