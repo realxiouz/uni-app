@@ -4,14 +4,6 @@
 			<view class="cu-item">
 				<view class="content padding-tb-sm flex align-center">
 					<view class="flex flex-direction flex-sub" style="align-items: flex-start;">
-						<view class="text-gray text-sm">客户类型</view>
-						<view class="text-black text-bold">{{bean.type}}</view>
-					</view>
-				</view>
-			</view>
-			<view class="cu-item">
-				<view class="content padding-tb-sm flex align-center">
-					<view class="flex flex-direction flex-sub" style="align-items: flex-start;">
 						<view class="text-gray text-sm">姓名</view>
 						<view class="text-black text-bold">{{bean.name}}</view>
 					</view>

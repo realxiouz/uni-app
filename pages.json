@@ -279,8 +279,14 @@
 			"style": {
 				"navigationBarTitleText": "报备详情"
 			}
-		}
-	    ,{
+		},
+		{
+			"path": "pages/baobei/daikan/index",
+			"style": {
+				"navigationBarTitleText": "报备带看"
+			}
+		},
+		{
             "path" : "pages/project/project-dev/index",
             "style": {
             	"app-plus": {

@@ -1,5 +1,5 @@
 <template>
-	<navigator class="bg-white margin-top-sm" :url="`/pages/customer/detail/index?id=${bean.id}`">
+	<navigator class="bg-white margin-top-sm" :url="`/pages/customer/detail/index?id=${bean.id}&type=${bean.type}`">
 			<view class="content flex align-center padding-tb-xs padding-lr-sm">
 				<view class="margin-right-sm">
 					<ava :name="bean.name"></ava>
@@ -35,7 +35,7 @@
 		methods: {
 			editCustomer(bean) {
 				uni.navigateTo({
-					url: `/pages/customer/bean/index?id=${bean.id}&type=${bean.type == '新房'?0:1}`
+					url: `/pages/customer/bean/index?id=${bean.id}&type=${bean.type}`
 				})
 			}
 		}

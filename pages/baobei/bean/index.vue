@@ -117,7 +117,7 @@
 				this.formBean.project_ids = this.selProject.map(i => i.id)
 				this.$http('baobei', this.formBean, 'post').then(r => {
 					uni.showToast({
-						title: '表单提交成功'
+						title: '报备成功'
 					})
 					setTimeout(_ => {
 						uni.navigateBack()

@@ -30,8 +30,10 @@
 				this.$refs.list.getData()
 			})
 			
+			this.type = opt.type
+			
 			this.data = {
-				type: opt.type,
+				type: this.type,
 			}
 			if(opt.is_share) {
 				this.data.is_share = opt.is_share
@@ -45,7 +47,8 @@
 				list: [],
 				top: uni.upx2px(90),
 				keywords: '',
-				data: null
+				data: null,
+				type: ''
 			}
 		},
 		methods: {
@@ -54,7 +57,7 @@
 			},
 			handleGo() {
 				uni.navigateTo({
-					url: `/pages/customer/bean/index?type=0`
+					url: `/pages/customer/bean/index?type=${this.type}`
 				})
 			},
 			handleSearch() {

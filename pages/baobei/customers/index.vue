@@ -87,9 +87,7 @@
 					})
 				}
 				this.setSelCustomer(arr)
-				setTimeout(_ => {
-					uni.navigateBack()
-				}, 1500);
+				uni.navigateBack()
 			},
 		},
 		computed: {

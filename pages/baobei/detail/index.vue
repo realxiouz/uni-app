@@ -15,7 +15,7 @@
 					</view>
 					<view class="margin-bottom-sm">
 						<text class="text-gray baobei-label">客户姓名:</text>
-						<text>{{bean.customer_name}}</text>
+						<text>{{bean.customer_name}}({{bean.customer_sex}})</text>
 					</view>
 					<view class="margin-bottom-sm">
 						<text class="text-gray baobei-label">客户电话:</text>
@@ -25,9 +25,21 @@
 						<text class="text-gray baobei-label">带看姓名:</text>
 						<text>{{bean.daikan_name}}</text>
 					</view>
-					<view class="">
+					<view class="margin-bottom-sm">
 						<text class="text-gray baobei-label">带看电话:</text>
 						<text>{{bean.daikan_phone}}</text>
+					</view>
+					<view class="margin-bottom-sm">
+						<text class="text-gray baobei-label">报备时间:</text>
+						<text>{{bean.created_at|moment('from')}}</text>
+					</view>
+					<view class="margin-bottom-sm">
+						<text class="text-gray baobei-label">带看时间:</text>
+						<text>{{bean.ordered_time|moment('from')}}</text>
+					</view>
+					
+					<view>
+						<button class="cu-btn bg-cyan small shadow" @click="handleConfirm">带看确认</button>
 					</view>
 				</view>
 			</view>
@@ -112,6 +124,11 @@
 					default:
 						break;
 				}
+			},
+			handleConfirm() {
+				uni.navigateTo({
+					url: `/pages/baobei/daikan/index`
+				})
 			}
 		},
 		components: {

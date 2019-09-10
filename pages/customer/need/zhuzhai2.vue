@@ -86,7 +86,7 @@
 			this.type = opt.type
 			this.customerId = opt.cId
 			this.$http('path').then(r => {
-				this.rules = r.data.find(i => i.field == 'CustomerDemand sales').values.filter(i => i.mapping == '住宅').filter(i => i.required)
+				this.rules = r.data.find(i => i.field == 'CustomerDemand').values.filter(i => i.mapping == this.type).filter(i => i.required)
 			})
 			this.$http('attribute').then(r => {
 				this.allSels = r.data['CustomerDemand']
