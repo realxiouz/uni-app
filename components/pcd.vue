@@ -147,6 +147,9 @@
 	]
 	export default {
 		mounted() {
+			if (this.level === 3) {
+				this.range.splice(3, 1)
+			}
 			this.$http(`cities/${ps[0].id}`)
 				.then(r => {
 					this.range.splice(1, 1, r)
@@ -154,15 +157,23 @@
 				})
 				.then(r => {
 					this.range.splice(2, 1, r)
-					return this.$http(`areas/${r[0].id}`)
+					if (this.level === 4) {
+						return this.$http(`areas/${r[0].id}`)
+					}
 				})
 				.then(r => {
-					this.range.splice(3, 1, r)
+					if (r) {
+						this.range.splice(3, 1, r)
+					}
 				})
 		},
 		props: {
 			value: {
 				type: Array
+			},
+			level: {
+				type: Number,
+				default: 4
 			}
 		},
 		data() {
@@ -203,10 +214,12 @@
 				let {
 					value
 				} = e.detail
-				this.title =
-					`${this.range[0][value[0]].name},${this.range[1][value[1]].name},${this.range[2][value[2]].name},${this.range[3][value[3]].name}`
-				let data = [this.range[0][value[0]].id, this.range[1][value[1]].id, this.range[2][value[2]].id, this.range[3][value[
-					3]].id]
+				this.title = this.level === 4 ?
+					`${this.range[0][value[0]].name},${this.range[1][value[1]].name},${this.range[2][value[2]].name},${this.range[3][value[3]].name}` :
+					`${this.range[0][value[0]].name},${this.range[1][value[1]].name},${this.range[2][value[2]].name}`
+				let data = this.level === 4 ?
+				[this.range[0][value[0]].id, this.range[1][value[1]].id, this.range[2][value[2]].id, this.range[3][value[3]].id] :
+				[this.range[0][value[0]].id, this.range[1][value[1]].id, this.range[2][value[2]].id]
 				this.$emit('input', data)
 			},
 			pChange(pId) {
@@ -217,33 +230,43 @@
 					})
 					.then(r => {
 						this.range.splice(2, 1, r)
-						return this.$http(`areas/${r[0].id}`)
+						if (this.level === 4) {
+							return this.$http(`areas/${r[0].id}`)
+						}
 					})
 					.then(r => {
-						this.range.splice(3, 1, r)
+						if (r) {
+							this.range.splice(3, 1, r)
+						}
 					})
 			},
 			cChange(cId) {
 				this.$http(`districts/${cId}`)
 					.then(r => {
 						this.range.splice(2, 1, r)
-						return this.$http(`areas/${r[0].id}`)
+						if (this.level === 4) {
+							return this.$http(`areas/${r[0].id}`)
+						}
 					})
 					.then(r => {
-						this.range.splice(3, 1, r)
+						if (r) {
+							this.range.splice(3, 1, r)
+						}
 					})
 			},
 			dChange(dId) {
-				this.$http(`areas/${dId}`)
-					.then(r => {
-						this.range.splice(3, 1, r)
-					})
+				if (this.level === 4) {
+					this.$http(`areas/${dId}`)
+						.then(r => {
+							this.range.splice(3, 1, r)
+						})
+				}
 			}
 		},
 		watch: {
 			value: {
 				handler(v) {
-					if (v.length == 4) {
+					if (v.length >= 3) {
 						let v0, v1, v2, v3
 						v0 = this.range[0].findIndex(i => i.id == v[0])
 						this.$http(`cities/${v[0]}`)
@@ -255,14 +278,22 @@
 							.then(r => {
 								this.range.splice(2, 1, r)
 								v2 = this.range[2].findIndex(i => i.id == v[2])
-								return this.$http(`areas/${v[2]}`)
+								if (this.level === 4) {
+									return this.$http(`areas/${v[2]}`)
+								} else if (this.level ==3) {
+									this.vAsync = [v0, v1, v2]
+									this.title =
+										`${this.range[0][this.vAsync[0]].name},${this.range[1][this.vAsync[1]].name},${this.range[2][this.vAsync[2]].name}`
+								}
 							})
 							.then(r => {
-								this.range.splice(3, 1, r)
-								v3 = this.range[3].findIndex(i => i.id == v[3])
-								this.vAsync = [v0, v1, v2, v3]
-								this.title =
-									`${this.range[0][this.vAsync[0]].name},${this.range[1][this.vAsync[1]].name},${this.range[2][this.vAsync[2]].name},${this.range[3][this.vAsync[3]].name}`
+								if (r) {
+									this.range.splice(3, 1, r)
+									v3 = this.range[3].findIndex(i => i.id == v[3])
+									this.vAsync = [v0, v1, v2, v3]
+									this.title =
+										`${this.range[0][this.vAsync[0]].name},${this.range[1][this.vAsync[1]].name},${this.range[2][this.vAsync[2]].name},${this.range[3][this.vAsync[3]].name}`
+								}
 							})
 					}
 				}

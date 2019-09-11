@@ -64,24 +64,12 @@
 			</view>
 			<view class="cu-form-group">
 				<view class="title">现居地址</view>
-				<addressd @changes="selAddress1"></addressd>
+				<pcd :level="3" v-model="pcd" />
 			</view>
 			<view class="cu-form-group">
 				<view class="title">现住址</view>
 				<input placeholder="输入现住址" v-model="formBean.current_address"></input>
 			</view>
-			<!-- <view class="cu-form-group">
-				<view class="title">户籍</view>
-				<addressd @changes="selAddress2"></addressd>
-			</view> -->
-			<!-- <view class="cu-form-group">
-				<view class="title">客户星级</view>
-				<picker @change="starChange" :value="starInx" :range="stars" range-key="text">
-					<view class="picker">
-						{{starInx>-1?stars[starInx].text:'选择星级'}}
-					</view>
-				</picker>
-			</view> -->
 			<view class="cu-form-group">
 				<view class="title">归属员工</view>
 				<navigator class="show-arrow" url="/pages/customer/employee/index" hover-class="none">
@@ -111,10 +99,11 @@
 		mapState,
 		mapMutations
 	} from 'vuex'
-	import addressd from "@/components/jm-address"
 	import save from "@/components/buttom-button"
 	import Ava from '@/components/avatar'
 	import Rate from '@/components/rate'
+	import Pcd from '@/components/pcd'
+	
 	import {
 		RULES as r
 	} from '@/utils/const'
@@ -126,7 +115,7 @@
 				let {
 					data
 				} = await this.getCustomerDetail()
-				this.originData = data[0]
+				this.originData = data
 				this.formatData()
 			} else {
 				this.setSelEmployee({})
@@ -217,7 +206,9 @@
 			starInx: -1,
 
 			projects: [],
-			projectInx: -1
+			projectInx: -1,
+			
+			pcd: []
 		}),
 		methods: {
 			...mapMutations('customer', ['setSelEmployee']),
@@ -249,12 +240,6 @@
 				this.projectInx = e.detail.value
 				this.formBean.project_id = this.projects[this.projectInx].id
 			},
-			selAddress1(e) {
-				console.log(e)
-				this.formBean.current_province_id = e.pId
-				this.formBean.current_city_id = e.cId
-				this.formBean.current_district_id = e.dId
-			},
 			handleSave() {
 				// if (!r.phone(this.formBean.phone)) {
 				// 	uni.showToast({
@@ -267,6 +252,10 @@
 					return
 				}
 				this.formBean.belongsto_id = this.selEmployee.id
+				
+				this.formBean.current_province_id = this.pcd[0]
+				this.formBean.current_city_id = this.pcd[1]
+				this.formBean.current_district_id = this.pcd[2]
 
 				let data = Object.assign({}, this.formBean, {
 					type: this.customerType
@@ -289,9 +278,7 @@
 				
 			},
 			async getCustomerDetail() {
-				return this.$http('customer', {
-					id: this.customerId
-				})
+				return this.$http(`customer/${this.customerId}`)
 			},
 			formatData() {
 				// this.formBean.name = this.originData.name
@@ -307,6 +294,12 @@
 
 				let employee = this.originData.belongsto_id ? this.originData.belongs_employee : {}
 				this.setSelEmployee(employee)
+				
+				this.pcd = [
+					this.originData.current_province_id,
+					this.originData.current_city_id,
+					this.originData.current_district_id
+				]
 			},
 			validateForm() {
 				for (let i of this.rules) {
@@ -336,10 +329,10 @@
 			},
 		},
 		components: {
-			addressd,
 			save,
 			Ava,
-			Rate
+			Rate,
+			Pcd
 		},
 		computed: {
 			...mapState('customer', ['selEmployee']),

@@ -77,7 +77,13 @@
 		},
 		data: _ => ({
 			map2: {
-				'住宅': 'zhuzhai2'
+				'住宅': 'zhuzhai2',
+				'商铺': 'shangpu2',
+				'公寓': 'gongyu2',
+				'别墅': 'bieshu2',
+				'写字楼': 'xiezilou2',
+				'车位': 'chewei2',
+				'其他': 'qita2'
 			},
 			map1: {
 				'住宅': 'zhuzhai1',
