@@ -98,13 +98,20 @@
 					mask: true
 				});
 				this.$http('geren/uptemplate', {templateId: index}).then(res => {
+                    uni.hideLoading();
                     this.changeCurrentLoginUserInfo({template_id: index});
                     this.changeCurrentInfo(Object.assign({}, this.currentInfo, {template_id: index}));
 					this.changeImg({key: 'img_bg', url: ''});
-					uni.navigateBack({
-						delta: 1
-					});
-                    uni.hideLoading();
+                    uni.showToast({
+                        title: '修改成功...',
+                        duration: 1000,
+                        mask: true
+                    });
+                    setTimeout(() => {
+                        uni.navigateBack({
+                            delta: 1
+                        });
+                    }, 1200);
                 }).catch(err => {
                     console.log(err);
                     uni.hideLoading();

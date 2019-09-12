@@ -10,7 +10,6 @@
 					<view class="title">密码</view>
 					<input placeholder="密码" password v-model="formBean.password"/>
 				</view>
-				
 				<button @tap="handleLogin">登录</button>
 				<!-- <button @tap="wechatlogin">wechat</button>
 				<button open-type="getUserInfo" @getuserinfo="getuserinfo" withCredentials>open_type</button> -->

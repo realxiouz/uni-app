@@ -1,10 +1,11 @@
 <template>
     <view>
         <view class="pd-left-right pubpdtop">
-            <form @submit="formSbumit">
-                <view class="seach">
+            <form style="display: block;">
+                <view class="search">
                     <text class="cuIcon-search"></text>
-                    <input placeholder="请输入姓名或手机号" value=""></input>
+                    <input placeholder="请输入姓名或手机号" v-model="search">
+                    <button type="primary" v-if="!!search.toString()" @tap="searchData">搜索</button>
                 </view>
             </form>
             <!--收藏模块
@@ -31,11 +32,18 @@
                 </view>
             </view>
             <view class="card-box pubpdtop"><!--card-list-->
-                <view class="card-list" v-for="(item, index) of Object.values(users)" :key="index">
+                <view v-if="!users.length" style="width: 130rpx; margin: 100rpx auto 0;">
+                    <view class="text-xsl">
+                        <text class="cuIcon-attentionforbidfill text-gray"></text>
+                    </view>
+                    <text class="text-gray">暂无数据</text>
+                </view>
+                <view class="card-list" v-else v-for="(item, index) of users" :key="index">
                     <child-com :currentUserInfo="item" :num="item.template_id">
-                        <button type="primary" @tap.stop="showCollect" :class="['cancel-collection', 'cancel-collection-' + item.template_id]" slot="cancel">收藏名片</button>
+                        <!--<button type="primary" @tap.stop="showCollect" :class="['cancel-collection', 'cancel-collection-' + item.template_id]" slot="cancel">收藏名片</button>-->
                     </child-com>
                 </view>
+
             </view>
             <!--最近访问模块 end-->
         </view>
@@ -47,30 +55,19 @@
     import makeBtn from "../../../../components/makebtn/index/makebtn";
     import {mapState, mapGetters} from 'vuex';
     import {BASE_URL} from '../../../../utils/const';
-    import {childCom} from '../../../../components/cardtemplate/child-com';
+    import childCom from '../../../../components/cardtemplate/child-com';
     export default {
         data() {
             return {
                 isCollEct: true, // 收藏模块显示
                 users: [], // 用于vfor循环, 用户组
                 currCollect: [],
-                userData: {}, // userInfo
-                isCollect: false,
                 cardBox: [],
-                /*cardBox: [
-                    {
-                        "username": "小明",
-                        "zhiwei": "公务员",
-                        "companyname": "机关单位",
-                        "phone": 18314307888,
-                        "userimg": "https://ss0.baidu.com/6ONWsjip0QIZ8tyhnq/it/u=3516274884,2016513193&fm=58",
-                        "template_id": 3
-                    },
-                ]*/
+                search: '',
                 onMyEvent: {
                     title: '返回首页',
                     imgSrc: '',
-                    url: '../../businesscard/index/businesscard',
+                    url: '/pages/ucenter/bussinesscard/index/bussinesscard',
                     isRedirect: true
                 }
             }
@@ -106,22 +103,36 @@
                 // 收藏
                 this.currCollect.forEach((ele, index) => {
                     this.currCollect[index].isShow = false;
-                })
+                });
                 this.cardBox.forEach((ele, index) => {
                     let itemID = e.currentTarget.dataset.btindex;
                     ele.isShow = false;
-                    if (itemID === index) {
+                    if (Number(itemID) === index) {
                         this.cardBox[index].isShow = true;
                     }
                 })
+            },
+            getData() {
+                uni.showLoading({
+                    title: '加载中',
+                    mask: true
+                });
+                const url = this.search.toString()? `?search=${this.search}`: '';
+                this.$http('geren/cardlist'+ url).then(res => {
+                    let data = res.data;
+                    this.users = data instanceof Array? data: [];
+                    uni.hideLoading();
+                }).catch(e => {
+                    uni.hideLoading();
+                });
+            },
+            searchData() {
+                this.getData();
             }
         },
         onLoad() {
             const self = this;
-			this.$http('geren/cardlist').then(res => {
-				self.users = res.data;
-			});
-            this.userData = this.userInfo;
+            this.getData();
             this.cardBox.forEach((item, index) => {
                 Object.defineProperty(item, 'isShow', {
                     configurable: false,

@@ -289,26 +289,7 @@
 
 .informationlist {
     @include clear;
-    padding-bottom: rpx(200);
-
-    > ul {
-        width: 100%;
-        float: left;
-
-        > li {
-            float: left;
-            width: 100%;
-            margin-bottom: $space_1;
-            @include boderradius($radius);
-            background: $white;
-            padding-bottom: $space_1*.8;
-
-            .topimg {
-                height: rpx(430);
-                overflow: hidden;
-            }
-        }
-    }
+    padding-bottom: rpx(35);
 }
 
 .radius-nobottom {

@@ -1,31 +1,38 @@
 @import "../../../../common/publicscss/scss/_link.scss";
 //搜索框
-.seach {
+.search {
+    display: flex;
     position: relative;
+    flex-wrap: nowrap;
+    align-items: center;
+    width: 100%;
+    padding: 0 15rpx;
+    border: solid $border $bordercl;
+    @include boderradius($radius);
+    background: $white;
     color: var(--darkGray);
-
     > text {
-        @include center(centerY, -55%);
-        left: rpx(15);
         font-size: $bigfont;
         color: rgba($gray,.5);
     }
 
     > input {
-        width: 100%;
-        padding: 0 $space_1 *2.5;
-        @include boderradius($radius);
-        background: $white;
-        border: solid $border $bordercl;
+        flex: 1;
         height: rpx(70);
+        padding-left: 10rpx;
         line-height: rpx(70);
+    }
+    > button {
+        padding: 0 10rpx;
+        font-size: 15px;
+        line-height: 1.7    ;
     }
 }
 //最近访问
 .nearest{
     .nearest-top{
 
-        $strip_wd:30;
+        $strip_wd: 30;
         text-align: center;
         >text{
             color: $gray;
@@ -247,4 +254,5 @@
         }
 
     }
+
 }
