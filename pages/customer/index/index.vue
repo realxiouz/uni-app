@@ -41,6 +41,18 @@
 			if(opt.private) {
 				this.data.private = opt.private
 			}
+			
+			let title = ''
+			if (!opt.is_share && !opt.private) {
+				title = '客户列表'
+			} else if (opt.is_share) {
+				title = '共享客户'
+			} else if (opt.private) {
+				title = '客户公池'
+			}
+			uni.setNavigationBarTitle({
+				title
+			})
 		},
 		data() {
 			return {

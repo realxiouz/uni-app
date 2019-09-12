@@ -1,5 +1,5 @@
 <template>
-	<view class="bg-white margin-bottom-sm">
+	<view class="bg-white margin-top-sm">
 			<view class="padding-tb-xs padding-lr-sm">
 				<view style="word-wrap:break-word">
 					<text class="cu-tag bg-blue radius">{{bean.status_name}}</text>

@@ -89,7 +89,7 @@
 				<view class="title">{{showStar('star')}}客户星级</view>
 				<rate v-model="formBean.star" />
 			</view>
-			<save @save="handleSave" />
+			<save @save="handleSave" :loading="formLoading"/>
 		</form>
 	</view>
 </template>
@@ -150,10 +150,11 @@
 			})
 		},
 		data: _ => ({
+			formLoading: false,
 			originData: {},
 			rules: [],
 			customerType: '',
-			customerId: 0,
+			customerId: null,
 			formBean: {
 				name: '',
 				phone: '',
@@ -241,13 +242,6 @@
 				this.formBean.project_id = this.projects[this.projectInx].id
 			},
 			handleSave() {
-				// if (!r.phone(this.formBean.phone)) {
-				// 	uni.showToast({
-				// 		title: '电话不能为空',
-				// 		icon: 'none'
-				// 	})
-				// 	return
-				// }
 				if (!this.validateForm()) {
 					return
 				}
@@ -262,17 +256,22 @@
 				})
 				
 				if (!this.customerId) {
+					this.formLoading = true
 					this.$http('customer', data, 'post').then(r => {
-						uni.showToast({
-							title: r.message
-						})
-						this.customerId = r.data.id
+						uni.redirectTo({
+							url: `/pages/customer/detail/index?id=${r.data.id}&type=${r.data.type}`
+						});
+					}).finally(_ => {
+						this.formLoading = false
 					})
 				} else {
+					this.formLoading = true
 					this.$http(`customer/${this.customerId}`, data, 'put').then(r => {
-						uni.showToast({
-							title: r.message
-						})
+						uni.redirectTo({
+							url: `/pages/customer/detail/index?id=${r.data.id}&type=${r.data.type}`
+						});
+					}).finally(_ => {
+						this.formLoading = false
 					})
 				}
 				
@@ -281,13 +280,7 @@
 				return this.$http(`customer/${this.customerId}`)
 			},
 			formatData() {
-				// this.formBean.name = this.originData.name
-				// this.formBean.phone = this.originData.phone
-				// this.formBean.qq = this.originData.qq
-				// this.formBean.weixin = this.originData.weixin
-				// this.formBean.phone_reserve = this.originData.phone_reserve
 				this.formBean = this.originData
-
 				this.sexInx = this.sexs.findIndex(i => i.value == this.originData.sex)
 				this.typeInx = this.types.findIndex(i => i == this.originData.customer_type)
 				this.starInx = this.stars.findIndex(i => i.value == this.originData.star)
@@ -314,13 +307,14 @@
 				return true
 			},
 			checkPhone() {
-				this.$http('customer/owner', {
+				this.$http('customer/validate', {
 					type: this.customerType,
-					phone: this.formBean.phone
+					phone: this.formBean.phone,
+					customer_id: this.customerId
 				}).then(r => {
 					uni.showToast({
 						icon: 'none',
-						title: r.name ? `手机号与(${r.name})重复` : '手机号码可用'
+						title: r.message
 					})
 				})
 			},

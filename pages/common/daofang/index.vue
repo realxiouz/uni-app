@@ -11,7 +11,7 @@
 			<upload-files @imgs="handleImgs" :max-count="6"/>
 		</form>
 		
-		<save @save="handleSave"/>
+		<save @save="handleSave" :loading="formLoading"/>
 	</view>
 	
 </template>
@@ -30,7 +30,8 @@
 				peoples: '',
 				remark: ''
 			},
-			customerId: ''
+			customerId: '',
+			formLoading: false
 		}),
 		methods: {
 			textareaAInput(e) {
@@ -39,18 +40,22 @@
 			handleSave() {
 				this.formBean.customer_id = this.customerId
 				this.formBean.kan_time = new Date()
+				this.formLoading = true
 				this.$http('daikan', this.formBean, 'post').then(r => {
 					uni.showToast({
 						title: '表单提交成功'
 					})
 					
-					setTimeout(_ => {
-						let pages = getCurrentPages()
-						pages[pages.length - 2].setData({
-							needRefresh: true
-						})
-						uni.navigateBack()
-					}, 1500)
+					// setTimeout(_ => {
+					// 	let pages = getCurrentPages()
+					// 	pages[pages.length - 2].setData({
+					// 		needRefresh: true
+					// 	})
+					// 	uni.navigateBack()
+					// }, 1500)
+					uni.navigateBack()
+				}).finally(_ => {
+					this.formLoading = false
 				})
 			},
 			handleImgs(e) {

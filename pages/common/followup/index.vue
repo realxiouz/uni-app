@@ -24,7 +24,7 @@
 				<view class="title">下次跟进日期</view>
 				<picker mode="date" :value="date" start="2015-09-01" end="2020-09-01" @change="dateChange">
 					<view class="picker">
-						{{date}}
+						{{date?date:'选择日期'}}
 					</view>
 				</picker>
 			</view>
@@ -32,7 +32,7 @@
 				<view class="title">下次跟进时间</view>
 				<picker mode="time" :value="time" start="09:01" end="21:01" @change="timeChange">
 					<view class="picker">
-						{{time}}
+						{{time?time:'选择时间'}}
 					</view>
 				</picker>
 			</view>
@@ -59,8 +59,8 @@
 				content: ''
 			},
 			formLoading: false,
-			date: '2019-08-03',
-			time: '12:00',
+			date: '',
+			time: '',
 			types: [
 				{text: '电话', value: '1'},
 				{text: '微信', value: '2'},

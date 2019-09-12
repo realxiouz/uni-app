@@ -66,7 +66,7 @@
 			</view>
 		</form>
 
-		<save @save="handleSave" />
+		<save @save="handleSave" :loading="formLoading"/>
 	</view>
 </template>
 
@@ -99,6 +99,7 @@
 			})
 		},
 		data: _ => ({
+			formLoading: true,
 			id: '',
 			type: '',
 			
@@ -455,18 +456,24 @@
 					return
 				}
 				if (this.id) {
+					this.formLoading = true
 					this.$http(`customerDemand/${this.id}`, data, 'put').then(r => {
 						uni.showToast({
 							title: r.message,
 							icon: 'none'
 						})
+					}).finally(_ => {
+						this.formLoading = false
 					})
 				} else {
+					this.formLoading = true
 					this.$http('customerDemand', data, 'post').then(r => {
 						uni.showToast({
 							title: r.message,
 							icon: 'none'
 						})
+					}).finally(_ => {
+						this.formLoading = false
 					})
 				}
 			},

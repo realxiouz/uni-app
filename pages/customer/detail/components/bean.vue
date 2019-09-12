@@ -113,11 +113,25 @@
 					</view>
 				</view>
 			</view>
+			<view class="cu-item" v-if="bean.next_genjin_at">
+				<view class="content padding-tb-sm flex align-center">
+					<view class="flex flex-direction flex-sub" style="align-items: flex-start;">
+						<view class="text-gray text-sm">下次跟进</view>
+						<view class="text-black text-bold">{{bean.next_genjin_at|moment('MM-DD HH:mm')}}</view>
+					</view>
+				</view>
+			</view>
+			<view class="cu-item" v-if="bean&&!bean.belongsto_id">
+				<view class="content padding-tb-sm flex align-center">
+					<button class="cu-btn bg-blue radius flex-sub" @click="rl(bean.id)">认领</button>
+				</view>
+			</view>
 		</view>
 	</scroll-view>
 </template>
 
 <script>
+	import {mapState} from 'vuex'
 	export default {
 		props: {
 			cId: {
@@ -130,6 +144,9 @@
 				bean: {}
 			}
 		},
+		computed: {
+			...mapState(['userInfo'])
+		},
 		methods: {
 			init() {
 				if (!this.hasLoaded) {
@@ -140,6 +157,18 @@
 				this.$http(`customer/${this.cId}`).then(r => {
 					this.bean = r.data
 					this.hasLoaded = true
+				})
+			},
+			rl(id) {
+				this.$http('customer-belongsto-log',{
+					belongsto_id: this.userInfo.id,
+					customer_ids: [id]
+				}, 'post').then(r => {
+					uni.showToast({
+						title: r.message,
+						icon: 'none'
+					})
+					this.getData()
 				})
 			}
 		}
