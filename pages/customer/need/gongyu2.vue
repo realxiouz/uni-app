@@ -418,7 +418,7 @@
 			},
 			handleSave() {
 				let data = {
-					house_using_type_name: "住宅",
+					house_using_type_name: "公寓",
 					type: this.type,
 					guanzhu: this.selGuanzhu,
 					intention: this.selIntention,

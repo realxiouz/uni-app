@@ -8,30 +8,30 @@
 		<swiper :style="[{position:'fixed',left:0,right:0,bottom:'0',top:top+'px',height:'auto'}]" @change="tabChange"
 		 :current="selTab">
 			<swiper-item>
-				<data-list ref="list0" @data="handleList0" r-url="customer_genjin" :r-data="rData">
-					<genjin v-for="(i, inx) in list0" :key="inx" :bean="i" />
-				</data-list>
+				<bean :c-id="id" ref="list0" />
 			</swiper-item>
 			<swiper-item>
-				<data-list ref="list1" @data="handleList1" r-url="daikan" :r-data="rData">
-					<daofang v-for="(i, inx) in list1" :key="inx" :bean="i" />
-				</data-list>
-			</swiper-item>
-			<swiper-item>
-				<data-list ref="list2" @data="handleList2" r-url="baobei" :r-data="rData">
-					<baobei v-for="(i, inx) in list2" :key="inx" :bean="i" />
-				</data-list>
-			</swiper-item>
-			<swiper-item>
-				<data-list ref="list3" @data="handleList3" r-url="customerDemand" :r-data="rData">
+				<data-list ref="list1" @data="handleList3" r-url="customerDemand" :r-data="rData">
 					<need v-for="(i, inx) in list3" :key="inx" :bean="i" />
 				</data-list>
 			</swiper-item>
 			<swiper-item>
-				<bean :c-id="id" ref="list4" />
+				<data-list ref="list2" @data="handleList0" r-url="customer_genjin" :r-data="rData">
+					<genjin v-for="(i, inx) in list0" :key="inx" :bean="i" />
+				</data-list>
+			</swiper-item>
+			<swiper-item>
+				<data-list ref="list3" @data="handleList1" r-url="daikan" :r-data="rData">
+					<daofang v-for="(i, inx) in list1" :key="inx" :bean="i" />
+				</data-list>
+			</swiper-item>
+			<swiper-item>
+				<data-list ref="list4" @data="handleList2" r-url="baobei" :r-data="rData">
+					<baobei v-for="(i, inx) in list2" :key="inx" :bean="i" />
+				</data-list>
 			</swiper-item>
 		</swiper>
-		<float-button @go="handleGo" />
+		<float-button @go="handleGo" v-show="selTab>0"/>
 	</view>
 </template>
 
@@ -54,6 +54,7 @@
 				this.top = 44 + uni.upx2px(90)
 			}
 			this.id = opt.id
+			this.type = opt.type
 			this.rData = {
 				customer_id: this.id
 			}
@@ -66,9 +67,17 @@
 				vId: 'nav-0',
 				top: uni.upx2px(90),
 				id: '',
+				type: '',
 				bean: {},
 				selTab: 0,
-				tabs: [{
+				tabs: [
+					{
+						text: '客户详情'
+					},
+					{
+						text: '客户需求'
+					},
+					{
 						text: '跟进记录'
 					},
 					{
@@ -76,13 +85,7 @@
 					},
 					{
 						text: '报备记录'
-					},
-					{
-						text: '客户需求'
-					},
-					{
-						text: '客户详情'
-					},
+					}
 				],
 				list0: [],
 				list1: [],
@@ -93,11 +96,6 @@
 		},
 		methods: {
 			...mapMutations('baobei', ['setDaikan', 'setSelProject', 'setSelCustomer']),
-			handleList(inx, l) {
-				console.log(inx)
-				console.log(l)
-				// this.tabs[inx].list = l
-			},
 			handleList0(l) {
 				this.list0 = l
 			},
@@ -123,17 +121,17 @@
 			},
 			handleGo() {
 				switch (this.selTab) {
-					case 0:
+					case 2:
 						uni.navigateTo({
 							url: `/pages/common/followup/index?customerId=${this.id}`
 						})
 						break
-					case 1:
+					case 3:
 						uni.navigateTo({
 							url: `/pages/common/daofang/index?customerId=${this.id}`
 						})
 						break
-					case 2:
+					case 4:
 						this.setDaikan({
 							name: this.userInfo.name,
 							phone: this.userInfo.mobile
@@ -147,9 +145,13 @@
 							url: `/pages/baobei/bean/index`
 						})
 						break;
-					case 3:
-
-						let itemList = ['住宅', '新房', '租房', '二手房']
+					case 1:
+						let itemList = []
+						if (this.type === '新房') {
+							itemList = ['住宅']
+						} else if(this.type === '分销') {
+							itemList = ['新房', '租房', '二手房']
+						}
 						uni.showActionSheet({
 							itemList,
 							success: r => {

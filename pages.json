@@ -56,6 +56,42 @@
 			}
 		},
 		{
+			"path": "pages/customer/need/gongyu2",
+			"style": {
+				"navigationBarTitleText": "分销-公寓"
+			}
+		},
+		{
+			"path": "pages/customer/need/bieshu2",
+			"style": {
+				"navigationBarTitleText": "分销-别墅"
+			}
+		},
+		{
+			"path": "pages/customer/need/shangpu2",
+			"style": {
+				"navigationBarTitleText": "分销-商铺"
+			}
+		},
+		{
+			"path": "pages/customer/need/xiezilou2",
+			"style": {
+				"navigationBarTitleText": "分销-写字楼"
+			}
+		},
+		{
+			"path": "pages/customer/need/chewei2",
+			"style": {
+				"navigationBarTitleText": "分销-车位"
+			}
+		},
+		{
+			"path": "pages/customer/need/qita2",
+			"style": {
+				"navigationBarTitleText": "分销-其他"
+			}
+		},
+		{
 			"path": "pages/ucenter/businesscard/index/businesscard",
 			"style": {
 				"navigationBarTitleText": "我的名片"
@@ -279,8 +315,14 @@
 			"style": {
 				"navigationBarTitleText": "报备详情"
 			}
-		}
-	    ,{
+		},
+		{
+			"path": "pages/baobei/daikan/index",
+			"style": {
+				"navigationBarTitleText": "报备带看"
+			}
+		},
+		{
             "path" : "pages/project/project-dev/index",
             "style": {
             	"app-plus": {

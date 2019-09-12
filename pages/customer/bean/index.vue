@@ -2,16 +2,16 @@
 	<view>
 		<form>
 			<view class="cu-form-group margin-top">
-				<view class="title">姓名</view>
+				<view class="title">{{showStar('name')}}姓名</view>
 				<input placeholder="输入姓名" v-model="formBean.name"></input>
 			</view>
 			<view class="cu-form-group">
-				<view class="title">电话</view>
+				<view class="title">{{showStar('phone')}}电话</view>
 				<input placeholder="输入电话号码" v-model="formBean.phone" :maxlength="11"></input>
 				<button class="cu-btn bg-green shadow" :disabled="formBean.phone.length<11" @click="checkPhone">检测</button>
 			</view>
 			<view class="cu-form-group">
-				<view class="title">性别</view>
+				<view class="title">{{showStar('sex')}}性别</view>
 				<picker @change="sexChange" :value="sexInx" :range="sexs" range-key="text">
 					<view class="picker">
 						{{sexInx>-1?sexs[sexInx].text:'选择性别'}}
@@ -19,15 +19,15 @@
 				</picker>
 			</view>
 			<view class="cu-form-group">
-				<view class="title">微信</view>
+				<view class="title">{{showStar('weixin')}}微信</view>
 				<input placeholder="输入微信" v-model="formBean.weixin"></input>
 			</view>
 			<view class="cu-form-group">
-				<view class="title">QQ</view>
+				<view class="title">{{showStar('qq')}}QQ</view>
 				<input placeholder="输入QQ" v-model="formBean.qq"></input>
 			</view>
 			<view class="cu-form-group">
-				<view class="title">客户分类</view>
+				<view class="title">{{showStar('customer_type')}}客户分类</view>
 				<picker @change="typeChange" :value="typeInx" :range="types">
 					<view class="picker">
 						{{typeInx>-1?types[typeInx]:'选择分类'}}
@@ -35,11 +35,11 @@
 				</picker>
 			</view>
 			<view class="cu-form-group">
-				<view class="title">备用电话</view>
+				<view class="title">{{showStar('phone_reserve')}}备用电话</view>
 				<input placeholder="输入备用电话" v-model="formBean.phone_reserve"></input>
 			</view>
 			<view class="cu-form-group">
-				<view class="title">来源</view>
+				<view class="title">{{showStar('source')}}来源</view>
 				<picker @change="sourceChange" :value="sourceInx" :range="sources" range-key="name">
 					<view class="picker">
 						{{sourceInx>-1?sources[sourceInx].name:'选择来源'}}
@@ -47,7 +47,7 @@
 				</picker>
 			</view>
 			<view class="cu-form-group">
-				<view class="title">职业</view>
+				<view class="title">{{showStar('job')}}职业</view>
 				<picker @change="jobChange" :value="jobInx" :range="jobs" range-key="name">
 					<view class="picker">
 						{{jobInx>-1?jobs[jobInx].name:'选择职业'}}
@@ -55,7 +55,7 @@
 				</picker>
 			</view>
 			<view class="cu-form-group">
-				<view class="title">年纪</view>
+				<view class="title">{{showStar('age')}}年纪</view>
 				<picker @change="ageChange" :value="ageInx" :range="ages" range-key="name">
 					<view class="picker">
 						{{ageInx>-1?ages[ageInx].name:'选择年纪'}}
@@ -64,24 +64,12 @@
 			</view>
 			<view class="cu-form-group">
 				<view class="title">现居地址</view>
-				<addressd @changes="selAddress1"></addressd>
+				<pcd :level="3" v-model="pcd" />
 			</view>
 			<view class="cu-form-group">
 				<view class="title">现住址</view>
 				<input placeholder="输入现住址" v-model="formBean.current_address"></input>
 			</view>
-			<!-- <view class="cu-form-group">
-				<view class="title">户籍</view>
-				<addressd @changes="selAddress2"></addressd>
-			</view> -->
-			<!-- <view class="cu-form-group">
-				<view class="title">客户星级</view>
-				<picker @change="starChange" :value="starInx" :range="stars" range-key="text">
-					<view class="picker">
-						{{starInx>-1?stars[starInx].text:'选择星级'}}
-					</view>
-				</picker>
-			</view> -->
 			<view class="cu-form-group">
 				<view class="title">归属员工</view>
 				<navigator class="show-arrow" url="/pages/customer/employee/index" hover-class="none">
@@ -89,7 +77,7 @@
 					<view v-else>未选择归属</view>
 				</navigator>
 			</view>
-			<view class="cu-form-group">
+			<view class="cu-form-group" v-if="customerType==='新房'">
 				<view class="title">归属楼盘</view>
 				<picker @change="peojectChange" :value="projectInx" :range="projects" range-key="name">
 					<view class="picker">
@@ -98,10 +86,9 @@
 				</picker>
 			</view>
 			<view class="cu-form-group">
-				<view class="title">客户星级</view>
+				<view class="title">{{showStar('star')}}客户星级</view>
 				<rate v-model="formBean.star" />
 			</view>
-			<!-- <navigator :url="`/pages/customer/need-list/index?id=${customerId}&type=${customerType}`">客户需求</navigator> -->
 			<save @save="handleSave" />
 		</form>
 	</view>
@@ -112,10 +99,11 @@
 		mapState,
 		mapMutations
 	} from 'vuex'
-	import addressd from "@/components/jm-address"
 	import save from "@/components/buttom-button"
 	import Ava from '@/components/avatar'
 	import Rate from '@/components/rate'
+	import Pcd from '@/components/pcd'
+	
 	import {
 		RULES as r
 	} from '@/utils/const'
@@ -127,14 +115,14 @@
 				let {
 					data
 				} = await this.getCustomerDetail()
-				this.originData = data[0]
+				this.originData = data
 				this.formatData()
 			} else {
 				this.setSelEmployee({})
 			}
 			this.customerType = opt.type
 			this.$http("attribute").then(r => {
-				let t = this.customerType == 0 ? 'Customer sales' : 'Customer'
+				let t = this.customerType == '新房' ? 'Customer sales' : 'Customer'
 				let d = r.data[t]
 				this.ages = d.age || []
 				this.sources = d.source || []
@@ -151,8 +139,8 @@
 				}
 			})
 			this.$http('path').then(r => {
-				let field = this.customerType == 0 ? 'Customer sales' : 'Customer'
-				this.rules = r.data.find(i => i.name == '客户' && i.field == field).values
+				let field = this.customerType == '新房' ? 'Customer sales' : 'Customer'
+				this.rules = r.data.find(i => i.name == '客户' && i.field == field).values.filter(i => i.required)
 			})
 			this.$http('project/list').then(r => {
 				this.projects = r
@@ -164,7 +152,7 @@
 		data: _ => ({
 			originData: {},
 			rules: [],
-			customerType: 0,
+			customerType: '',
 			customerId: 0,
 			formBean: {
 				name: '',
@@ -218,7 +206,9 @@
 			starInx: -1,
 
 			projects: [],
-			projectInx: -1
+			projectInx: -1,
+			
+			pcd: []
 		}),
 		methods: {
 			...mapMutations('customer', ['setSelEmployee']),
@@ -250,12 +240,6 @@
 				this.projectInx = e.detail.value
 				this.formBean.project_id = this.projects[this.projectInx].id
 			},
-			selAddress1(e) {
-				console.log(e)
-				this.formBean.current_province_id = e.pId
-				this.formBean.current_city_id = e.cId
-				this.formBean.current_district_id = e.dId
-			},
 			handleSave() {
 				// if (!r.phone(this.formBean.phone)) {
 				// 	uni.showToast({
@@ -268,9 +252,13 @@
 					return
 				}
 				this.formBean.belongsto_id = this.selEmployee.id
+				
+				this.formBean.current_province_id = this.pcd[0]
+				this.formBean.current_city_id = this.pcd[1]
+				this.formBean.current_district_id = this.pcd[2]
 
 				let data = Object.assign({}, this.formBean, {
-					type: this.customerType == 0 ? '新房' : '分销'
+					type: this.customerType
 				})
 				
 				if (!this.customerId) {
@@ -290,9 +278,7 @@
 				
 			},
 			async getCustomerDetail() {
-				return this.$http('customer', {
-					id: this.customerId
-				})
+				return this.$http(`customer/${this.customerId}`)
 			},
 			formatData() {
 				// this.formBean.name = this.originData.name
@@ -308,10 +294,15 @@
 
 				let employee = this.originData.belongsto_id ? this.originData.belongs_employee : {}
 				this.setSelEmployee(employee)
+				
+				this.pcd = [
+					this.originData.current_province_id,
+					this.originData.current_city_id,
+					this.originData.current_district_id
+				]
 			},
 			validateForm() {
-				let requires = this.rules.filter(i => i.required)
-				for (let i of requires) {
+				for (let i of this.rules) {
 					if (!this.formBean[i.field]) {
 						uni.showToast({
 							title: `${i.name}是必须的`,
@@ -324,7 +315,7 @@
 			},
 			checkPhone() {
 				this.$http('customer/owner', {
-					type: this.customerType == 0 ? '分销':'新房',
+					type: this.customerType,
 					phone: this.formBean.phone
 				}).then(r => {
 					uni.showToast({
@@ -332,16 +323,20 @@
 						title: r.name ? `手机号与(${r.name})重复` : '手机号码可用'
 					})
 				})
-			}
+			},
+			showStar(field) {
+				return this.rules.findIndex(i => i.field == field) > -1 ? '*' : ''
+			},
 		},
 		components: {
-			addressd,
 			save,
 			Ava,
-			Rate
+			Rate,
+			Pcd
 		},
 		computed: {
-			...mapState('customer', ['selEmployee'])
+			...mapState('customer', ['selEmployee']),
+			...mapState(['userInfo'])
 		}
 	}
 </script>

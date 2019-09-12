@@ -3,6 +3,24 @@
 		<view class="cu-item arrow" @click="handleNav('zhuzhai')">
 			<text>住宅</text>
 		</view>
+		<view class="cu-item arrow" @click="handleNav('gongyu')">
+			<text>公寓</text>
+		</view>
+		<view class="cu-item arrow" @click="handleNav('bieshu')">
+			<text>别墅</text>
+		</view>
+		<view class="cu-item arrow" @click="handleNav('shangpu')">
+			<text>商铺</text>
+		</view>
+		<view class="cu-item arrow" @click="handleNav('xiezilou')">
+			<text>写字楼</text>
+		</view>
+		<view class="cu-item arrow" @click="handleNav('chewei')">
+			<text>车位</text>
+		</view>
+		<view class="cu-item arrow" @click="handleNav('qita')">
+			<text>其他</text>
+		</view>
 	</view>
 </template>
 

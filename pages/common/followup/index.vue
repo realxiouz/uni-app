@@ -40,7 +40,7 @@
 			<upload-files v-if="typeInx==1||typeInx==2" @imgs="handleImgs"/>
 		</form>
 		
-		<save @save="handleSave" />
+		<save @save="handleSave" :loading="formLoading" />
 	</view>
 	
 </template>
@@ -58,6 +58,7 @@
 			formBean: {
 				content: ''
 			},
+			formLoading: false,
 			date: '2019-08-03',
 			time: '12:00',
 			types: [
@@ -94,10 +95,13 @@
 			handleSave() {
 				this.formBean.customer_id = this.customerId
 				this.formBean.next_genjin_at = this.dateTime
+				this.formLoading = true
 				this.$http('customer_genjin', this.formBean, 'post').then(r => {
-					uni.showToast({
-						title: '表单提交成功'
+					uni.navigateBack({
+						delta: 1
 					})
+				}).finally(_ => {
+					this.formLoading = false
 				})
 			},
 			typeChange(e) {

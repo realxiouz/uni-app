@@ -96,13 +96,13 @@
 					arr.push({name, phone})
 				}
 				this.setSelCustomer(arr)
-				uni.showToast({
-					title: `共选择了${arr.length}个客户`,
-					icon: 'none'
-				})
-				setTimeout(_ => {
-					uni.navigateBack()
-				}, 1500)
+				// uni.showToast({
+				// 	title: `共选择了${arr.length}个客户`,
+				// 	icon: 'none'
+				// })
+				uni.navigateBack()
+				// setTimeout(_ => {
+				// }, 1500)
 			}
 		},
 		components: {
