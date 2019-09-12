@@ -36,6 +36,9 @@
             },
             relayOn: {
 			    type: Boolean
+            },
+            self: {
+			    type: [Number, String]
             }
 		},
 		components: {
@@ -58,11 +61,14 @@
             relayOn() {
                 if (this.isPreview) {
                     this.changeCurrentInfo(this.currentLoginUserInfo);
+                    this.changeRecommendHouse({arr: this.currentLoginUserInfo.house, replace: true});
                     this.changeImg({key: 'img_bg', url: ''});
                     this.changeImg({key: 'img_avatar', url: ''});
                 } else {
                     let data = this.currentUserInfo.name? this.currentUserInfo: this.currentLoginUserInfo;
+                    if (this.self === 1) data = this.currentLoginUserInfo;
                     this.changeCurrentInfo(data);
+                    this.changeRecommendHouse({arr: data.house, replace: true});
                     this.changeImg({key: 'img_avatar', url: ''});
                     this.changeImg({key: 'img_bg', url: ''});
                 }
@@ -73,6 +79,7 @@
 		    // 这里必须要有, 不然可能会当前用户赋值不上
             if (!/pages\/ucenter\/businesscard\/index\/businesscard/.test(route)) {
                 this.changeCurrentInfo(this.currentLoginUserInfo);
+                this.changeRecommendHouse({arr: this.currentLoginUserInfo.house, replace: true});
                 this.changeImg({key: 'img_bg', url: ''});
                 this.changeImg({key: 'img_avatar', url: ''});
             }
@@ -89,7 +96,7 @@
 			// 设置当前背景为已选中状态
 		},
 		methods: {
-			...mapMutations('ucenter', ['changeCurrentInfo', 'changeImg', 'changeCurrentLoginUserInfo']),
+			...mapMutations('ucenter', ['changeCurrentInfo', 'changeImg', 'changeCurrentLoginUserInfo', 'changeRecommendHouse']),
 			changed(e) {
 				let index = e.detail.value || e.currentTarget.dataset.list;
 				this.tem[index].checked  = true;

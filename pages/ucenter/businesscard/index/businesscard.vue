@@ -2,7 +2,7 @@
 	<view class="padding-25" v-cloak>
 		<!-- cardtemplate 组件start -->
 		<!-- :user="currentUserInfo"  -->
-		<card-template :is-show-list="false" :is-preview="showMakeBtn" :relay-on="relayOn"></card-template>
+		<card-template :is-show-list="false" :is-preview="showMakeBtn" :relay-on="relayOn" :self="_self"></card-template>
 		<!-- cardtemplate 组件end -->
 
 		<!-- 名片详情start -->
@@ -196,7 +196,8 @@
                 isRepeatDraw: true,// 是否需要重新绘制canvas图片
                 isShowShare: true,
                 relayOn: false,// 依赖, 只要是onShow都要变化, 以引起currentInfo的变化
-                showNumber: ''// 浏览记录显示的个数, 保存使用, 而且只获取一次
+                showNumber: '',// 浏览记录显示的个数, 保存使用, 而且只获取一次
+                _self: ''
 			}
 		},
 		components: {
@@ -205,9 +206,13 @@
 		},
 		onLoad(options){
             const self = this;
+            this._self = Number(options.self);
             self.showMakeBtn = options.previewB === '1';
             let uidx = options.uidx;
-            if (this.currentLoginUserInfo.name !== undefined) {// 在已经获取了就不要再去请求了
+
+            if (this._self === 1) {
+                this.getUserMsg();
+            } else if (this.currentLoginUserInfo.name !== undefined) {// 在已经获取了就不要再去请求了
                 this.changeCurrentInfo(this.currentLoginUserInfo);
             } else {
                 this.getUserMsg();
@@ -259,13 +264,11 @@
                         self.setBrowseUser(browseUser);
                     })
                 }
-                console.log(data.house, 'data.house', this.currentInfo.house);
-                self.changeRecommendHouse({arr: data.house, replace: true});
             }
 		},
 		methods: {
 			...mapMutations(['login']),
-			...mapMutations('ucenter', ['changeCurrentLoginUserInfo', 'changeImg', 'changeCurrentUserInfo', 'changeCurrentInfo', 'setUId', 'setBrowseUser', 'setInterceptUId', 'changeRecommendHouse']),
+			...mapMutations('ucenter', ['changeCurrentLoginUserInfo', 'changeImg', 'changeCurrentUserInfo', 'changeCurrentInfo', 'setUId', 'setBrowseUser', 'setInterceptUId']),
 			toDetail(id) {
 				// recommend为1表示是从名片推荐楼盘这里跳转过去的, 因为在详情页里有些不显示户型图片, 地图, 详情
 				uni.navigateTo({

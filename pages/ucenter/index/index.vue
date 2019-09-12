@@ -40,7 +40,7 @@
                     <view>报备邀请码: {{userInfo.invitation_code}}</view>
                     <view>渠道邀请码: {{userInfo.company_id}}-{{userInfo.invitation_code}}</view>
                 </view>
-                <view class="list" @tap="handleNav('/pages/ucenter/businesscard/index/businesscard')" style="border-width: 0">
+                <view class="list" @tap="handleNav('/pages/ucenter/businesscard/index/businesscard?self=1')" style="border-width: 0">
                     <view class="content">个人名片</view>
                     <view class="cuIcon-right text-gray icon"></view>
                 </view>
