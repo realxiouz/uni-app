@@ -69,7 +69,7 @@
 			})
 		},
 		onShow() {
-			if(this.$refs[`list${this.selTab}`]) {
+			if(this.$refs[`list${this.selTab}`] && this.selTab != 0) {
 				this.$refs[`list${this.selTab}`].getData(true)
 			}
 		},
