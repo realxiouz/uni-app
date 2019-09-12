@@ -30,8 +30,13 @@
 					<baobei v-for="(i, inx) in list2" :key="inx" :bean="i" />
 				</data-list>
 			</swiper-item>
+			<swiper-item>
+				<data-list ref="list5" @data="handleList5" r-url="customer-log" :r-data="rData">
+					<log v-for="(i, inx) in list5" :key="inx" :bean="i" />
+				</data-list>
+			</swiper-item>
 		</swiper>
-		<float-button @go="handleGo" v-show="selTab>0"/>
+		<float-button @go="handleGo" :icon="selTab == 0 ? 'edit':'add'" v-if="selTab != 5"/>
 	</view>
 </template>
 
@@ -41,6 +46,7 @@
 	import Daofang from './components/daofang'
 	import Baobei from './components/baobei'
 	import Need from './components/need'
+	import Log from './components/log'
 	import Bean from './components/bean'
 	import FloatButton from '@/components/float-button'
 	import {
@@ -61,6 +67,11 @@
 			this.$nextTick(_ => {
 				this.$refs.list0.init()
 			})
+		},
+		onShow() {
+			if(this.$refs[`list${this.selTab}`]) {
+				this.$refs[`list${this.selTab}`].getData(true)
+			}
 		},
 		data() {
 			return {
@@ -85,12 +96,16 @@
 					},
 					{
 						text: '报备记录'
+					},
+					{
+						text: '操作记录'
 					}
 				],
 				list0: [],
 				list1: [],
 				list2: [],
 				list3: [],
+				list5: [],
 				rData: null,
 			}
 		},
@@ -108,6 +123,9 @@
 			handleList3(l) {
 				this.list3 = l
 			},
+			handleList5(l) {
+				this.list5 = l
+			},
 			tabChange(e) {
 				let temp = e.detail.current - 2 < 0 ? 0 : e.detail.current - 2
 				this.vId = `nav-${temp}`
@@ -121,6 +139,11 @@
 			},
 			handleGo() {
 				switch (this.selTab) {
+					case 0:
+						uni.redirectTo({
+							url: `/pages/customer/bean/index?id=${this.id}&type=${this.type}`,
+						});
+						break
 					case 2:
 						uni.navigateTo({
 							url: `/pages/common/followup/index?customerId=${this.id}`
@@ -201,7 +224,8 @@
 			Daofang,
 			Baobei,
 			Bean,
-			Need
+			Need,
+			Log
 		},
 		computed: {
 			...mapState(['userInfo', 'isH5']),

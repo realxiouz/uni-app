@@ -1,17 +1,20 @@
 <template>
 	<view class="bg-white margin-bottom-sm">
 			<view class="padding-tb-xs padding-lr-sm">
-				<view style="word-wrap:break-word">
+				<view class="margin-bottom-xs" style="word-wrap:break-word">
 					<text>{{bean.content}}</text>
 				</view>
-				<view>
+				<view class="margin-bottom-xs">
 					<text class="cu-tag bg-blue radius">{{bean.type_name}}</text>
 					<text class="cu-tag radius" :class="bean.desire<=2?'bg-red':bean.desire==2?'bg-yellow':'bg-green'">{{desireObj[bean.desire]}}</text>
 				</view>
-				<view class="flex flex-wrap">
+				<view class="flex flex-wrap margin-bottom-xs">
 					<text class="basis-df"><text class="text-gray">时间:&nbsp;</text>{{bean.created_at|moment('from')}}</text>
 					<text class="basis-df"><text class="text-gray">跟进人:&nbsp;</text>{{bean.user.name}}</text>
 				</view>
+				<!-- <view class="margin-bottom-xs" v-if="bean.customer.next_genjin_at">
+					<text class="text-gray">下次跟进:&nbsp;</text><text>{{bean.customer.next_genjin_at|moment('MM-DD HH:mm')}}</text>
+				</view> -->
 				<view class="grid col-4 grid-square flex-sub">
 					<view class="bg-img" v-for="(i,inx) in bean.imgs" :key="inx" @tap="viewImage(bean.imgs, inx)">
 						<image :src="i" mode="aspectFill"></image>

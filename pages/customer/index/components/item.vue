@@ -12,9 +12,9 @@
 					<view>{{bean.desireRatio}}</view>
 					<view>客户星级：{{bean.star}}</view>
 					<view>录入时间：{{bean.created_at}}</view>
-					<view>
+					<!-- <view>
 						<view @click.stop="editCustomer(bean)">编辑</view>
-					</view>
+					</view> -->
 				</view>
 			</view>
 	</navigator>
