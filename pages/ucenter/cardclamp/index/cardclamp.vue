@@ -31,8 +31,8 @@
                 </view>
             </view>
             <view class="card-box pubpdtop"><!--card-list-->
-                <view class="card-list" v-for="(item, index) of users" :key="index">
-                    <child-com :user="item" :num="item.template_id">
+                <view class="card-list" v-for="(item, index) of Object.values(users)" :key="index">
+                    <child-com :currentUserInfo="item" :num="item.template_id">
                         <button type="primary" @tap.stop="showCollect" :class="['cancel-collection', 'cancel-collection-' + item.template_id]" slot="cancel">收藏名片</button>
                     </child-com>
                 </view>
@@ -92,12 +92,12 @@
                 // 取消收藏
                 this.cardBox.forEach((ele, index) => {
                     this.cardBox[index].isShow = false;
-                })
+                });
 
                 let colletData = this.currCollect;
                 colletData.forEach((ele, index) => {
                     let itemID = e.currentTarget.dataset.cancelbt;
-                    if (itemID == index) {
+                    if (itemID === index) {
                         this.currCollect[index].isShow = false;
                     }
                 })
@@ -110,7 +110,7 @@
                 this.cardBox.forEach((ele, index) => {
                     let itemID = e.currentTarget.dataset.btindex;
                     ele.isShow = false;
-                    if (itemID == index) {
+                    if (itemID === index) {
                         this.cardBox[index].isShow = true;
                     }
                 })
@@ -120,7 +120,7 @@
             const self = this;
 			this.$http('geren/cardlist').then(res => {
 				self.users = res.data;
-			})
+			});
             this.userData = this.userInfo;
             this.cardBox.forEach((item, index) => {
                 Object.defineProperty(item, 'isShow', {

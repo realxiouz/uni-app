@@ -18,9 +18,9 @@
 				}
 			});
 			let token = uni.getStorageSync('apiToken');
-			if (token) {
+            if (token) {
 				this.$http('auth/user').then(r => {
-					this.login(r)			
+					this.login(r);
 					let e = new Echo({
 						client: client,
 						broadcaster: "socket.io",
@@ -36,7 +36,7 @@
 								Authorization: "Bearer " + uni.getStorageSync('apiToken')
 							}
 						}
-					})
+					});
 					e.private("App.User." + this.userInfo.id).notification(r => {
 						this.setNew(r.data)
 						uni.showTabBarRedDot({
@@ -46,7 +46,7 @@
 				})
 			} else {
                 let until = !/(object|undefined)/.test(typeof query.shop_id)? `?type=${query.type}&shop_id=${query.shop_id}`: '';
-				uni.navigateTo({
+                uni.navigateTo({
 					url: '/pages/public/login/index' + until,
 				})
 			}
@@ -63,12 +63,8 @@
 			// 	}
 			// })
 		},
-		onShow: function() {
-
-		},
-		onHide: function() {
-
-		},
+		onShow: function() {},
+		onHide: function() {},
 		methods: {
 			...mapMutations(['login', 'setH5']),
 			...mapMutations('message', ['setNew'])

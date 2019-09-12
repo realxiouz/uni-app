@@ -106,7 +106,6 @@ export default {
             {
                 ctx.drawImage(bg, 0, 0, this.canvasWidth, this.canvasHeight);
                 // ctx.drawImage(cardInfo.ewm, this.canvasWidth * .85, this.canvasHeight * .66, 50, 50);
-                ctx.drawImage(cardInfo.userImg, this.canvasWidth - 80, 30, 50, 50);
                 ctx.setFontSize(17);
                 ctx.fillText(cardInfo.name, 30, this.canvasHeight / 2.3);
                 ctx.setFontSize(13);
@@ -115,16 +114,21 @@ export default {
                 ctx.fillText(cardInfo.companyname, 50, this.canvasHeight / 1.32);
                 ctx.drawImage(icon.companyIconWhite, 30, this.canvasHeight / 1.45, 14, 14);
                 ctx.drawImage(icon.phoneWhite, 30, this.canvasHeight / 1.22, 15, 15);
-                ctx.fillText(cardInfo.phone, 50, this.canvasHeight / 1.1);
-
+                ctx.fillText(cardInfo.phone, 50, this.canvasHeight / 1.13);
                 // 绘制头像
                 ctx.save(); // 先保存状态 已便于画完圆再用
+
                 ctx.beginPath(); //开始绘制
                 //先画个圆
-                ctx.arc(this.canvasWidth - 100 + 25, 30 + 25, 25, 0, 2 * Math.PI, false)
+                ctx.setLineWidth(10);
+                ctx.setStrokeStyle("#fff");
+                ctx.arc(this.canvasWidth - 100 + 25, 30 + 25, 30, 0, 2 * Math.PI, false);
                 ctx.clip(); //画了圆 再剪切 原始画布中剪切任意形状和尺寸。一旦剪切了某个区域，则所有之后的绘图都会被限制在被剪切的区域内
-                // ctx.drawImage(smCardInfo.userImg, 15, 46, 30, 30); // 推进去图片
+                // ctx.drawImage(cardInfo.userImg, this.canvasWidth - 80, 30, 50, 50);
                 ctx.drawImage(cardInfo.userImg, this.canvasWidth - 100, 30, 50, 50);
+                ctx.stroke();
+                // ctx.drawImage(smCardInfo.userImg, 15, 46, 30, 30); // 推进去图片
+                // ctx.stroke();
                 ctx.restore(); //恢复之前保存的绘图上下文
 
             }
@@ -133,7 +137,6 @@ export default {
             {
                 ctx.drawImage(bg, 0, 0, this.canvasWidth, this.canvasHeight);
                 // ctx.drawImage(cardInfo.ewm, 2, this.canvasWidth / 1.3, this.canvasHeight - 60, 50);
-                ctx.drawImage(cardInfo.userImg, this.canvasWidth / 1.3, 10, 50, 50);
                 ctx.setFontSize(17);
                 ctx.fillText(cardInfo.name, this.canvasWidth / 1.6, this.canvasHeight / 1.9);
                 ctx.setFontSize(13);
@@ -143,13 +146,21 @@ export default {
                 ctx.drawImage(icon.companyIconWhite, this.canvasWidth / 1.6, this.canvasHeight / 1.38, 14, 14);
                 ctx.drawImage(icon.phoneWhite, this.canvasWidth / 1.6, this.canvasHeight / 1.18, 15, 15);
                 ctx.fillText(cardInfo.phone, this.canvasWidth / 1.5, this.canvasHeight / 1.09);
+                ctx.save(); // 先保存状态 已便于画完圆再用
+                ctx.beginPath(); //开始绘制
+                ctx.setLineWidth(10);
+                ctx.setStrokeStyle("#fff");
+                ctx.arc((this.canvasWidth / 1.3) + 25, 8 + 25, 30, 0, 2 * Math.PI, false);
+                ctx.clip();
+                ctx.drawImage(cardInfo.userImg, this.canvasWidth / 1.3, 8, 50, 50);
+                ctx.stroke();
+                ctx.restore(); //恢复之前保存的绘图上下文
             }
                 break;
             case 2:
             {
                 ctx.drawImage(bg, 0, 0, this.canvasWidth, this.canvasHeight);
                 // ctx.drawImage(cardInfo.ewm, this.canvasWidth * .005, this.canvasHeight * .66, 50, 50);
-                ctx.drawImage(cardInfo.userImg, this.canvasWidth * .33, this.canvasHeight / 2 - 20, 50, 50);
                 ctx.setFontSize(17);
                 ctx.fillText(cardInfo.name, this.canvasWidth * .58, this.canvasHeight / 2.8);
                 ctx.setFontSize(13);
@@ -159,6 +170,15 @@ export default {
                 ctx.drawImage(icon.companyIconWhite, this.canvasWidth * .58, this.canvasHeight / 1.5, 14, 14);
                 ctx.drawImage(icon.phoneWhite, this.canvasWidth * .58, this.canvasHeight / 1.24, 15, 15);
                 ctx.fillText(cardInfo.phone, this.canvasWidth * .63, this.canvasHeight / 1.148);
+                ctx.save(); // 先保存状态 已便于画完圆再用
+                ctx.beginPath(); //开始绘制
+                ctx.setLineWidth(10);
+                ctx.setStrokeStyle("#01A63E");
+                ctx.arc(this.canvasWidth * .33 + 25, this.canvasHeight / 2 - 20 + 25, 30, 0, 2 * Math.PI, false);
+                ctx.clip();
+                ctx.drawImage(cardInfo.userImg, this.canvasWidth * .33, this.canvasHeight / 2 - 20, 50, 50);
+                ctx.stroke();
+                ctx.restore(); //恢复之前保存的绘图上下文
                 // ctx.draw()
             }
                 break;
@@ -166,7 +186,6 @@ export default {
             {
                 ctx.drawImage(bg, 0, 0, this.canvasWidth, this.canvasHeight);
                 // ctx.drawImage(cardInfo.ewm, this.canvasWidth * .85, this.canvasHeight * .10, 50, 50);
-                ctx.drawImage(cardInfo.userImg, this.canvasWidth * .45, this.canvasHeight / 2 - 30, 50, 50);
                 ctx.setFontSize(17);
                 ctx.fillStyle = 'black';
                 ctx.fillText(cardInfo.name, 27, this.canvasHeight / 3.4);
@@ -178,8 +197,16 @@ export default {
                 ctx.fillText(cardInfo.companyname, 45, this.canvasHeight / 1.32);
                 ctx.drawImage(icon.companyIconBlack, 27, this.canvasHeight / 1.47, 14, 14);
                 ctx.drawImage(icon.phoneBlack, 27, this.canvasHeight / 1.24, 15, 15);
-                ctx.fillText(cardInfo.phone, 45, this.canvasHeight / 1.135);
-                ctx.fillStyle = 'black'
+                ctx.fillText(cardInfo.phone, 45, this.canvasHeight / 1.138);
+                ctx.save();
+                ctx.beginPath(); //开始绘制
+                ctx.setLineWidth(10);
+                ctx.setStrokeStyle("#fff");
+                ctx.arc(this.canvasWidth * .39 + 25, this.canvasHeight / 2 - 30 + 25, 30, 0, 2 * Math.PI, false);
+                ctx.clip();
+                ctx.drawImage(cardInfo.userImg, this.canvasWidth * .39, this.canvasHeight / 2 - 30, 50, 50);
+                ctx.stroke();
+                ctx.restore(); //恢复之前保存的绘图上下文
                 // ctx.draw()
             }
         }
@@ -193,6 +220,7 @@ export default {
                 canvasId: 'share-card',
                 success(res) {
                     self.saveImgSrc = res.tempFilePath;
+                    console.log(self.saveImgSrc);
                     self.modalName = e.currentTarget.dataset.target;
                 },
                 fail(err) {

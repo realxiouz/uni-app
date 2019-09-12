@@ -26,7 +26,7 @@
 </template>
 
 <script>
-	import { mapMutations} from 'vuex';
+	import { mapMutations, mapState} from 'vuex';
 	export default {
 		onLoad(opt) {
 			// this.wechatlogin()
@@ -40,6 +40,7 @@
 		}),
 		methods: {
 			...mapMutations(['login', 'changeToken']),
+            ...mapMutations('ucenter', ['setInterceptUId', 'setUId']),
             ...mapMutations('work', ['setShopId']),
 			handleLogin() {
 				this.$http('auth/login', this.formBean, 'post').then(r => {
@@ -52,9 +53,17 @@
 					this.changeToken(r.access_token);
 					uni.setStorageSync('apiToken', r.access_token);
 					this.login(r.user);
-					uni.switchTab({
-						url: '/pages/work/index/index'
-					})
+					if (!/(object|undefined)/.test(typeof this.interceptUId) && this.interceptUId !== '') {
+					    this.setUId('');
+					    uni.reLaunch({
+                            url: '/pages/ucenter/businesscard/index/businesscard?uidx=' + this.interceptUId
+                        });
+                        this.setInterceptUId('');// 用完一定要清除掉
+                    } else {
+                        uni.switchTab({
+                            url: '/pages/work/index/index'
+                        })
+                    }
 				}).catch(e => {
 					// console.log(e);
 					uni.showToast({
@@ -68,7 +77,7 @@
 				  provider: 'weixin',
 				  success: (loginRes) => {
 				    console.log(loginRes);
-					this.code = loginRes.code
+					this.code = loginRes.code;
 					console.log(this.code);
 					// this.$http('wxapp/login', {code: loginRes.code}, 'post').then(r => {
 					// 	
@@ -134,7 +143,7 @@
 			}
 		},
 		computed: {
-			// ...mapState('work', ['shopId'])
+			...mapState('ucenter', ['interceptUId'])
 		}
 	}
 </script>

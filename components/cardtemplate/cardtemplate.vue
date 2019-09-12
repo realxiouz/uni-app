@@ -33,6 +33,9 @@
             isPreview: {
 			    type: Boolean,
                 default: false
+            },
+            relayOn: {
+			    type: Boolean
             }
 		},
 		components: {
@@ -52,21 +55,23 @@
 			}
 		},
 		watch: {
-            isPreview(data) {
-                if (data) {
-                    // 只有是在预览下这里才会赋值
+            relayOn() {
+                if (this.isPreview) {
                     this.changeCurrentInfo(this.currentLoginUserInfo);
                     this.changeImg({key: 'img_bg', url: ''});
-                }/* else {
-                    this.changeCurrentInfo(this.currentUserInfo);
+                    this.changeImg({key: 'img_avatar', url: ''});
+                } else {
+                    let data = this.currentUserInfo.name? this.currentUserInfo: this.currentLoginUserInfo;
+                    this.changeCurrentInfo(data);
                     this.changeImg({key: 'img_avatar', url: ''});
                     this.changeImg({key: 'img_bg', url: ''});
-                }*/
+                }
             }
         },
 		beforeMount() {
 		    let route = this.getCurPage().route;
-            if (/pages\/ucenter\/page_makecard\/index\/page_makecard/.test(route)) {
+		    // 这里必须要有, 不然可能会当前用户赋值不上
+            if (!/pages\/ucenter\/businesscard\/index\/businesscard/.test(route)) {
                 this.changeCurrentInfo(this.currentLoginUserInfo);
                 this.changeImg({key: 'img_bg', url: ''});
                 this.changeImg({key: 'img_avatar', url: ''});
