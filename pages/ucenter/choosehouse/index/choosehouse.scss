@@ -7,7 +7,7 @@ $liht:95;
     width: 100%;
     height: rpx(90);
     padding: rpx(15) $space_1;
-    background: #ccc;
+    background: #EDEDED;
     z-index: 100;
 }
 form {
@@ -16,27 +16,31 @@ form {
 //搜索框
 .search {
     display: flex;
-	flex-wrap: nowrap;
-	align-items: center;
-	height: rpx(60);
-	background: $white;
-	@include boderradius($radius);
+    position: relative;
+    flex-wrap: nowrap;
+    align-items: center;
+    width: 100%;
+    padding: 0 15rpx;
+    border: solid $border $bordercl;
+    @include boderradius($radius);
+    background: $white;
     color: var(--darkGray);
     > text {
-       margin-left: 0.5rem;
         font-size: $bigfont;
-        color: rgba($gray, .5);
+        color: rgba($gray,.5);
     }
 
     > input {
-		flex: 1;
-        padding: 0 0.1rem;
-        heidth: 100%;
-        line-height: rpx(60);
+        flex: 1;
+        height: rpx(70);
+        padding-left: 10rpx;
+        line-height: rpx(70);
     }
-	> button{
-		padding: 0 0.5rem;
-	}
+    > button {
+        padding: 0 10rpx;
+        font-size: 15px;
+        line-height: 1.7    ;
+    }
 }
 
 .showchoose {

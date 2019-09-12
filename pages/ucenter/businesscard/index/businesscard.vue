@@ -117,23 +117,24 @@
 			<view class="Module-title pubpdtop">
 				推荐房源
 			</view>
-			<!-- /#/shop/project/detail?id=' + items.id -->
-			<view class="informationlist" v-for="(items, index) of currentInfo.house" :key="index">
-				<view @tap="toDetail(items.id)">
-					<view class="topimg">
-						<image class="imgauto radius-top" :src="items.img"></image>
-					</view>
-					<view class="housesource pd-left-right pubpdtop">
-						<view class="housesource-left">
-							<text class="block spece-1">{{items.name}}</text>
-							<text class="block gray">{{items.address}}</text>
-						</view>
-						<view class="housesource-right">
-							<view class="houseprice" v-for="(item, i) of items.prices" :key="i">{{item.price}}元/㎡</view>
-						</view>
-					</view>
-				</view>
-			</view>
+			<view style="margin-bottom: 65rpx;">
+                <view class="informationlist" v-for="(items, index) of recommendHouse" :key="index">
+                    <view @tap="toDetail(items.id)">
+                        <view class="topimg">
+                            <image class="imgauto radius-top" :src="items.img"></image>
+                        </view>
+                        <view class="housesource pd-left-right pubpdtop">
+                            <view class="housesource-left">
+                                <text class="block spece-1">{{items.name}}</text>
+                                <text class="block gray">{{items.address}}</text>
+                            </view>
+                            <view class="housesource-right">
+                                <view class="houseprice" v-for="(item, i) of items.prices" :key="i">{{item.price}}元/㎡</view>
+                            </view>
+                        </view>
+                    </view>
+                </view>
+            </view>
 		</view>
 		<!-- 模块 end -->
 
@@ -205,7 +206,6 @@
 		onLoad(options){
             const self = this;
             self.showMakeBtn = options.previewB === '1';
-            console.log(options, 'options');
             let uidx = options.uidx;
             if (this.currentLoginUserInfo.name !== undefined) {// 在已经获取了就不要再去请求了
                 this.changeCurrentInfo(this.currentLoginUserInfo);
@@ -259,11 +259,13 @@
                         self.setBrowseUser(browseUser);
                     })
                 }
+                console.log(data.house, 'data.house', this.currentInfo.house);
+                self.changeRecommendHouse({arr: data.house, replace: true});
             }
 		},
 		methods: {
 			...mapMutations(['login']),
-			...mapMutations('ucenter', ['changeCurrentLoginUserInfo', 'changeImg', 'changeCurrentUserInfo', 'changeCurrentInfo', 'setUId', 'setBrowseUser', 'setInterceptUId']),
+			...mapMutations('ucenter', ['changeCurrentLoginUserInfo', 'changeImg', 'changeCurrentUserInfo', 'changeCurrentInfo', 'setUId', 'setBrowseUser', 'setInterceptUId', 'changeRecommendHouse']),
 			toDetail(id) {
 				// recommend为1表示是从名片推荐楼盘这里跳转过去的, 因为在详情页里有些不显示户型图片, 地图, 详情
 				uni.navigateTo({
@@ -461,7 +463,7 @@
             }
 		},
 		computed: {
-			...mapState('ucenter', ['currentUserInfo', 'downLoadImg', 'currentLoginUserInfo', 'currentInfo', 'uId', 'browseUser']),
+			...mapState('ucenter', ['currentUserInfo', 'downLoadImg', 'currentLoginUserInfo', 'currentInfo', 'uId', 'browseUser', 'recommendHouse']),
 			...mapState(['userInfo']),
 			...mapGetters('ucenter', ['imgSrcGetters'])
 		},

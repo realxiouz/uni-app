@@ -4,7 +4,7 @@
             <view class="prompt">提示：长按可删除楼盘,点击加号可添加楼盘</view>
             <view class="reclist pubpdtop">
                 <view v-for="(item, index) of selectedHouse" @longpress="handleLongPress" :class="[item.istrue? 'on': '', list]" :data-touchindex="index" :key="index">
-                    <view @tap.stop="deletitem" class="close iconshanchu iconfont" :data-deleteindex="index" :data-id="item.id"></view>
+                    <view @tap.stop="deleteItem" class="close iconshanchu iconfont" :data-deleteindex="index" :data-id="item.id"></view>
                     <view class="selectmask"></view>
                     <view :data-id="item.id" class="recoimg">
 						<image :src="item.img" mode="widthFix" style="width: 100%; height: 100%;"></image>
@@ -21,7 +21,7 @@
 </template>
 
 <script>
-    import {mapState} from 'vuex';
+    import {mapState, mapMutations} from 'vuex';
     import {BASE_URL} from "../../../../utils/const";
 
 	export default {
@@ -48,6 +48,7 @@
 			})
         },
         methods: {
+            ...mapMutations('ucenter', ['changeRecommendHouse']),
             handleLongPress(e) {
                 // 长按后350ms触发
                 let touchIndex = e.currentTarget.dataset.touchindex;
@@ -62,7 +63,7 @@
                     url: '../../choosehouse/index/choosehouse'
                 })
             },
-            deletitem(e) {
+            deleteItem(e) {
                 const target = e.currentTarget.dataset;
                 let deleteIndex = target.deleteindex;
                 let id = target.id;
@@ -71,11 +72,12 @@
                 uni.showLoading({
                     title: '删除中...',
                     mask: true
-                })
+                });
 				this.$http('geren/deRecommend', {houseid: id}, 'post').then(res => {
-					self.selectedHouse.splice(deleteIndex, 1);
-					uni.hideLoading();
-					uni.showToast({
+                    self.selectedHouse.splice(deleteIndex, 1);
+                    self.changeRecommendHouse({index: deleteIndex, isDelete: true});
+                    uni.hideLoading();
+                    uni.showToast({
 					    title: '删除成功',
 					    icon: 'success',
 					    duration: 1000,

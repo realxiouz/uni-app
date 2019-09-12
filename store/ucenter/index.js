@@ -8,7 +8,6 @@ export default {
 			template_id: '0'
 		},
 		statusBarHeight: 0, //状态栏的高度，单位px
-		houseId: [],//保存被选中的楼盘ID,
 		imgSrc: BASE_URL + '/storage/vicard/',
         downLoadImg: {
             img_phone: '',
@@ -22,8 +21,10 @@ export default {
         currentLoginUserInfo: {},// 登录用户的信息
         currentInfo: {},// 当前显示使用的信息(登录或被分享的)
         uId: '',
+        houseId: [],
         browseUser: [],
-        interceptUId: ''
+        interceptUId: '',
+        recommendHouse: []
 	},
 	mutations: {
 		changeCurrentUserInfo(state, data) {
@@ -78,7 +79,27 @@ export default {
         },
         setInterceptUId(state, id) {
 		    state.interceptUId = id;
+        },
+        changeRecommendHouse(state, obj) {
+		    let  rec= state.recommendHouse;
+		    let arr = obj.arr || [];
+		    if (obj.isDelete) {
+                state.recommendHouse.splice(obj.index, 1);
+            } else if (obj.replace){
+                state.recommendHouse = arr;
+            } else {
+                for (let item of rec) {
+                    for (let i=0; i<arr.length; i++) {
+                        if (arr[i].id === item.id) {
+                            arr.splice(i, 1);
+                        }
+                    }
+                }
+                state.recommendHouse = [ ...arr, ...rec];
+            }
+
         }
+
     },
 	actions: {
 

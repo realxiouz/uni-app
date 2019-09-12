@@ -25,7 +25,7 @@
                 <!--#ifdef MP-WEIXIN-->
                 <input class="uni-input" password type="text" placeholder="旧密码" v-model="oldPassWord" />
                 <input class="uni-input" password type="text" placeholder="新密码" v-model="newPassWord" @blur="checkPassword" />
-                <input class="uni-input" password type="text" placeholder="请在输入一次密码" v-model="againPassWord" @blur="checkPassword" />
+                <input class="uni-input" password type="text" placeholder="请再输入一次密码" v-model="againPassWord" @blur="checkPassword" data-type="confirm"/>
                 <!--#endif-->
             </view>
             <view class="message">
@@ -61,10 +61,14 @@
                 let newPassWord = this.newPassWord;
                 if (againPassWord && newPassWord) {
                     if (againPassWord !== newPassWord) {
-                        this.msg = '两次密码输入的不一致'
+                        this.msg = '两次输入的密码不一致';
                     } else {
-                        this.msg = '';
-                        this.isTrue = true;
+                        if (againPassWord.length <= 5) {
+                            this.msg = '密码至少6位';
+                        } else {
+                            this.isTrue = true;
+                            this.msg = '';
+                        }
                     }
                 }
             },
@@ -85,39 +89,45 @@
                 }
             },
             setPassWord() {
-                if (!this.oldPassWord) {
-                    this.msg = '旧密码不可以为空';
-                    return false;
-                }
-                this.msg = '';
-                if (this.isTrue) {
-                    this.$http(`employee/set-password/${this.userInfo.id}`, {
-                        old_password: this.oldPassWord,
-                        password: this.newPassWord,
-                        password_confirmation: this.againPassWord
-                    }, 'post').then(res => {
-                        if (res.message) {
-                            uni.showToast({
-                                title: res.message,
-                                duration: 1000,
-                                mask: true
-                            });
-                            this.logout();
-                            setTimeout(function() {
-                                uni.navigateTo({
-                                    url: '/pages/public/login/index'
-                                })
-                            }, 1200);
-                        } else if (res.errors.password[0]) {
-                            uni.showToast({
-                                title: res.errors.password[0],
-                                icon: 'none',
-                                duration: 1000,
-                                mask: true
-                            });
-                        }
-                    })
-                }
+                setTimeout(() => {
+                    if (!this.oldPassWord) {
+                        this.msg = '旧密码不可以为空';
+                        return false;
+                    }
+                    if (this.oldPassWord.length <= 5) {
+                        this.msg = '密码至少6位';
+                        return false;
+                    }
+                    this.msg = '';
+                    if (this.isTrue) {
+                        uni.showLoading({
+                            title: '修改中...',
+                            mask: true
+                        });
+                        this.$http(`employee/set-password/${this.userInfo.id}`, {
+                            old_password: this.oldPassWord,
+                            password: this.newPassWord,
+                            password_confirmation: this.againPassWord
+                        }, 'post').then(res => {
+                            uni.hideLoading();
+                            this.isTrue = false;
+                            if (res.message) {
+                                uni.showToast({
+                                    title: res.message,
+                                    duration: 1000,
+                                    mask: true
+                                });
+                            } else if (res.errors.password[0]) {
+                                uni.showToast({
+                                    title: res.errors.password[0],
+                                    icon: 'none',
+                                    duration: 1000,
+                                    mask: true
+                                });
+                            }
+                        })
+                    }
+                }, 300);
             }
 		},
         computed: {

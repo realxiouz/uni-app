@@ -1,5 +1,5 @@
 <template>
-	<view :style="{height}" class="wrap">
+	<view :style="{height: height}" class="wrap">
 		<!-- <view class="cu-bar bg-white solid-bottom margin-top">
 			<view class="action">
 				<text class="cuIcon-title text-green "></text> 名片
@@ -22,12 +22,12 @@
                     <image :src="userInfo.avatar"></image>
                 </view>
                 <view class="userInfo">
-                    <view class="title-msg">
-                        <text class="name">{{userInfo.name}}</text>
-                        <text class="position">{{userInfo.role_name}}</text>
+                        <view class="title-msg">
+                            <text class="name">{{userInfo.name}}</text>
+                            <text class="position">{{userInfo.role_name}}</text>
+                        </view>
+                        <view class="position">电话: {{userInfo.mobile}}</view>
                     </view>
-                    <view class="position">电话: {{userInfo.mobile}}</view>
-                </view>
             </view>
 			<view class="menu">
                 <view class="list">
@@ -40,29 +40,24 @@
                     <view>报备邀请码: {{userInfo.invitation_code}}</view>
                     <view>渠道邀请码: {{userInfo.company_id}}-{{userInfo.invitation_code}}</view>
                 </view>
-                <view class="list" @tap="setPassword">
-                    <view class="content">修改密码</view>
-                    <view class="cuIcon-right text-gray icon"></view>
-                </view>
-                <view class="list" @tap="handleNav('/pages/ucenter/businesscard/index/businesscard')">
+                <view class="list" @tap="handleNav('/pages/ucenter/businesscard/index/businesscard')" style="border-width: 0">
                     <view class="content">个人名片</view>
                     <view class="cuIcon-right text-gray icon"></view>
                 </view>
-                <view class="list" @tap="btnSignOut">
-                    <view class="content">退出登录</view>
-                </view>
+            </view>
+            <view class="set-password" @tap="setPassword">
+                <view class="content">修改密码</view>
+                <view class="cuIcon-right text-gray icon"></view>
+            </view>
+            <view class="btn" @tap="btnSignOut">
+                <view class="content">退出登录</view>
             </view>
 		</view>
-		<!--<view class="business-card">
-			<button type="primary" class="btn" @tap="handleNav">个人名片</button>
-            <button type="primary" class="btn" @tap="setPassword">修改密码</button>
-            <button type="warn" class="btn" @tap="btnSignOut">退出登录</button>
-		</view>-->
 	</view>
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex'
+    import { mapState, mapMutations } from 'vuex'
 	export default {
 		data() {
 			return {
@@ -217,13 +212,15 @@ import { mapState, mapMutations } from 'vuex'
 
 <style lang="scss" scoped>
     .wrap {
-        background: #fff;
+        background: #EDEDED;
         .user {
             .title {
+                background: #fff;
                 display: flex;
                 align-items: center;
                 flex-wrap: nowrap;
-                padding: 20rpx 0 20rpx 40rpx;
+                padding: 30rpx 0 30rpx 40rpx;
+                border-bottom: 1px solid #ccc;
                 .avatar {
                     width: 115rpx;
                     height: 115rpx;
@@ -257,11 +254,15 @@ import { mapState, mapMutations } from 'vuex'
                 }
             }
             .menu {
-                padding: 0 20rpx;
+                padding: 8rpx 20rpx;
+                margin-top: 20rpx;
+                background: #fff;
+                border-bottom: 1px solid #ccc;
+                border-top: 1px solid #ccc;
                 .list {
                     display: flex;
                     justify-content: space-between;
-                    padding: 20rpx 20rpx 20rpx 10rpx;
+                    padding: 30rpx 20rpx 30rpx 10rpx;
                     border-bottom: 1px solid #ccc;
                     font-size: 18px;
                     .icon {
@@ -271,11 +272,35 @@ import { mapState, mapMutations } from 'vuex'
                 .show {
                     padding: 0 20rpx;
                     border-bottom: 1px solid #ccc;
+                    background: #fff;
                     font-size: 15px;
                     view {
                         padding: 5rpx 0;
                     }
                 }
+            }
+            .set-password {
+                display: flex;
+                justify-content: space-between;
+                padding: 30rpx 20rpx 30rpx 40rpx;
+                background: #fff;
+                border-top: 1px solid #ccc;
+                border-bottom: 1px solid #ccc;
+                margin-top: 20rpx;
+                font-size: 18px;
+                .icon {
+                    font-size: 20px;
+                }
+            }
+            .btn {
+                padding: 30rpx 20rpx 30rpx 10rpx;
+                background: #fff;
+                border-bottom: 1px solid #ccc;
+                border-top: 1px solid #ccc;
+                margin-top: 20rpx;
+                color: red;
+                font-size: 18px;
+                text-align: center;
             }
         }
     }

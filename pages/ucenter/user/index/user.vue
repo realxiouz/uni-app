@@ -121,12 +121,19 @@
 					title: '提交中'
 				});
 				this.$http('geren/addcard', this.editUserInfo).then(res => {
+                    uni.hideLoading();
 					// 保存成功
 					self.changeCurrentLoginUserInfo(res.data);
-					uni.navigateBack({
-					    delta: 1
-					});
-					uni.hideLoading();
+					uni.showToast({
+                        title: '修改成功...',
+                        duration: 1000,
+                        mask: true
+                    });
+					setTimeout(() => {
+                        uni.navigateBack({
+                            delta: 1
+                        });
+                    }, 1200);
 				}).catch(err => {
 					uni.hideLoading();
 				})

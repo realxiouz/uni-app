@@ -5,8 +5,8 @@
                 <form>
                     <view class="search">
                         <text class="cuIcon-search"></text>
-                        <input placeholder="请输入楼盘编号" v-model="keywords" @focus="showSearchBtn = true" @blur="showSearchBtn = !!keywords"></input>
-						<button type="primary" size="mini" v-if="showSearchBtn" @tap="searchKeywords">搜索</button>
+                        <input placeholder="请输入楼盘编号" v-model="keywords">
+						<button type="primary" size="mini" v-if="!!keywords.toString()" @tap="searchKeywords">搜索</button>
                     </view>
                 </form>
             </view>
@@ -18,7 +18,13 @@
 			<view v-else class="showchoose" style="font-size: 18px;">请选择楼盘...</view>
             <view class="choosehouse" style="padding-top: 95rpx">
                 <view class="chooselist">
-                    <view @tap="pushToTem" v-for="(item, index) of houseList"
+                    <view v-if="!houseList.length" style="display: block; width: 180rpx; margin: 100rpx auto 0;">
+                        <view class="text-xsl">
+                            <text class="cuIcon-attentionforbidfill text-gray"></text>
+                        </view>
+                        <text class="text-gray">暂无数据</text>
+                    </view>
+                    <view @tap="pushToTem" v-else v-for="(item, index) of houseList"
                           :data-item="index" :key="index" :data-imgsrc="item.img" :data-id="item.id">
                         <view class="selectbox">
                             <text class="noselect iconfont iconxuanze" v-if="!item.isTrue"></text>
@@ -64,9 +70,9 @@
 				per_page: 10,
 				total: '',
 				last_page: '',
-				showSearchBtn: false,
 				keywords: '',
-				isSearch: false
+				isSearch: false,
+                selectedHouse: []
             }
         },
         onLoad() {
@@ -80,7 +86,7 @@
                     app.globalData.CustomBar = custom.bottom + custom.top - res.statusBarHeight;*/
 
                 }
-            })
+            });
 			this.getDate();
 			
         },
@@ -103,12 +109,13 @@
 			}
 		},
         methods: {
-            ...mapMutations('ucenter', [
-                'changeHouseArr',
-                'changeHouseId'
-            ]),
+            ...mapMutations('ucenter', ['changeHouseId', 'changeRecommendHouse']),
             submitHouse() {
-                // this.onReady(),	
+                uni.showLoading({
+                    title: '提交中...',
+                    duration: 1000,
+                    mask: true
+                });
                 const self = this;
 				let params = '';
 				let len = self.houseId.length-1;
@@ -118,10 +125,19 @@
 				}
 				this.$http('geren/recommendHouse', {houseid: params}).then(res => {
 					if (res.code === 100) {
+					    uni.hideLoading();
+					    self.changeRecommendHouse({arr: self.selectedHouse});
+                        uni.showToast({
+                            title: '提交成功...',
+                            mask: true,
+                            duration: 1000
+                        });
 					    //返回上一页面
-					    uni.navigateBack({
-					        delta: 1
-					    });
+					    setTimeout(() => {
+                            uni.navigateBack({
+                                delta: 1
+                            });
+                        }, 1200);
 					} else {
 					    uni.showToast({
 					        title: '提交失败, 请检查网络重试',
@@ -149,6 +165,7 @@
                 if (!isTrue) {
                     const id = target.id;
                     this.temArr.unshift(imgSrc);
+                    this.selectedHouse.push(this.houseList[index]);
                     this.changeHouseId({
                         id: id,
                         isAdd: true
@@ -157,6 +174,7 @@
                 } else {
                     let i = this.temArr.findIndex(val => val === imgSrc);
                     this.temArr.splice(i, 1);
+                    this.selectedHouse.splice(i, 1);
                     this.changeHouseId({
                         index: i,
                         isAdd: false
@@ -209,28 +227,34 @@
 			},
 			getDate() {
 				const self = this;
+				uni.showLoading({
+                    title: '加载中...',
+                    mask: true
+                });
 				let url =  `guestProjects?page=${this.page}&per_page=${this.per_page}`;
 				url = this.isSearch? url+ `&keywords=${this.keywords}`: url;
 				this.$http(url).then(res => {
+				    uni.hideLoading();
 					const data = res.data;
 					self.total = res.total;
 					self.last_page = res.last_page;
-					self.changeHouseArr(data);
+                    data.forEach((ele, index) => {
+                        ele.isTrue = false;
+                        Object.defineProperty(ele, 'isTrue', {
+                            configurable: false,
+                            writable: true,
+                            enumerable: true,
+                            value: false
+                        });
+                    });
 					if (this.isSearch && this.page === 1) {
 						self.houseList = [...data];
 					} else {
 						self.houseList = [...self.houseList, ...data];
 					}
-					self.houseList.forEach((ele, index) => {
-					    ele.isTrue = false;
-					    Object.defineProperty(ele, 'isTrue', {
-					        configurable: false,
-					        writable: true,
-					        enumerable: true,
-					        value: false
-					    });
-					});
-				})
+				}).catch(e => {
+                    uni.hideLoading();
+                })
 			},
 			searchKeywords() {
 				this.isSearch = true;
