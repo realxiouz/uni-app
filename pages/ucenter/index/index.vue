@@ -1,5 +1,5 @@
 <template>
-	<view>
+	<view :style="{height}" class="wrap">
 		<!-- <view class="cu-bar bg-white solid-bottom margin-top">
 			<view class="action">
 				<text class="cuIcon-title text-green "></text> 名片
@@ -17,28 +17,47 @@
 			</view>
 		</view> -->
 		<view class="user">
-			<view class="avatar">
-				<image :src="userInfo.avatar"></image>
-			</view>
-			<view class="userInfo">
-				<view class="title">
-					<text class="name">{{userInfo.name}}</text>
-					<text class="position">{{userInfo.role_name}}</text>
-				</view>
-				<view class="phone">{{userInfo.mobile}}</view>
-				<view class="public">所属部门: {{userInfo.department.name}}</view>
-				<view class="public">报备邀请码: {{userInfo.invitation_code}}</view>
-				<view class="public">渠道邀请码: {{userInfo.company_id}}-{{userInfo.invitation_code}}</view>
-				<view class="public">{{userInfo.company.name}}</view>
-				<view class="public">公司ID: {{userInfo.company_id}}</view>
-			</view>
+            <view class="title">
+                <view class="avatar">
+                    <image :src="userInfo.avatar"></image>
+                </view>
+                <view class="userInfo">
+                    <view class="title-msg">
+                        <text class="name">{{userInfo.name}}</text>
+                        <text class="position">{{userInfo.role_name}}</text>
+                    </view>
+                    <view class="position">电话: {{userInfo.mobile}}</view>
+                </view>
+            </view>
+			<view class="menu">
+                <view class="list">
+                    <view class="content">公司信息</view>
+                    <view :class="[show? 'cuIcon-fold': 'cuIcon-unfold',  'text-gray', 'icon']" @tap="show= !show"></view>
+                </view>
+                <view v-if="show" class="show">
+                    <view>{{userInfo.company.name}}</view>
+                    <view>公司ID: {{userInfo.company_id}}</view>
+                    <view>报备邀请码: {{userInfo.invitation_code}}</view>
+                    <view>渠道邀请码: {{userInfo.company_id}}-{{userInfo.invitation_code}}</view>
+                </view>
+                <view class="list" @tap="setPassword">
+                    <view class="content">修改密码</view>
+                    <view class="cuIcon-right text-gray icon"></view>
+                </view>
+                <view class="list" @tap="handleNav('/pages/ucenter/businesscard/index/businesscard')">
+                    <view class="content">个人名片</view>
+                    <view class="cuIcon-right text-gray icon"></view>
+                </view>
+                <view class="list" @tap="btnSignOut">
+                    <view class="content">退出登录</view>
+                </view>
+            </view>
 		</view>
-		<view class="business-card">
+		<!--<view class="business-card">
 			<button type="primary" class="btn" @tap="handleNav">个人名片</button>
-		</view>
-		<view class="login-out">
-			<button type="warn" class="btn" @tap="btnLognout">退出登录</button>
-		</view>
+            <button type="primary" class="btn" @tap="setPassword">修改密码</button>
+            <button type="warn" class="btn" @tap="btnSignOut">退出登录</button>
+		</view>-->
 	</view>
 </template>
 
@@ -58,7 +77,7 @@ import { mapState, mapMutations } from 'vuex'
 					badge: 0,
 					name: '设置'
 				} */],
-
+                show: false,
 				attendanceList: [
 					{
 						cuIcon: 'locationfill',
@@ -73,9 +92,37 @@ import { mapState, mapMutations } from 'vuex'
 						badge: 0,
 						name: '设置'
 					}
-				]
+				],
+                height: 100,
+                icon: 'unfold'
 			};
 		},
+        watch: {
+		    userInfo(data) {
+		        const userInfo = data;
+                this.info = [
+                    {
+                        subInfo: userInfo.phone,
+                        supInfo: '所属公司: ' + userInfo.department.name,
+                        icon: 'phone',
+                    },
+                    {
+                        subInfo: userInfo.company.name,
+                        supInfo: '公司ID:' + userInfo.company.id,
+                        icon: 'radioboxfill',
+                    },
+                    {
+                        subInfo: '报备邀请码:' + userInfo.invitation_code,
+                        supInfo: '渠道邀请码:' +  userInfo.company_id + '-' + userInfo.invitation_code,
+                        icon: 'deliver_fill',
+                    }
+
+                ];
+            },
+            info(data) {
+		        this.info = data;
+            }
+        },
 		onLoad() {
 			//#ifdef MP-WEIXIN
 			/*uni.startWifi({
@@ -98,89 +145,138 @@ import { mapState, mapMutations } from 'vuex'
 				console.log(r.wifiList);
 			})*/
 			//#endif
-			
+            const self = this;
+            uni.getSystemInfo({
+                success(res) {
+                    self.height = res.windowHeight + 'px';
+                }
+            })
 		},
 		onShow() {
 			
 		},
 		methods: {
 			...mapMutations(['logout']),
-			handleNav() {
+            ...mapMutations('ucenter', ['clearEmpty']),
+			handleNav(url) {
 				uni.navigateTo({
-					url: '/pages/ucenter/businesscard/index/businesscard'
+					url: url
 				})
 			},
-			btnLognout() {
+			btnSignOut() {
 				let self = this;
 				uni.showModal({
 					title: '确定退出登录',
-					cancelColor: "green",
-					confirmColor: "red",
+					cancelColor: "#085820",
+					confirmColor: "#ff0000",
+                    cancelText: "取消",
+                    confirmText: "确定",
 					success(res) {
 						if (res.confirm) {
 							self.logout();
+							self.clearEmpty();
 							uni.navigateTo({
 								url: '/pages/public/login/index'
 							})
 						}
 					}
 				})
-			}
+			},
+            setPassword() {
+			    uni.navigateTo({
+                    url: '/pages/ucenter/set-passward/set-passward'
+                })
+            }
 		},
 		computed: {
 			...mapState(['hasLogin', 'userInfo'])
 		},
-		mounted() {}
+		mounted() {
+            const userInfo = this.userInfo;
+            this.info = [
+                {
+                    subInfo: userInfo.phone,
+                    supInfo: '所属公司: ' + userInfo.department.name,
+                    icon: 'phone',
+                },
+                {
+                    subInfo: userInfo.company.name,
+                    supInfo: '公司ID:' + userInfo.company.id,
+                    icon: 'radioboxfill',
+                },
+                {
+                    subInfo: userInfo.invitation_code,
+                    supInfo: userInfo.company_id + '-' + userInfo.invitation_code,
+                    icon: 'deliver_fill',
+                }
+
+            ];
+        }
 	}
 </script>
 
-<style lang="scss">
-	.user {
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		flex-wrap: nowrap;
-		padding: 20rpx 0;
-		.avatar {
-			width: 115rpx;
-			height: 115rpx;
-			margin-right: 100rpx;
-			image {
-				width: 100%;
-				height: 100%;
-				border-radius: 50%;
-			}
-		}
-		.userInfo {
-			.title {
-				.name {
-					font-size: 25px;
-					font-weight: bold;
-				}
-				.position {
-					padding: 3rpx 10rpx;
-					background: #C6F3EA;
-					border-radius: 20rpx;
-				}
-			}
-			.phone {
-				font-size: 18px;
-				font-weight: bold;
-			}
-			.public {
-				font-size: 15px;
-				color: darkgray;
-			}
-		} 
-	}
-	.business-card {
-		margin-bottom: 15rpx;
-	}
-	button {
-		width: 500rpx;
-		height: 70rpx;
-		padding: 0;
-		line-height: 2;
-	}
-	
+<style lang="scss" scoped>
+    .wrap {
+        background: #fff;
+        .user {
+            .title {
+                display: flex;
+                align-items: center;
+                flex-wrap: nowrap;
+                padding: 20rpx 0 20rpx 40rpx;
+                .avatar {
+                    width: 115rpx;
+                    height: 115rpx;
+                    margin-right: 50rpx;
+                    image {
+                        width: 100%;
+                        height: 100%;
+                        border-radius: 50%;
+                    }
+                }
+                .userInfo {
+                    .title-msg {
+                        .name {
+                            font-size: 25px;
+                            font-weight: bold;
+                        }
+                        .position {
+                            padding: 3rpx 10rpx;
+                            background: #C6F3EA;
+                            border-radius: 20rpx;
+                        }
+                    }
+                    .phone {
+                        font-size: 18px;
+                        font-weight: bold;
+                    }
+                    .public {
+                        font-size: 15px;
+                        color: darkgray;
+                    }
+                }
+            }
+            .menu {
+                padding: 0 20rpx;
+                .list {
+                    display: flex;
+                    justify-content: space-between;
+                    padding: 20rpx 20rpx 20rpx 10rpx;
+                    border-bottom: 1px solid #ccc;
+                    font-size: 18px;
+                    .icon {
+                        font-size: 20px;
+                    }
+                }
+                .show {
+                    padding: 0 20rpx;
+                    border-bottom: 1px solid #ccc;
+                    font-size: 15px;
+                    view {
+                        padding: 5rpx 0;
+                    }
+                }
+            }
+        }
+    }
 </style>

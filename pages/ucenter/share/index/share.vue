@@ -11,7 +11,7 @@
 					</textarea>
 				</view>
 				<view class="btngrp">
-					<button form-type="reset" class="cu-btn  bg-red button-hover">一键清空</button>
+					<button @tap="cNames = ''" class="cu-btn  bg-red button-hover">一键清空</button>
 					<button @tap="generateCard" form-type="submit" class="cu-btn bg-cyan" data-target="bottomModal">
 						分享名片
 					</button>
@@ -72,6 +72,7 @@
 
 <script>
 	import share from '../../../../common/share.js';
+	import weiXinAuthorization from '../../../../utils/weixin-authorization'
 	import {
 		mapState,
 		mapGetters,
@@ -110,6 +111,9 @@
             },
             shareImg(data) {
                 this.showSmallImage = Boolean(data);
+            },
+            cNames(data) {
+                console.log(data, 'cNames');
             }
         },
 		onLoad() {
@@ -239,41 +243,7 @@
 							}
 						},
 						fail(err) {
-							if (err.errMsg === "saveImageToPhotosAlbum:fail:auth denied" || err.errMsg ===
-								"saveImageToPhotosAlbum:fail auth deny") {
-								// 这边微信做过调整，必须要在按钮中触发，因此需要在弹框回调中进行调用
-								wx.showModal({
-									title: '提示',
-									content: '需要您授权保存相册',
-									showCancel: false,
-									success: modalSuccess => {
-										wx.openSetting({
-											success(settingdata) {
-												console.log("settingdata", settingdata)
-												if (settingdata.authSetting['scope.writePhotosAlbum']) {
-													wx.showModal({
-														title: '提示',
-														content: '获取权限成功,再次点击图片即可保存',
-														showCancel: false,
-													})
-												} else {
-													wx.showModal({
-														title: '提示',
-														content: '获取权限失败，将无法保存到相册哦~',
-														showCancel: false,
-													})
-												}
-											},
-											fail(failData) {
-												console.log("failData", failData)
-											},
-											complete(finishData) {
-												console.log("finishData", finishData)
-											}
-										})
-									}
-								})
-							}
+                            weiXinAuthorization.saveImg(err);
 						}
 					})
 				}
@@ -296,16 +266,11 @@
 		},
 		onShareAppMessage(res) {
 			// 分享
-			return {
+            console.log(this.userInfo.id, 'id');
+            return {
 				title: this.cNames,
-				path: '/pages/ucenter/businesscard/index/businssecard?uidx='+ this.userInfo.id,
-				imageUrl: this.shareImg,
-				success(res) {
-				    uni.showToast({
-                        title: '分享成功'
-                    });
-					console.log('成功', res);
-				}
+				path: '/pages/ucenter/businesscard/index/businesscard?uidx='+ this.userInfo.id,
+				imageUrl: this.shareImg
 			}
 		},
         mounted() {

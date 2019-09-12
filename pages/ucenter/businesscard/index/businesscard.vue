@@ -2,7 +2,7 @@
 	<view class="padding-25" v-cloak>
 		<!-- cardtemplate 组件start -->
 		<!-- :user="currentUserInfo"  -->
-		<card-template :is-show-list="false" :is-preview="showMakeBtn"></card-template>
+		<card-template :is-show-list="false" :is-preview="showMakeBtn" :relay-on="relayOn"></card-template>
 		<!-- cardtemplate 组件end -->
 
 		<!-- 名片详情start -->
@@ -75,7 +75,7 @@
                                 <button @tap="saveImage" class="btnwd cu-btn block bg-cyan" :data-temp="shareImg">保存到相册</button>
                             </view>
                         </view>
-                        <view class="pd-top-bottom bg-white btn-center" @tap="canclesavepic">
+                        <view class="pd-top-bottom bg-white btn-center" @tap="hideModal">
                             取消
                         </view>
                     </view>
@@ -89,12 +89,14 @@
 		<view class="browse-count">
 			<view class="browse-count-letf">
 				<text class="browse-count-text">阅览次数</text>
-				<text class="browse-count-nunber">{{readNumber}}</text>
+				<text class="browse-count-nunber">{{currentInfo.readNumber}}</text>
 			</view>
 			<view class="browse-count-right" id="browse-user">
 				<view class="vertical-md">
 					<view class="cu-avatar-group">
-						<view class="avatar-info" v-for="(item, index) of BrowseUser" :key="index" :id="[index === 0? 'img_width': '']">
+                        <view v-if="!browseUser.length" class="avatar-info" id="img_width"></view>
+                        <view class="avatar-info" v-else  v-for="(item, index) of browseUser" :key="index">
+                            <!--:id="[index === 0? 'img_width': '']"-->
 							<image class="avatar-style" :src="item.avatar"></image>
 						</view>
 						<view class="avatar-info" v-if="showBrowseEllipsis" :class="[showBrowseEllipsis? 'show-browse-ellipsis': '']">···</view>
@@ -116,7 +118,7 @@
 				推荐房源
 			</view>
 			<!-- /#/shop/project/detail?id=' + items.id -->
-			<view class="informationlist" v-for="(items, index) of house" :key="index">
+			<view class="informationlist" v-for="(items, index) of currentInfo.house" :key="index">
 				<view @tap="toDetail(items.id)">
 					<view class="topimg">
 						<image class="imgauto radius-top" :src="items.img"></image>
@@ -159,13 +161,11 @@
 	import makeBtn from '../../../../components/makebtn/index/makebtn.vue';
 	import share from '../../../../common/share.js';
 	import {mapMutations, mapState, mapGetters} from 'vuex';
+	import weiXinAuthorization from '../../../../utils/weixin-authorization';
 
 	export default {
 		data() {
 			return {
-				// userInfo: {},// 绘制图片时调用
-				readNumber: 0, //阅读次数
-				BrowseUser: [], // 浏览的人
 				signature: '', // 名片签名
 				isShowCard: '展开名片信息', //名片模板的标题
 				cardIs: false, //名片详情
@@ -182,7 +182,6 @@
 				testUserInfo: {},// 分享是绘制canvas需要
 				qrCode: '', // 图片的src(头像)
 				bg_gradual_blue: 'bg-gradual-blue',
-				house: {},
 				onMyEvent: {
 					url: '../../page_makecard/index/page_makecard',
 					title: '制作名片',
@@ -193,8 +192,10 @@
                 smallImg : '', // 小图src
                 showImage: false,
                 showSmallImage: false,
-                isRepeatDraw: true,
-                isShowShare: true
+                isRepeatDraw: true,// 是否需要重新绘制canvas图片
+                isShowShare: true,
+                relayOn: false,// 依赖, 只要是onShow都要变化, 以引起currentInfo的变化
+                showNumber: ''// 浏览记录显示的个数, 保存使用, 而且只获取一次
 			}
 		},
 		components: {
@@ -204,60 +205,65 @@
 		onLoad(options){
             const self = this;
             self.showMakeBtn = options.previewB === '1';
-			let uidx = options.uidx;
-            if (this.currentUserInfo.name) {// 这个是被分享人的名片信息
-                this.changeCurrentInfo(this.currentUserInfo);
-            } else if (uidx){
-                this.getUserMsg(uidx);
-            }
-            if (this.currentLoginUserInfo.name) {// 在已经获取了就不要再去请求了
+            console.log(options, 'options');
+            let uidx = options.uidx;
+            if (this.currentLoginUserInfo.name !== undefined) {// 在已经获取了就不要再去请求了
                 this.changeCurrentInfo(this.currentLoginUserInfo);
             } else {
                 this.getUserMsg();
             }
-            self.readNumber = self.currentInfo.readNumber;
+            if (uidx !== undefined) { // 在uidx为undefined时就不需要去请求了, 如果还发, 那么后端会报个错
+                if (uidx !== this.uId) {// 这个是被分享人的名片信息
+                    this.setUId(uidx);
+                    this.setInterceptUId(uidx);
+                    this.getUserMsg(uidx);
+                } else {
+                    this.changeCurrentInfo(this.currentUserInfo);
+                    this.setInterceptUId('');
+                }
+            }
 			// canvas
 			let screenWd = uni.getSystemInfoSync().windowWidth;
 			this.canvasWd = this.canvasWidth = screenWd - 20 * 1.9;
 			this.currentBgNum = this.currentInfo.template_id || 1;
 			this.onMyEvent.imgSrc = this.imgSrcGetters('card.png');
 		},
-		onHide() {
-			uni.hideLoading();
-		},
 		watch: {
-			readNumber() {
-				const self = this;
-				let BrowseUser = self.currentInfo.BrowseUser;
-                if (BrowseUser) {
-                    self.BrowseUser = self.currentInfo.BrowseUser;
-                } else {
-                    return false;
-                }
-				// 这里是因为数据都是一起修改的, 所以监听它可以省去无限调用的麻烦, 还有此时页面也已经挂载上去, 可以正常获取到宽度
-				// 这个方法是获取宽高的, 目前只可以传id, 且不带#, 需要改成标签名或者是class的可以去global-data.js下修改
-				async function getSize() {
-					let widthP = await self.getElSize('browse-user');
-					let imgWidthP = await self.getElSize('img_width');
-					let imgW = imgWidthP.width + 5;
-					return Math.floor(widthP.width / imgW);
-				}
-				getSize().then(data => {
-					if (self.BrowseUser.length <= data-1) return false;
-					self.BrowseUser = self.BrowseUser.slice(0, data);
-					self.showBrowseEllipsis = true;
-				})
-			},
             saveImgSrc(data) {
                 this.showImage = Boolean(data);
             },
             shareImg(data) {
                 this.showSmallImage = Boolean(data);
+            },
+            currentInfo(data) {
+                // 这里是因为数据都是一起修改的, 所以监听它可以省去无限调用的麻烦, 还有此时页面也已经挂载上去, 可以正常获取到宽度
+                // 这个方法是获取宽高的, 目前只可以传id, 且不带#, 需要改成标签名或者是class的可以去global-data.js下修改
+                if (!data.BrowseUser) return false;
+                const self = this;
+                let browseUser = data.BrowseUser;
+                if (self.showNumber !== '') {
+                    browseUser = browseUser.slice(0, this.showNumber);
+                } else {
+                    async function getSize() {
+                        let widthP = await self.getElSize('browse-user');
+                        let imgWidthP = await self.getElSize('img_width');
+                        let imgW = imgWidthP.width + 5;
+                        return Math.floor(widthP.width / imgW);
+                    }
+                    getSize().then(index => {
+                        self.showNumber = index;
+                        if (browseUser.length >= index-1) {
+                            browseUser = browseUser.slice(0, index);
+                            self.showBrowseEllipsis = true;
+                        }
+                        self.setBrowseUser(browseUser);
+                    })
+                }
             }
 		},
 		methods: {
 			...mapMutations(['login']),
-			...mapMutations('ucenter', ['changeCurrentLoginUserInfo', 'changeImg', 'changeCurrentUserInfo', 'changeCurrentInfo']),
+			...mapMutations('ucenter', ['changeCurrentLoginUserInfo', 'changeImg', 'changeCurrentUserInfo', 'changeCurrentInfo', 'setUId', 'setBrowseUser', 'setInterceptUId']),
 			toDetail(id) {
 				// recommend为1表示是从名片推荐楼盘这里跳转过去的, 因为在详情页里有些不显示户型图片, 地图, 详情
 				uni.navigateTo({
@@ -353,13 +359,6 @@
                 this.saveImgSrc = false;
                 this.showSmallImage = false;
 			},
-			/*隐藏已打开的分享界面*/
-			canclesavepic() {
-				this.modalName = null;
-				this.canvasWidth = 0;
-				this.canvasHeight = 0;
-				this.shareImg = '';
-			},
 			/*拨打电话*/
 			tel() {
 				uni.makePhoneCall({
@@ -393,40 +392,7 @@
 							}
 						},
                         fail(err) {
-                            if (err.errMsg === "saveImageToPhotosAlbum:fail:auth denied" || err.errMsg === "saveImageToPhotosAlbum:fail auth deny") {
-                                // 这边微信做过调整，必须要在按钮中触发，因此需要在弹框回调中进行调用
-                                uni.showModal({
-                                    title: '提示',
-                                    content: '需要您授权保存相册',
-                                    showCancel: false,
-                                    success: modalSuccess => {
-                                        uni.openSetting({
-                                            success(settingdata) {
-                                                console.log("settingdata", settingdata);
-                                                if (settingdata.authSetting['scope.writePhotosAlbum']) {
-                                                    uni.showModal({
-                                                        title: '提示',
-                                                        content: '获取权限成功,再次点击图片即可保存',
-                                                        showCancel: false,
-                                                    })
-                                                } else {
-                                                    uni.showModal({
-                                                        title: '提示',
-                                                        content: '获取权限失败，将无法保存到相册哦~',
-                                                        showCancel: false,
-                                                    })
-                                                }
-                                            },
-                                            fail(failData) {
-                                                console.log("failData", failData)
-                                            },
-                                            complete(finishData) {
-                                                console.log("finishData", finishData)
-                                            }
-                                        })
-                                    }
-                                })
-                            }
+                            weiXinAuthorization.saveImg(err);
                         }
 					})
 				}
@@ -475,43 +441,35 @@
                 });
                 let boo = !!uidx;
                 uidx = uidx || this.userInfo.id;
+                if (!uidx) return false;
                 this.$http('geren/userinfo', {uidx: uidx}).then(res => {
-                    self.readNumber = res.readnumber;
-                    self.BrowseUser = res.Browseuser;
-                    self.house = res.house.data;
                     const data = Object.assign({}, {readNumber: res.readnumber}, {BrowseUser: res.Browseuser}, {house: res.house.data}, res.data);
-                    this.changeCurrentInfo(res.data);
+                    this.relayOn = !this.relayOn;
                     self[boo? 'changeCurrentUserInfo': 'changeCurrentLoginUserInfo'](data);
-                    console.log(this.currentUserInfo, 'c');
-                    console.log(this.currentLoginUserInfo, 'nc');
+                    if (!boo) this.setInterceptUId('');
                     uni.hideLoading();
                 }).catch(err => {
-                    console.log(err);
                     uni.hideLoading();
                 });
-            }
+            },
 		},
-        onShow() {
-            console.log(this.currentUserInfo, 'on');
-            if (!this.showMakeBtn && this.currentUserInfo.name) {
-                this.changeCurrentUserInfo(this.currentUserInfo);
-            }
-        },
 		onShareAppMessage() {
             return {
 			    title: `您好，我是${this.currentInfo.name}。这是我的名片，请惠存`,
                 imageUrl: this.shareImg,
-                path: '/pages/ucenter/businesscard/index/businesscard?uidx='+ this.userInfo.id
+                path: '/pages/ucenter/businesscard/index/businesscard?uidx='+ this.currentInfo.uid
             }
 		},
 		computed: {
-			...mapState('ucenter', ['currentUserInfo', 'downLoadImg', 'currentLoginUserInfo', 'currentInfo']),
+			...mapState('ucenter', ['currentUserInfo', 'downLoadImg', 'currentLoginUserInfo', 'currentInfo', 'uId', 'browseUser']),
 			...mapState(['userInfo']),
 			...mapGetters('ucenter', ['imgSrcGetters'])
 		},
-		mounted() {
-
-        }
+        onShow() {
+            const self = this;
+            self.relayOn = !self.relayOn;
+        },
+		mounted() {}
 	}
 </script>
 
