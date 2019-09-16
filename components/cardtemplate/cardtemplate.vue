@@ -7,7 +7,6 @@
 
 		<form v-else style="display: block;">
 			<view class="cardtemplate">
-				
 				<radio-group class="block" @change="changed">
 					<view @tap="changed" v-for="(item, index) of tem" :key="index" class="list-box" rol="radiogroup" :data-list="index">
 						<label class="radiu">
@@ -37,7 +36,7 @@
             relayOn: {
 			    type: Boolean
             },
-            self: {
+            personal: {
 			    type: [Number, String]
             }
 		},
@@ -66,9 +65,8 @@
                     this.changeImg({key: 'img_avatar', url: ''});
                 } else {
                     let data = this.currentUserInfo.name? this.currentUserInfo: this.currentLoginUserInfo;
-                    if (this.self === 1) data = this.currentLoginUserInfo;
+                    if (this.personal === 1) data = this.currentLoginUserInfo;
                     this.changeCurrentInfo(data);
-                    this.changeRecommendHouse({arr: data.house, replace: true});
                     this.changeImg({key: 'img_avatar', url: ''});
                     this.changeImg({key: 'img_bg', url: ''});
                 }
@@ -79,7 +77,6 @@
 		    // 这里必须要有, 不然可能会当前用户赋值不上
             if (!/pages\/ucenter\/businesscard\/index\/businesscard/.test(route)) {
                 this.changeCurrentInfo(this.currentLoginUserInfo);
-                this.changeRecommendHouse({arr: this.currentLoginUserInfo.house, replace: true});
                 this.changeImg({key: 'img_bg', url: ''});
                 this.changeImg({key: 'img_avatar', url: ''});
             }
@@ -91,12 +88,12 @@
 				})
 			}
 			let num = this.currentLoginUserInfo.template_id;
-			this.tem = JSON.parse(JSON.stringify(this.curr));
-			this.tem[num]['checked'] = true;
+			// this.tem = JSON.parse(JSON.stringify(this.curr));
+			this.tem[num||0]['checked'] = true;
 			// 设置当前背景为已选中状态
 		},
 		methods: {
-			...mapMutations('ucenter', ['changeCurrentInfo', 'changeImg', 'changeCurrentLoginUserInfo', 'changeRecommendHouse']),
+			...mapMutations('ucenter', ['changeCurrentInfo', 'changeImg', 'changeCurrentLoginUserInfo']),
 			changed(e) {
 				let index = e.detail.value || e.currentTarget.dataset.list;
 				this.tem[index].checked  = true;

@@ -1,21 +1,5 @@
 <template>
 	<view :style="{height: height}" class="wrap">
-		<!-- <view class="cu-bar bg-white solid-bottom margin-top">
-			<view class="action">
-				<text class="cuIcon-title text-green "></text> 名片
-			</view>
-		</view>
-		<!-- 列表图标 -->
-		<!-- <view class="cu-list grid col-4 no-border">
-			<view class="cu-item" v-for="(item,index) in cuIconList" :key="index" @tap="handleNav" :item="item">
-				<view :class="['cuIcon-' + item.cuIcon,'text-' + item.color]">
-					<view class="cu-tag badge" v-if="item.badge">
-						<block v-if="item.badge!=1">{{item.badge>99?'99+':item.badge}}</block>
-					</view>
-				</view>
-				<text>{{item.name}}</text>
-			</view>
-		</view> -->
 		<view class="user">
             <view class="title">
                 <view class="avatar">
@@ -30,9 +14,9 @@
                     </view>
             </view>
 			<view class="menu">
-                <view class="list">
+                <view class="list" @tap="show = !show">
                     <view class="content">公司信息</view>
-                    <view :class="[show? 'cuIcon-fold': 'cuIcon-unfold',  'text-gray', 'icon']" @tap="show= !show"></view>
+                    <view :class="[show? 'cuIcon-fold': 'cuIcon-unfold',  'text-gray', 'icon']"></view>
                 </view>
                 <view v-if="show" class="show">
                     <view>{{userInfo.company.name}}</view>
@@ -40,7 +24,7 @@
                     <view>报备邀请码: {{userInfo.invitation_code}}</view>
                     <view>渠道邀请码: {{userInfo.company_id}}-{{userInfo.invitation_code}}</view>
                 </view>
-                <view class="list" @tap="handleNav('/pages/ucenter/businesscard/index/businesscard?self=1')" style="border-width: 0">
+                <view class="list" @tap="handleNav('/pages/ucenter/businesscard/index/businesscard?personal=1')" style="border-width: 0">
                     <view class="content">个人名片</view>
                     <view class="cuIcon-right text-gray icon"></view>
                 </view>
@@ -61,33 +45,7 @@
 	export default {
 		data() {
 			return {
-				cuIconList: [{
-					cuIcon: 'cardboardfill',
-					color: 'red',
-					badge: 0,
-					name: '我的名片'
-				}/* , {
-					cuIcon: 'recordfill',
-					color: 'orange',
-					badge: 0,
-					name: '设置'
-				} */],
                 show: false,
-				attendanceList: [
-					{
-						cuIcon: 'locationfill',
-						color: 'green',
-						badge: 0,
-						name: '打卡',
-						path: '/pages/attendance/signin/index'
-					},
-					{
-						cuIcon: 'settingsfill',
-						color: 'blue',
-						badge: 0,
-						name: '设置'
-					}
-				],
                 height: 100,
                 icon: 'unfold'
 			};
@@ -282,7 +240,7 @@
             .set-password {
                 display: flex;
                 justify-content: space-between;
-                padding: 30rpx 20rpx 30rpx 40rpx;
+                padding: 30rpx 40rpx 30rpx 40rpx;
                 background: #fff;
                 border-top: 1px solid #ccc;
                 border-bottom: 1px solid #ccc;

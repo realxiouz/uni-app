@@ -22,7 +22,6 @@
 
 <script>
     import {mapState, mapMutations} from 'vuex';
-    import {BASE_URL} from "../../../../utils/const";
 
 	export default {
         data() {
@@ -36,25 +35,25 @@
             }
         },
 		onShow() {
-			const self = this;
-			this.$http('geren/recommend').then(res => {
-				self.selectedHouse = res.data;
-			})
-		},
-        onLoad() {
+            console.log('111');
             const self = this;
 			this.$http('geren/recommend').then(res => {
 				self.selectedHouse = res.data;
 			})
+		},
+        onLoad() {},
+        onUnload() {
+            let arr = JSON.parse(JSON.stringify(this.selectedHouse));
+            this.changeCurrentLoginUserInfo({house: arr});
         },
         methods: {
-            ...mapMutations('ucenter', ['changeRecommendHouse']),
+            ...mapMutations('ucenter', ['changeCurrentLoginUserInfo']),
             handleLongPress(e) {
                 // 长按后350ms触发
                 let touchIndex = e.currentTarget.dataset.touchindex;
 				let index = this.selectedHouse.findIndex((ele, index) => {
 					return touchIndex == index;
-				})
+				});
                 // 添加isTUR字段, true
                 this.$set(this.selectedHouse[index], 'istrue', true);
             },
@@ -75,7 +74,6 @@
                 });
 				this.$http('geren/deRecommend', {houseid: id}, 'post').then(res => {
                     self.selectedHouse.splice(deleteIndex, 1);
-                    self.changeRecommendHouse({index: deleteIndex, isDelete: true});
                     uni.hideLoading();
                     uni.showToast({
 					    title: '删除成功',
@@ -88,7 +86,9 @@
 				})
             }
         },
-        computed: {},
+        computed: {
+            ...mapState('ucenter', ['currentLoginUserInfo'])
+        },
         mounted() {
             const self = this;
             uni.getSystemInfo({

@@ -220,7 +220,6 @@ export default {
                 canvasId: 'share-card',
                 success(res) {
                     self.saveImgSrc = res.tempFilePath;
-                    console.log(self.saveImgSrc);
                     self.modalName = e.currentTarget.dataset.target;
                 },
                 fail(err) {
@@ -233,7 +232,6 @@ export default {
         let	smHt = 140; // canvas的高
         let h = 9*smWd / 16; // 背景图的高度 16: 9
         let y = (smHt - h)/2; // 背景图的位置
-        // console.log(typeof this.currentBgNum)
         let largeBg = this.downLoadImg.img_large_bg;
         switch (Number(this.currentBgNum)) {
             case 0:
