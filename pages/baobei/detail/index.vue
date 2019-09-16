@@ -38,7 +38,11 @@
 						<text>{{bean.ordered_time|moment('from')}}</text>
 					</view>
 					
-					<view>
+					<view v-if="type==='in'">
+						<button class="cu-btn bg-cyan small shadow" @click="handleConfirm">带看确认</button>
+						<button class="cu-btn bg-red small shadow" @click="navReject(bean.id)">驳回</button>
+					</view>
+					<view v-else-if="type==='up'">
 						<button class="cu-btn bg-cyan small shadow" @click="handleConfirm">带看确认</button>
 					</view>
 				</view>
@@ -78,6 +82,7 @@
 				this.bean = r.data
 				this.calcStep(this.bean.status)
 			})
+			this.type = opt.type
 			this.$nextTick(_ => {
 				this.$refs.list.getData()
 			})
@@ -90,7 +95,9 @@
 				rUrl: 'baobei-status-log',
 				list: [],
 				steps: ['待确认', '初步确认', '带看', '成交'],
-				stepInx: -1
+				stepInx: -1,
+				
+				type: ''
 			}
 		},
 		methods: {
@@ -128,6 +135,11 @@
 			handleConfirm() {
 				uni.navigateTo({
 					url: `/pages/baobei/daikan/index`
+				})
+			},
+			navReject(id) {
+				uni.navigateTo({
+					url: `/pages/baobei/reject/index?id=${id}`
 				})
 			}
 		},

@@ -19,7 +19,7 @@
 	import Item from './components/item'
 	import DataList from '@/components/data-list'
 	import FloatButton from '@/components/float-button'
-	import { mapState } from 'vuex'
+	import { mapState, mapMutations } from 'vuex'
 	
 	export default {
 		onLoad(opt) {
@@ -45,6 +45,7 @@
 			let title = ''
 			if (!opt.is_share && !opt.private) {
 				title = '客户列表'
+				this.needSetDefault = true
 			} else if (opt.is_share) {
 				title = '共享客户'
 			} else if (opt.private) {
@@ -60,14 +61,25 @@
 				top: uni.upx2px(90),
 				keywords: '',
 				data: null,
-				type: ''
+				type: '',
+				
+				needSetDefault: false
+				
 			}
 		},
 		methods: {
+			...mapMutations('customer', ['setSelEmployee']),
 			handleList(l) {
 				this.list = l
 			},
 			handleGo() {
+				if (this.needSetDefault) {
+					this.setSelEmployee({
+						id: this.userInfo.id,
+						name: this.userInfo.name,
+						avatar: this.userInfo.avatar
+					})
+				}
 				uni.navigateTo({
 					url: `/pages/customer/bean/index?type=${this.type}`
 				})
@@ -80,7 +92,7 @@
 			Item, DataList, FloatButton
 		},
 		computed: {
-			...mapState(['isH5'])
+			...mapState(['isH5', 'userInfo'])
 		}
 	}
 </script>

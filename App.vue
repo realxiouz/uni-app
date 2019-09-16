@@ -30,6 +30,8 @@
 						// #ifndef H5
 						protocol: 'wss',
 						host: BASE_URL.replace('https://', '') + ':6001',
+						protocol:'wss',
+						host: `${BASE_URL.split('//')[1]}:6001`,
 						// #endif
 						auth: {
 							headers: {
