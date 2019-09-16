@@ -2,7 +2,7 @@
 	<view class="padding-25" v-cloak>
 		<!-- cardtemplate 组件start -->
 		<!-- :user="currentUserInfo"  -->
-		<card-template :is-show-list="false" :is-preview="showMakeBtn" :relay-on="relayOn" :self="_self"></card-template>
+		<card-template :is-show-list="false" :is-preview="showMakeBtn" :relay-on="relayOn" :personal="personal"></card-template>
 		<!-- cardtemplate 组件end -->
 
 		<!-- 名片详情start -->
@@ -118,7 +118,7 @@
 				推荐房源
 			</view>
 			<view style="margin-bottom: 65rpx;">
-                <view class="informationlist" v-for="(items, index) of recommendHouse" :key="index">
+                <view class="informationlist" v-for="(items, index) of currentInfo.house" :key="index">
                     <view @tap="toDetail(items.id)">
                         <view class="topimg">
                             <image class="imgauto radius-top" :src="items.img"></image>
@@ -167,21 +167,19 @@
 	export default {
 		data() {
 			return {
-				signature: '', // 名片签名
 				isShowCard: '展开名片信息', //名片模板的标题
-				cardIs: false, //名片详情
+				cardIs: false, //名片详情, 点击打开和隐藏, 在事件内触发
 				isShowCardContent: false, //名片内容的显隐
 				isExeCuteCanvas: false, //在还没点击的时候不执行子组件里的分享(v-if)
 				canvasWidth: '', //canvas宽
 				canvasHeight: '', //canvas高
 				currentBgNum: 0, //当前名片索引
-				shareImg: '', // 分享img
+				// shareImg: '', // 分享img
                 saveImgSrc: '', // 保存img
 				modalName: '',// 用户授权时使用, 打开分享界面时也使用
 				ifShowRZbt: false,// 用户授权使用
 				showBrowseEllipsis: false,// 显示浏览名片人的头像的省略号
 				testUserInfo: {},// 分享是绘制canvas需要
-				qrCode: '', // 图片的src(头像)
 				bg_gradual_blue: 'bg-gradual-blue',
 				onMyEvent: {
 					url: '../../page_makecard/index/page_makecard',
@@ -197,20 +195,21 @@
                 isShowShare: true,
                 relayOn: false,// 依赖, 只要是onShow都要变化, 以引起currentInfo的变化
                 showNumber: '',// 浏览记录显示的个数, 保存使用, 而且只获取一次
-                _self: ''
+                personal: 0
 			}
 		},
 		components: {
 			cardTemplate,
 			makeBtn
 		},
+        beforeMount() {},
 		onLoad(options){
             const self = this;
-            this._self = Number(options.self);
+            self.personal = Number(options.personal);
             self.showMakeBtn = options.previewB === '1';
             let uidx = options.uidx;
 
-            if (this._self === 1) {
+            if (self.personal === 1) {
                 this.getUserMsg();
             } else if (this.currentLoginUserInfo.name !== undefined) {// 在已经获取了就不要再去请求了
                 this.changeCurrentInfo(this.currentLoginUserInfo);
@@ -230,7 +229,7 @@
 			// canvas
 			let screenWd = uni.getSystemInfoSync().windowWidth;
 			this.canvasWd = this.canvasWidth = screenWd - 20 * 1.9;
-			this.currentBgNum = this.currentInfo.template_id || 1;
+			this.currentBgNum = this.currentInfo.template_id || 0;
 			this.onMyEvent.imgSrc = this.imgSrcGetters('card.png');
 		},
 		watch: {
@@ -317,7 +316,7 @@
                     },
                     {
                         key: 'img_bg',
-                        src: this.imgSrcGetters(`template_${this.currentInfo.template_id}.png`)
+                        src: this.imgSrcGetters(`template_${this.currentInfo.template_id || 0}.png`)
                     },
                     {
                         key: 'img_company_black',
@@ -448,7 +447,8 @@
                 uidx = uidx || this.userInfo.id;
                 if (!uidx) return false;
                 this.$http('geren/userinfo', {uidx: uidx}).then(res => {
-                    const data = Object.assign({}, {readNumber: res.readnumber}, {BrowseUser: res.Browseuser}, {house: res.house.data}, res.data);
+                    let houseArr = res.house.data;
+                    const data = Object.assign({}, {readNumber: res.readnumber}, {BrowseUser: res.Browseuser}, {house: houseArr}, res.data);
                     this.relayOn = !this.relayOn;
                     self[boo? 'changeCurrentUserInfo': 'changeCurrentLoginUserInfo'](data);
                     if (!boo) this.setInterceptUId('');
@@ -466,7 +466,7 @@
             }
 		},
 		computed: {
-			...mapState('ucenter', ['currentUserInfo', 'downLoadImg', 'currentLoginUserInfo', 'currentInfo', 'uId', 'browseUser', 'recommendHouse']),
+			...mapState('ucenter', ['currentUserInfo', 'downLoadImg', 'currentLoginUserInfo', 'currentInfo', 'uId', 'browseUser']),
 			...mapState(['userInfo']),
 			...mapGetters('ucenter', ['imgSrcGetters'])
 		},

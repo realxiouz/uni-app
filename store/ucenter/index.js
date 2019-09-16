@@ -23,8 +23,7 @@ export default {
         uId: '',
         houseId: [],
         browseUser: [],
-        interceptUId: '',
-        recommendHouse: []
+        interceptUId: ''
 	},
 	mutations: {
 		changeCurrentUserInfo(state, data) {
@@ -79,27 +78,7 @@ export default {
         },
         setInterceptUId(state, id) {
 		    state.interceptUId = id;
-        },
-        changeRecommendHouse(state, obj) {
-		    let  rec= state.recommendHouse;
-		    let arr = obj.arr || [];
-		    if (obj.isDelete) {
-                state.recommendHouse.splice(obj.index, 1);
-            } else if (obj.replace){
-                state.recommendHouse = arr;
-            } else {
-                for (let item of rec) {
-                    for (let i=0; i<arr.length; i++) {
-                        if (arr[i].id === item.id) {
-                            arr.splice(i, 1);
-                        }
-                    }
-                }
-                state.recommendHouse = [ ...arr, ...rec];
-            }
-
         }
-
     },
 	actions: {
 

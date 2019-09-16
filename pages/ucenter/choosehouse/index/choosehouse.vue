@@ -84,7 +84,6 @@
                     /*let custom = wx.getMenuButtonBoundingClientRect();
                     app.globalData.Custom = custom;
                     app.globalData.CustomBar = custom.bottom + custom.top - res.statusBarHeight;*/
-
                 }
             });
 			this.getDate();
@@ -94,7 +93,8 @@
         computed: {
             ...mapState('ucenter', [
                 'houseArr',
-                'houseId'
+                'houseId',
+                'currentInfo'
             ])
         },
 		onReachBottom() {
@@ -109,7 +109,7 @@
 			}
 		},
         methods: {
-            ...mapMutations('ucenter', ['changeHouseId', 'changeRecommendHouse']),
+            ...mapMutations('ucenter', ['changeHouseId']),
             submitHouse() {
                 uni.showLoading({
                     title: '提交中...',
@@ -126,7 +126,6 @@
 				this.$http('geren/recommendHouse', {houseid: params}).then(res => {
 					if (res.code === 100) {
 					    uni.hideLoading();
-					    self.changeRecommendHouse({arr: self.selectedHouse});
                         uni.showToast({
                             title: '提交成功...',
                             mask: true,

@@ -167,7 +167,7 @@
                     },
                     {
                         key: 'img_bg',
-                        src: this.imgSrcGetters(`template_${this.currentInfo.template_id}.png`)
+                        src: this.imgSrcGetters(`template_${this.currentInfo.template_id || 0}.png`)
                     },
                     {
                         key: 'img_company_black',
