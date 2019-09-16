@@ -29,7 +29,7 @@
 						// #endif
 						// #ifndef H5
 						protocol:'wss',
-						host:'dev.km999.com:6001',
+						host: `${BASE_URL.split('//')[1]}:6001`,
 						// #endif
 						auth: {
 							headers: {

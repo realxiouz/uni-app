@@ -154,9 +154,14 @@
 				}
 			},
 			getData() {
+				uni.showLoading({
+					title: '加载中...'
+				})
 				this.$http(`customer/${this.cId}`).then(r => {
 					this.bean = r.data
 					this.hasLoaded = true
+				}).finally(_ => {
+					uni.hideLoading()
 				})
 			},
 			rl(id) {

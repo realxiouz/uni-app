@@ -1,5 +1,5 @@
 <template>
-	<navigator class="bg-white margin-top-sm" :url="`/pages/baobei/detail/index?id=${bean.id}`">
+	<navigator class="bg-white margin-top-sm" :url="`/pages/baobei/detail/index?id=${bean.id}&type=${type}`">
 			<view class="content flex align-center padding-tb-xs padding-lr-sm">
 				<ava :name="bean.customer_name" class="margin-right-sm"></ava>
 				<view class="flex-sub flex">
@@ -22,6 +22,9 @@
 		props: {
 			bean: {
 				type: Object
+			},
+			type: {
+				type: String
 			}
 		},
 		components: {

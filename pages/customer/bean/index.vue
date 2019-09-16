@@ -112,13 +112,14 @@
 		async onLoad(opt) {
 			this.customerId = opt.id
 			if (this.customerId) {
+				uni.setNavigationBarTitle({
+					title: '编辑客户'
+				})
 				let {
 					data
 				} = await this.getCustomerDetail()
 				this.originData = data
 				this.formatData()
-			} else {
-				this.setSelEmployee({})
 			}
 			this.customerType = opt.type
 			this.$http("attribute").then(r => {

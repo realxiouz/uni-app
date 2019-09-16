@@ -215,7 +215,9 @@
 		},
 		{
 			"path": "pages/customer/bean/index",
-			"style": {}
+			"style": {
+				"navigationBarTitleText": "录入客户"
+			}
 		},
 		{
 			"path": "pages/attendance/setting/index",
@@ -320,6 +322,12 @@
 			"path": "pages/baobei/daikan/index",
 			"style": {
 				"navigationBarTitleText": "报备带看"
+			}
+		},
+		{
+			"path": "pages/baobei/reject/index",
+			"style": {
+				"navigationBarTitleText": "报备驳回"
 			}
 		},
 		{
