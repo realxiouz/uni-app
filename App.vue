@@ -21,13 +21,15 @@
             if (token) {
 				this.$http('auth/user').then(r => {
 					this.login(r);
-					let e = new Echo({
+                    let e = new Echo({
 						client: client,
 						broadcaster: "socket.io",
 						// #ifdef H5
 						host: BASE_URL + ":6001",
 						// #endif
 						// #ifndef H5
+						protocol: 'wss',
+						host: BASE_URL.replace('https://', '') + ':6001',
 						protocol:'wss',
 						host: `${BASE_URL.split('//')[1]}:6001`,
 						// #endif
@@ -38,8 +40,8 @@
 						}
 					});
 					e.private("App.User." + this.userInfo.id).notification(r => {
-						this.setNew(r.data)
-						uni.showTabBarRedDot({
+						this.setNew(r.data);
+                        uni.showTabBarRedDot({
 							index: 1
 						})
 					})
