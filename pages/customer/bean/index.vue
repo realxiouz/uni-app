@@ -311,7 +311,7 @@
 				this.$http('customer/validate', {
 					type: this.customerType,
 					phone: this.formBean.phone,
-					customer_id: this.customerId
+					customer_id: this.customerId ? this.customerId : 0
 				}).then(r => {
 					uni.showToast({
 						icon: 'none',
