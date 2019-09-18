@@ -8,13 +8,10 @@
 					<view>
 						{{bean.name}}{{bean.belongsto_id ? `[${bean.belongsto_type}]`: ''}}
 					</view>
-					<view>{{bean.last_genjin_time | moment('from')}}</view>
-					<view>{{bean.desireRatio}}</view>
-					<view>客户星级：{{bean.star}}</view>
+					<view>上次跟进：{{bean.last_genjin_time?bean.last_genjin_time:''}}</view>
+					<!-- <view>{{bean.desireRatio}}</view> -->
+					<view>客户星级：{{bean.star?bean.star:''}}</view>
 					<view>录入时间：{{bean.created_at}}</view>
-					<!-- <view>
-						<view @click.stop="editCustomer(bean)">编辑</view>
-					</view> -->
 				</view>
 			</view>
 	</navigator>

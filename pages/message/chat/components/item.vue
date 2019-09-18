@@ -54,6 +54,12 @@
 					case 'customer_distribution_pool':
 					case 'customer_distribution':
 						return `/pages/customer/detail/index?id=${i.id}&type=新房`
+					case 'baobei_in':
+						return `/pages/baobei/detail/index?id=${i.id}&type=in`
+					case 'baobei_my':
+						return `/pages/baobei/detail/index?id=${i.id}&type=up`
+					case 'project_cooperation':
+						return `/pages/project/detail/index?id=${i.id}&type=cooperation`
 				}
 			}
 		}

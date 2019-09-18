@@ -159,7 +159,7 @@
 			},
 			handleConfirm() {
 				uni.navigateTo({
-					url: `/pages/baobei/daikan/index`
+					url: `/pages/baobei/daikan/index?bId=${this.id}`
 				})
 			},
 			navReject(id) {
