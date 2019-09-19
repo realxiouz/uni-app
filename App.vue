@@ -21,30 +21,29 @@
             if (token) {
 				this.$http('auth/user').then(r => {
 					this.login(r);
-                    let e = new Echo({
-						client: client,
-						broadcaster: "socket.io",
-						// #ifdef H5
-						host: BASE_URL + ":6001",
-						// #endif
-						// #ifndef H5
-						protocol: 'wss',
-						host: BASE_URL.replace('https://', '') + ':6001',
-						protocol:'wss',
-						host: `${BASE_URL.split('//')[1]}:6001`,
-						// #endif
-						auth: {
-							headers: {
-								Authorization: "Bearer " + uni.getStorageSync('apiToken')
-							}
+                    let e = this.socket();
+                    e.private("App.User." + this.userInfo.id).notification(r => {
+                        const data = r.data;
+                        this.setNew(data);
+                        // #ifdef APP-PLUS
+						if (!this.isNotice) return false;
+						let opt = {
+							cover: true,
+							title: data.both.name
 						}
-					});
-					e.private("App.User." + this.userInfo.id).notification(r => {
-						this.setNew(r.data);
+						plus.push.createMessage(data.message.data.content, null, opt);
+						plus.push.addEventListener('click', function(msg){
+							console.log('3333222233');
+						    uni.navigateTo({
+								url: `/pages/message/chat/index?id=${data.both.id}&type=${data.window.both_type}`
+						    })
+							plus.push.clear();
+						}, false);
+                        // #endif
                         uni.showTabBarRedDot({
-							index: 1
-						})
-					})
+                            index: 1
+                        })
+                    })
 				})
 			} else {
                 let until = !/(object|undefined)/.test(typeof query.shop_id)? `?type=${query.type}&shop_id=${query.shop_id}`: '';
@@ -67,13 +66,65 @@
 		},
 		onShow: function() {},
 		onHide: function() {},
+        watch: {
+		    hasLogin(data) {
+		        let e = this.socket();
+                if (data) {
+                    e.private("App.User." + this.userInfo.id).notification(r => {
+                        const data = r.data;
+                        this.setNew(data);
+                        // #ifdef APP-PLUS
+						if (!this.isNotice) return false;
+                        let opt = {
+                        	cover: true,
+                        	title: data.both.name,
+						}
+                        plus.push.createMessage(data.message.data.content, null, opt);
+                        plus.push.addEventListener('click', function(msg){
+							console.log('22222233');
+                            uni.navigateTo({
+                        		url: `/pages/message/chat/index?id=${data.both.id}&type=${data.window.both_type}`
+                            })
+							plus.push.clear();
+                        }, false);
+                        // #endif
+                        uni.showTabBarRedDot({
+                            index: 1
+                        })
+                    })
+                } else {
+                    e.private("App.User." + this.userInfo.id).disconnect();
+                }
+            }
+        },
 		methods: {
 			...mapMutations(['login', 'setH5']),
-			...mapMutations('message', ['setNew'])
+			...mapMutations('message', ['setNew']),
+            socket() {
+                let e = new Echo({
+                    client: client,
+                    broadcaster: "socket.io",
+                    // #ifdef H5
+                    host: BASE_URL + ":6001",
+                    // #endif
+                    // #ifndef H5
+                    protocol:'wss',
+                    host: `${BASE_URL.split('//')[1]}:6001`,
+                    // #endif
+                    auth: {
+                        headers: {
+                            Authorization: "Bearer " + uni.getStorageSync('apiToken')
+                        }
+                    }
+                });
+                return e;
+            }
 		},
 		computed: {
-			...mapState(['userInfo'])
-		}
+			...mapState(['userInfo', 'hasLogin']),
+			...mapState('message', ['isNotice'])
+		},
+        mounted() {}
 	}
 </script>
 

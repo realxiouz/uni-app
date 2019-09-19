@@ -33,8 +33,8 @@
         },
 		data: _ => ({
 			formBean: {
-				mobile: '10000000000',
-				password: '000000',
+				mobile: '',
+				password: '',
 			}
 		}),
 		methods: {

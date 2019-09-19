@@ -14,7 +14,8 @@
 	
 	export default {
 		onLoad(opt) {
-			this.rData.user_id = this.userInfo.id
+			this.rData.user_id = this.userInfo.id;
+			this.setNotice(false);
 		},
 		onShow() {
 			this.$nextTick(_ => {
@@ -23,6 +24,9 @@
 			uni.hideTabBarRedDot({
 				index: 1
 			})
+		},
+		onUnload() {
+			this.setNotice(true);
 		},
 		components: {
 			DataList, Item
@@ -40,7 +44,7 @@
 			...mapState('message', ['new'])
 		},
 		methods: {
-			...mapMutations('message', ['setChats']),
+			...mapMutations('message', ['setChats', 'setNotice']),
 			handleList(list) {
 				this.list = list
 			},
