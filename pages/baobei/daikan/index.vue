@@ -5,7 +5,7 @@
 				<view class="title">看房日期</view>
 				<picker mode="date" :value="date" start="2015-09-01" end="2020-09-01" @change="dateChange">
 					<view class="picker">
-						{{date}}
+						{{date?date:'选择日期'}}
 					</view>
 				</picker>
 			</view>
@@ -13,7 +13,7 @@
 				<view class="title">看房时间</view>
 				<picker mode="time" :value="time" start="09:01" end="21:01" @change="timeChange">
 					<view class="picker">
-						{{time}}
+						{{time?time:'选择时间'}}
 					</view>
 				</picker>
 			</view>
@@ -21,8 +21,8 @@
 				<view class="title">到场人数</view>
 				<input placeholder="填写实看人数" v-model="formBean.peoples"></input>
 			</view>
-			<upload-files @imgs="handleImgs" :max-count="1" title="现场照片"/>
-			<upload-files @imgs="handleImgs" :max-count="1" title="带看确认单"/>
+			<upload-files @imgs="handleImgs1" :max-count="1" title="现场照片"/>
+			<upload-files @imgs="handleImgs2" :max-count="1" title="带看确认单"/>
 		</form>
 		
 		<save @save="handleSave" :loading="formLoading"/>
@@ -37,17 +37,16 @@
 
 	export default {
 		onLoad(opt) {
-			this.customerId = opt.customerId
+			this.formBean.baobei_id = opt.bId
 		},
 		data: _ => ({
 			formBean: {
 				peoples: '',
 				remark: ''
 			},
-			customerId: '',
 			formLoading: false,
-			date: '2019-08-03',
-			time: '12:00',
+			date: '',
+			time: '',
 		}),
 		methods: {
 			timeChange(e) {
@@ -57,24 +56,23 @@
 				this.date = e.detail.value
 			},
 			handleSave() {
-				this.formBean.customer_id = this.customerId
-				this.formBean.kan_time = new Date()
-				// this.$http('daikan', this.formBean, 'post').then(r => {
-				// }).finally(_ => {
-				// 	this.formLoading = false
-				// })
+				this.formBean.kan_time = this.date && this.time ? `${this.date} ${this.time}` : null
+				this.formLoading = true
+				this.$http('daikan', this.formBean, 'post').then(r => {
+					uni.navigateBack();
+				}).finally(_ => {
+					this.formLoading = false
+				})
 			},
-			handleImgs(e) {
+			handleImgs1(e) {
 				this.formBean.img = e
+			},
+			handleImgs2(e) {
+				this.formBean.confirm_img = e.length ? e[0] : null
 			}
 		},
 		components: {
 			save, UploadFiles
-		},
-		computed: {
-			dateTime() {
-				return `${this.date} ${this.time}`
-			}
 		}
 	}
 </script>

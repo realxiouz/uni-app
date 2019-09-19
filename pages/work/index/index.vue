@@ -151,14 +151,14 @@
 						path: `/pages/baobei/list/index?type=up`,
 						hasFeatures: 'baobei up'
 					},
-					// {
-					// 	cuIcon: 'list',
-					// 	color: 'green',
-					// 	badge: 0,
-					// 	name: '报备列表',
-					// 	path: `/pages/baobei/list/index?type=in`,
-					// 	hasFeatures: 'baobei in'
-					// },
+					{
+						cuIcon: 'list',
+						color: 'green',
+						badge: 0,
+						name: '报备列表',
+						path: `/pages/baobei/list/index?type=in`,
+						hasFeatures: 'baobei in'
+					},
 					{
 						cuIcon: 'circlefill',
 						color: 'green',

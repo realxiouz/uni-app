@@ -331,6 +331,12 @@
 			}
 		},
 		{
+			"path": "pages/daikan/list/index",
+			"style": {
+				"navigationBarTitleText": "带看列表"
+			}
+		},
+		{
             "path" : "pages/project/project-dev/index",
             "style": {
             	"app-plus": {

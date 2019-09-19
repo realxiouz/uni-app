@@ -63,12 +63,28 @@
 				</picker>
 			</view>
 			<view class="cu-form-group">
-				<view class="title">现居地址</view>
-				<pcd :level="3" v-model="pcd" />
+				<view class="title">{{showStar('qudao')}}渠道</view>
+				<picker @change="qudaoChange" :value="qudaoInx" :range="qudaos" range-key="name">
+					<view class="picker">
+						{{qudaoInx>-1?qudaos[qudaoInx].name:'选择渠道'}}
+					</view>
+				</picker>
 			</view>
 			<view class="cu-form-group">
-				<view class="title">现住址</view>
-				<input placeholder="输入现住址" v-model="formBean.current_address"></input>
+				<view class="title">
+					{{showStar('current_province_id')||showStar('current_city_id')||showStar('current_district_id')}}现居地址
+				</view>
+				<pcd :level="4" v-model="pcd"/>
+			</view>
+			<view class="cu-form-group">
+				<view class="title">详细住址</view>
+				<input placeholder="输入详细住址" v-model="formBean.current_address"></input>
+			</view>
+			<view class="cu-form-group">
+				<view class="title">
+					{{showStar('city_id')||showStar('district_id')}}户籍地址
+				</view>
+				<pcd :level="3" v-model="pcd1"/>
 			</view>
 			<view class="cu-form-group">
 				<view class="title">归属员工</view>
@@ -88,6 +104,10 @@
 			<view class="cu-form-group">
 				<view class="title">{{showStar('star')}}客户星级</view>
 				<rate v-model="formBean.star" />
+			</view>
+			<view class="cu-form-group">
+				<view class="title">{{showStar('remark')}}备注</view>
+				<input placeholder="输入备注" v-model="formBean.remark"></input>
 			</view>
 			<save @save="handleSave" :loading="formLoading"/>
 		</form>
@@ -127,10 +147,12 @@
 				let d = r.data[t]
 				this.ages = d.age || []
 				this.sources = d.source || []
+				this.qudaos = d.qudao || []
 
 				if (this.customerId) {
 					this.sourceInx = this.sources.findIndex(i => i.id == this.originData.source)
 					this.ageInx = this.ages.findIndex(i => i.id == this.originData.age)
+					this.qudaoInx = this.qudaos.findIndex(i => i.id == this.originData.qudao)
 				}
 			})
 			this.$http("customer_job").then(r => {
@@ -183,6 +205,9 @@
 
 			ages: [],
 			ageInx: -1,
+			
+			qudaos: [],
+			qudaoInx: -1,
 
 			stars: [{
 					text: '一星',
@@ -210,7 +235,8 @@
 			projects: [],
 			projectInx: -1,
 			
-			pcd: []
+			pcd: [],
+			pcd1: []
 		}),
 		methods: {
 			...mapMutations('customer', ['setSelEmployee']),
@@ -234,6 +260,10 @@
 				this.ageInx = e.detail.value
 				this.formBean.age = this.ages[this.ageInx].id
 			},
+			qudaoChange(e) {
+				this.qudaoInx = e.detail.value
+				this.formBean.qudao = this.qudaos[this.qudaoInx].id
+			},
 			starChange(e) {
 				this.starInx = e.detail.value
 				this.formBean.star = this.stars[this.starInx].value
@@ -248,9 +278,9 @@
 				}
 				this.formBean.belongsto_id = this.selEmployee.id
 				
-				this.formBean.current_province_id = this.pcd[0]
-				this.formBean.current_city_id = this.pcd[1]
-				this.formBean.current_district_id = this.pcd[2]
+				// this.formBean.current_province_id = this.pcd[0]
+				// this.formBean.current_city_id = this.pcd[1]
+				// this.formBean.current_district_id = this.pcd[2]
 
 				let data = Object.assign({}, this.formBean, {
 					type: this.customerType
@@ -285,6 +315,7 @@
 				this.sexInx = this.sexs.findIndex(i => i.value == this.originData.sex)
 				this.typeInx = this.types.findIndex(i => i == this.originData.customer_type)
 				this.starInx = this.stars.findIndex(i => i.value == this.originData.star)
+				this.qudaoInx = this.qudaos.findIndex(i => i.value == this.originData.qudao)
 
 				let employee = this.originData.belongsto_id ? this.originData.belongs_employee : {}
 				this.setSelEmployee(employee)
@@ -292,7 +323,13 @@
 				this.pcd = [
 					this.originData.current_province_id,
 					this.originData.current_city_id,
-					this.originData.current_district_id
+					this.originData.current_district_id,
+					this.originData.current_area_id
+				]
+				this.pcd1 = [
+					this.originData.city.province_id,
+					this.originData.city.id,
+					this.originData.district_id
 				]
 			},
 			validateForm() {
@@ -332,6 +369,27 @@
 		computed: {
 			...mapState('customer', ['selEmployee']),
 			...mapState(['userInfo'])
+		},
+		watch: {
+			pcd: {
+				handler(val) {
+					if(val.length === 4) {
+						this.formBean.current_province_id = val[0]
+						this.formBean.current_city_id = val[1]
+						this.formBean.current_district_id = val[2]
+						this.formBean.current_area_id = val[3]
+					}
+				}
+			},
+			pcd1: {
+				handler(val) {
+					if(val.length === 3) {
+						this.formBean.province_id = val[0]
+						this.formBean.city_id = val[1]
+						this.formBean.district_id = val[2]
+					}
+				}
+			}
 		}
 	}
 </script>

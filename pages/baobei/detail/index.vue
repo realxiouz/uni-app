@@ -39,8 +39,25 @@
 					</view>
 					
 					<view v-if="type==='in'">
-						<button class="cu-btn bg-cyan small shadow" @click="handleConfirm">带看确认</button>
-						<button class="cu-btn bg-red small shadow" @click="navReject(bean.id)">驳回</button>
+						<picker
+							class="cu-btn bg-cyan small shadow margin-right-xs"
+							range-key="name"
+							:range="employees"
+							@change="handlePass"
+							v-if="stepInx === 0"
+						>
+							<view>报备通过</view>
+						</picker>
+						<button
+							class="cu-btn bg-cyan small shadow margin-right-xs"
+							@click="handleConfirm"
+							v-if="stepInx === 1"
+						>带看确认</button>
+						<button
+							class="cu-btn bg-cyan small shadow margin-right-xs"
+							@click="navDaikan"
+						>带看列表</button>
+						<button class="cu-btn bg-red small shadow margin-right-xs" @click="navReject(bean.id)">驳回</button>
 					</view>
 					<view v-else-if="type==='up'">
 						<button class="cu-btn bg-cyan small shadow" @click="handleConfirm">带看确认</button>
@@ -78,10 +95,7 @@
 		onLoad(opt) {
 			this.id = opt.id
 			this.rData = {baobei_id: this.id},
-			this.$http(`baobei/${this.id}`).then(r => {
-				this.bean = r.data
-				this.calcStep(this.bean.status)
-			})
+			this.getDetail()
 			this.type = opt.type
 			this.$nextTick(_ => {
 				this.$refs.list.getData()
@@ -97,12 +111,23 @@
 				steps: ['待确认', '初步确认', '带看', '成交'],
 				stepInx: -1,
 				
-				type: ''
+				type: '',
+				employees: []
 			}
 		},
 		methods: {
 			handleList(l) {
 				this.list = l
+			},
+			getDetail() {
+				this.$http(`baobei/${this.id}`).then(r => {
+					this.bean = r.data
+					this.calcStep(this.bean.status)
+					
+					return this.$http(`employee/receptionEmployees/${r.data.developer_project_id}`)
+				}).then(r => {
+					r && (this.employees = r)
+				})
 			},
 			calcStep(status) {
 				switch (status){
@@ -134,12 +159,28 @@
 			},
 			handleConfirm() {
 				uni.navigateTo({
-					url: `/pages/baobei/daikan/index`
+					url: `/pages/baobei/daikan/index?bId=${this.id}`
 				})
 			},
 			navReject(id) {
 				uni.navigateTo({
 					url: `/pages/baobei/reject/index?id=${id}`
+				})
+			},
+			handlePass(e) {
+				let inx = e.detail.value
+				let employee_id = this.employees[inx].id
+				employee_id && this.$http(`baobei/approve/${this.id}`, {employee_id}, 'put').then(r => {
+					uni.showToast({
+						title: r.message,
+						icon: 'none'
+					})
+					this.getDetail()
+				})
+			},
+			navDaikan() {
+				uni.navigateTo({
+					url: `/pages/daikan/list/index?bId=${this.id}`
 				})
 			}
 		},
