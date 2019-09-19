@@ -2,7 +2,8 @@
 const state = {
 	new: {},
 	chats: [],
-	isLoaded: false
+	isLoaded: false,
+	isNotice: true
 }
 
 const getters = {}
@@ -15,6 +16,9 @@ const mutations = {
 	},
 	setChats(s, a) {
 		s.chats = a
+	},
+	setNotice(state, boo) {
+		state.isNotice = boo;
 	}
 }
 

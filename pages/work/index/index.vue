@@ -246,7 +246,8 @@
 		computed: {
 			...mapState(['hasLogin', 'userInfo']),
             ...mapState('work', ['shopId'])
-		}
+		},
+        mounted() {}
 	}
 </script>
 

@@ -8,7 +8,7 @@
 			<!-- <view class="action">
 				<text class="cuIcon-sound text-grey"></text>
 			</view> -->
-			<input class="solid-bottom" :adjust-position="false" :focus="false" maxlength="300" cursor-spacing="10"
+			<input class="solid-bottom" :adjust-position="true" :focus="false" maxlength="300" cursor-spacing="10"
 			 @focus="InputFocus" @blur="InputBlur" v-model="content"></input>
 			<!-- <view class="action">
 				<text class="cuIcon-emojifill text-grey"></text>
@@ -20,7 +20,7 @@
 </template>
 
 <script>
-	import { mapState } from 'vuex'
+	import { mapState, mapMutations } from 'vuex'
 	import Item from './components/item'
 	
 	export default {
@@ -30,7 +30,8 @@
 			if (this.bothType == "App\\User") {
 				this.bottom = uni.upx2px(100) + 'px'
 			}
-			this.getData()
+			this.getData();
+			this.setNotice(false);
 		},
 		data() {
 			return {
@@ -47,7 +48,11 @@
 				bottom: 0
 			};
 		},
+		onUnload() {
+			this.setNotice(true);
+		},
 		methods: {
+			...mapMutations('message', ['setNotice']),
 			InputFocus(e) {
 				this.InputBottom = e.detail.height
 			},

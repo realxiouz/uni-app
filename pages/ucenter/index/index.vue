@@ -118,8 +118,9 @@
 			},
 			btnSignOut() {
 				let self = this;
-				uni.showModal({
-					title: '确定退出登录',
+                uni.showModal({
+					title: '确定退出登录? ',
+                    content: ' ',
 					cancelColor: "#085820",
 					confirmColor: "#ff0000",
                     cancelText: "取消",
