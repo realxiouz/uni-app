@@ -6,7 +6,7 @@
 					<text class="num">{{inx+1}}</text> {{i}}
 				</view>
 			</view>
-			
+
 			<view class="cu-card">
 				<view class="cu-item shadow padding-sm">
 					<view class="margin-bottom-sm">
@@ -37,39 +37,30 @@
 						<text class="text-gray baobei-label">带看时间:</text>
 						<text>{{bean.ordered_time|moment('from')}}</text>
 					</view>
-					
+
 					<view v-if="type==='in'">
-						<picker
-							class="cu-btn bg-cyan small shadow margin-right-xs"
-							range-key="name"
-							:range="employees"
-							@change="handlePass"
-							v-if="stepInx === 0"
-						>
-							<view>报备通过</view>
-						</picker>
-						<button
-							class="cu-btn bg-cyan small shadow margin-right-xs"
-							@click="handleConfirm"
-							v-if="stepInx === 1"
-						>带看确认</button>
-						<button
-							class="cu-btn bg-cyan small shadow margin-right-xs"
-							@click="navDaikan"
-						>带看列表</button>
-						<button class="cu-btn bg-red small shadow margin-right-xs" @click="navReject(bean.id)">驳回</button>
+						<template v-if="isShowDoneNot(bean)">
+							<picker class="cu-btn bg-cyan small shadow margin-right-xs" range-key="name" :range="employees" @change="handlePass"
+							 v-if="canApprove(bean)">
+								<view>报备通过</view>
+							</picker>
+							<button class="cu-btn bg-cyan small shadow margin-right-xs" @click="handleConfirm" v-if="canDaikanQueren(bean)">带看确认</button>
+							
+							<button class="cu-btn bg-red small shadow margin-right-xs"
+								v-if="bean.status==2||bean.status==3||bean.status==5||bean.status==9"
+								@click="navReject(bean.id)">驳回</button>
+						</template>
+						<button class="cu-btn bg-cyan small shadow margin-right-xs"
+							v-if="stepInx==1||stepInx==2||stepInx==3"
+							@click="navDaikan">带看列表</button>
 					</view>
 					<view v-else-if="type==='up'">
-						<button class="cu-btn bg-cyan small shadow" @click="handleConfirm">带看确认</button>
+						<button class="cu-btn bg-cyan small shadow" @click="handleConfirm" v-if="canDaikanQueren(bean)">带看确认</button>
 					</view>
 				</view>
 			</view>
-			
-			<view
-				class="padding-sm bg-white solid-bottom"
-				v-for="(i, inx) in list"
-				:key="inx"
-			>
+
+			<view class="padding-sm bg-white solid-bottom" v-for="(i, inx) in list" :key="inx">
 				<view>
 					<text class="text-gray baobei-label">操作人:</text>
 					<text>{{i.user.name}}</text>
@@ -89,13 +80,17 @@
 
 <script>
 	import DataList from '@/components/data-list'
-	import { mapState } from 'vuex'
-	
+	import {
+		mapState
+	} from 'vuex'
+
 	export default {
 		onLoad(opt) {
 			this.id = opt.id
-			this.rData = {baobei_id: this.id},
-			this.getDetail()
+			this.rData = {
+					baobei_id: this.id
+				},
+				this.getDetail()
 			this.type = opt.type
 			this.$nextTick(_ => {
 				this.$refs.list.getData()
@@ -110,9 +105,11 @@
 				list: [],
 				steps: ['待确认', '初步确认', '带看', '成交'],
 				stepInx: -1,
-				
+
 				type: '',
-				employees: []
+				employees: [],
+
+				isBaoBeiShenHeRen: false
 			}
 		},
 		methods: {
@@ -123,35 +120,35 @@
 				this.$http(`baobei/${this.id}`).then(r => {
 					this.bean = r.data
 					this.calcStep(this.bean.status)
-					
+
 					return this.$http(`employee/receptionEmployees/${r.data.developer_project_id}`)
 				}).then(r => {
 					r && (this.employees = r)
 				})
 			},
 			calcStep(status) {
-				switch (status){
+				switch (status) {
 					case 0:
 					case 8:
 					case 10:
 					case 11:
-						this.stepInx = 0 
+						this.stepInx = 0
 						break;
 					case 1:
-						this.stepInx = 1 
+						this.stepInx = 1
 						break;
 					case 4:
-						this.stepInx = 2 
+						this.stepInx = 2
 						break;
 					case 6:
 					case 7:
-						this.stepInx = 3 
+						this.stepInx = 3
 						break;
 					case 2:
 					case 3:
 					case 5:
 					case 9:
-						this.stepInx = -1 
+						this.stepInx = -1
 						break;
 					default:
 						break;
@@ -170,7 +167,9 @@
 			handlePass(e) {
 				let inx = e.detail.value
 				let employee_id = this.employees[inx].id
-				employee_id && this.$http(`baobei/approve/${this.id}`, {employee_id}, 'put').then(r => {
+				employee_id && this.$http(`baobei/approve/${this.id}`, {
+					employee_id
+				}, 'put').then(r => {
 					uni.showToast({
 						title: r.message,
 						icon: 'none'
@@ -182,19 +181,90 @@
 				uni.navigateTo({
 					url: `/pages/daikan/list/index?bId=${this.id}`
 				})
-			}
+			},
+
+			canDaikanQueren(item) {
+				if (
+					item.status === 1 &&
+					item.baobei_project.daikan_audit_id === this.userInfo.id
+				) {
+					return true;
+				} else {
+					return false;
+				}
+			},
+			canApprove(baobei) {
+				let isKaiFaShang = true;
+				if (baobei.agent_id === this.userInfo.company_id) {
+					isKaiFaShang = false;
+				}
+				if (baobei.status === 0 || baobei.status === 10) {
+					if (isKaiFaShang && this.isBaoBeiShenHeRen) {
+						return true;
+					} else {
+						if (baobei.baobei_project.project.baobei_approve_type === 1) {
+							return false;
+						} else if (this.isBaoBeiShenHeRen) {
+							return true;
+						}
+					}
+				} else if (
+					isKaiFaShang &&
+					baobei.status === 8 &&
+					this.isBaoBeiShenHeRen
+				) {
+					return true;
+				} else {
+					return false;
+				}
+				return false;
+			},
+			isShowDoneNot(item) {
+				let obj = {};
+				let find = 0;
+				let userId = this.userInfo.id;
+
+				if (item.agent_id === this.userInfo.company_id) {
+					obj = item.agent_project;
+				} else {
+					obj = item.developer_project;
+				}
+				if (
+					obj.charger_id === userId ||
+					obj.qudao_manager_id === userId ||
+					obj.qudao_attache_id === userId
+				) {
+					find++;
+				}
+
+				if (obj.audit_user_id != null) {
+					for (let i = 0; i < obj.audit_user_id.length; i++) {
+						if (userId === parseInt(obj.audit_user_id[i])) {
+							find++;
+							this.isBaoBeiShenHeRen = true;
+							break;
+						}
+					}
+				}
+
+				if (find > 0) {
+					return true;
+				} else {
+					return false;
+				}
+			},
 		},
 		components: {
 			DataList
 		},
 		computed: {
-			...mapState(['isH5'])
+			...mapState(['isH5', 'userInfo'])
 		}
 	}
 </script>
 
 <style>
-	.baobei-label{
+	.baobei-label {
 		width: 5em;
 		display: inline-block;
 	}
