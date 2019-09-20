@@ -64,7 +64,33 @@
                     }
                 }
             },
-            "icons" : {}
+            "icons" : {
+                "android" : {
+                    "hdpi" : "C:/Users/kmtech/Desktop/999/1/72.png",
+                    "xhdpi" : "C:/Users/kmtech/Desktop/999/1/96.png",
+                    "xxhdpi" : "C:/Users/kmtech/Desktop/999/1/144.png",
+                    "xxxhdpi" : "C:/Users/kmtech/Desktop/999/1/192.png"
+                },
+                "ios" : {
+                    "appstore" : "C:/Users/kmtech/Desktop/999/1/1024.png",
+                    "iphone" : {
+                        "app@2x" : "C:/Users/kmtech/Desktop/999/1/120.png",
+                        "app@3x" : "C:/Users/kmtech/Desktop/999/1/180.png",
+                        "spotlight@2x" : "C:/Users/kmtech/Desktop/999/1/80.png",
+                        "spotlight@3x" : "C:/Users/kmtech/Desktop/999/1/120.png",
+                        "settings@2x" : "C:/Users/kmtech/Desktop/999/1/58.png",
+                        "settings@3x" : "C:/Users/kmtech/Desktop/999/1/87.png",
+                        "notification@2x" : "C:/Users/kmtech/Desktop/999/1/40.png",
+                        "notification@3x" : "C:/Users/kmtech/Desktop/999/1/60.png"
+                    },
+                    "ipad" : {
+                        "notification@2x" : "",
+                        "settings@2x" : "",
+                        "spotlight@2x" : "",
+                        "spotlight" : ""
+                    }
+                }
+            }
         }
     },
     /* SDK配置 */
