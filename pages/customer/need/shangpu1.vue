@@ -452,10 +452,7 @@
 					return
 				}
 				this.$http('customerDemand', data, 'post').then(r => {
-					uni.showToast({
-						title: r.message,
-						icon: 'none'
-					})
+					uni.navigateBack()
 				})
 			},
 			

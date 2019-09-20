@@ -456,16 +456,12 @@
 				}
 				if (this.id) {
 					this.$http(`customerDemand/${this.id}`, data, 'put').then(r => {
-						uni.showToast({
-							title: r.message,
-							icon: 'none'
-						})
+						uni.navigateBack()
 					})
 				} else {
 					this.$http('customerDemand', data, 'post').then(r => {
-						uni.showToast({
-							title: r.message,
-							icon: 'none'
+						uni.navigateBack({
+							delta: 2
 						})
 					})
 				}

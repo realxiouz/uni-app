@@ -16,6 +16,9 @@
 						<view class="text-black text-bold">{{bean.phone}}</view>
 					</view>
 					<button
+						class="cu-btn bg-cyan small radius shadow margin-right-xs" @click.stop="handleCopy">复制
+					</button>
+					<button
 						v-if="bean.phone&&bean.phone.indexOf('*') != -1 && !usingMiddlePhone"
 						class="cu-btn bg-blue radius shadow small"
 						@click="getPhone"
@@ -190,6 +193,17 @@
 					})
 					this.getData()
 				})
+			},
+			handleCopy() {
+				uni.setClipboardData({
+				    data: this.bean.phone,
+				    success: _ => {
+						uni.showToast({
+							title: '电话已复制',
+							icon: 'none'
+						});
+					}
+				});
 			}
 		}
 	}

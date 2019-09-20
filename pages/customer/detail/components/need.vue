@@ -2,42 +2,42 @@
 	<view class="bg-white margin-top-sm padding-tb-xs padding-lr-sm" @click="handleNav(bean)">
 		<view class="flex align-center">
 			<view class="cu-tag bg-cyan small radius">{{bean.type}}</view>
-			<text class="margin-left-xs">{{bean.brief}}</text>
+			<text class="margin-left-xs">{{bean.brief?bean.brief:''}}</text>
 		</view>
 		<view class="flex margin-top-xs">
 			<view class="flex-sub">
 				<text class="text-gray">价格:</text>
-				<text>{{bean.price_start}}-{{bean.price_end}}</text>
+				<text>{{bean.price_start?bean.price_start:''}}-{{bean.price_end?bean.price_end:''}}</text>
 			</view>
 			<view class="flex-sub">
 				<text class="text-gray">单价:</text>
-				<text>{{bean.unit_price_start}}-{{bean.unit_price_end}}</text>
+				<text>{{bean.unit_price_start?bean.unit_price_start:''}}-{{bean.unit_price_end?bean.unit_price_end:''}}</text>
 			</view>
 		</view>
 		<view class="flex margin-top-xs">
 			<view class="flex-sub">
 				<text class="text-gray">面积:</text>
-				<text>{{bean.area_start}}-{{bean.area_end}}</text>
+				<text>{{bean.area_start?bean.area_start:''}}-{{bean.area_end?bean.area_end:''}}</text>
 			</view>
 			<view class="flex-sub">
 				<text class="text-gray">期限:</text>
-				<text>{{bean.term}}</text>
+				<text>{{bean.term?bean.term:''}}</text>
 			</view>
 		</view>
 		<view class="flex margin-top-xs">
 			<view class="flex-sub">
 				<text class="text-gray">意向:</text>
-				<text v-if="bean.intention_attr">{{bean.intention_attr.name}}</text>
+				<text v-if="bean.intention_attr">{{bean.intention_attr.name?bean.intention_attr.name:''}}</text>
 			</view>
 			<view class="flex-sub">
 				<text class="text-gray">楼层:</text>
-				<text>{{bean.floor}}</text>
+				<text>{{bean.floor?bean.floor:''}}</text>
 			</view>
 		</view>
 		<view class="flex margin-top-xs">
 			<view class="flex-sub">
 				<text class="text-gray">装修:</text>
-				<text>{{bean.renovation}}</text>
+				<text>{{bean.renovation?bean.renovation:''}}</text>
 			</view>
 			<view class="flex-sub">
 				<text class="text-gray">付款方式:</text>
@@ -59,7 +59,7 @@
 		<view class="flex margin-top-xs">
 			<view class="flex-sub">
 				<text class="text-gray">备注:</text>
-				<text>{{bean.remark}}</text>
+				<text>{{bean.remark?bean.remark:''}}</text>
 			</view>
 		</view>
 	</view>

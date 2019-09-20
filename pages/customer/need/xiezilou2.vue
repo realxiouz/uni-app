@@ -458,19 +458,15 @@
 				if (this.id) {
 					this.formLoading = true
 					this.$http(`customerDemand/${this.id}`, data, 'put').then(r => {
-						uni.showToast({
-							title: r.message,
-							icon: 'none'
-						})
+						uni.navigateBack()
 					}).finally(_ => {
 						this.formLoading = false
 					})
 				} else {
 					this.formLoading = true
 					this.$http('customerDemand', data, 'post').then(r => {
-						uni.showToast({
-							title: r.message,
-							icon: 'none'
+						uni.navigateBack({
+							delta: 2
 						})
 					}).finally(_ => {
 						this.formLoading = false
