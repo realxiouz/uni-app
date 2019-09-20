@@ -15,6 +15,11 @@
 						<view class="text-gray text-sm">手机</view>
 						<view class="text-black text-bold">{{bean.phone}}</view>
 					</view>
+					<button
+						v-if="bean.phone&&bean.phone.indexOf('*') != -1 && !usingMiddlePhone"
+						class="cu-btn bg-blue radius shadow small"
+						@click="getPhone"
+					>取电</button>
 				</view>
 			</view>
 			<view class="cu-item" v-if="bean.phone_reserve">
@@ -131,8 +136,11 @@
 </template>
 
 <script>
-	import {mapState} from 'vuex'
+	import {mapState, mapActions, mapGetters} from 'vuex'
 	export default {
+		mounted() {
+			this.getCompany()
+		},
 		props: {
 			cId: {
 				type: [Number, String]
@@ -145,9 +153,16 @@
 			}
 		},
 		computed: {
-			...mapState(['userInfo'])
+			...mapState(['userInfo']),
+			...mapGetters("company", ["usingMiddlePhone"]),
 		},
 		methods: {
+			...mapActions('company', ['getCompany']),
+			getPhone() {
+				uni.navigateTo({
+					url: `/pages/customer/get-phone/index?cId=${this.bean.id}`
+				});
+			},
 			init() {
 				if (!this.hasLoaded) {
 					this.getData()

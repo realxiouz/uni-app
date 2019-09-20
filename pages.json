@@ -92,6 +92,12 @@
 			}
 		},
 		{
+			"path": "pages/customer/get-phone/index",
+			"style": {
+				"navigationBarTitleText": "取电"
+			}
+		},
+		{
 			"path": "pages/ucenter/businesscard/index/businesscard",
 			"style": {
 				"navigationBarTitleText": "我的名片"
