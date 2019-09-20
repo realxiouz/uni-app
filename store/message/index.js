@@ -1,6 +1,9 @@
 
 const state = {
-	new: {},
+	new: {
+		both: {},
+		window: {}
+	},
 	chats: [],
 	isLoaded: false,
 	isNotice: true

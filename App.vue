@@ -7,6 +7,16 @@
 	import { mapState, mapMutations } from 'vuex'
 	
 	export default {
+		created() {
+			// #ifdef APP-PLUS
+			const self = this;
+			plus.push.addEventListener('click', function(msg){
+				uni.navigateTo({
+					url: `/pages/message/chat/index?id=${self.new.both.id}&type=${self.new.window.both_type}`
+				})
+			}, false);
+			// #endif
+		},
 		onLaunch: function(e) {
             const query = e.query;
             // #ifdef H5
@@ -23,7 +33,7 @@
 					this.login(r);
                     let e = this.socket();
                     e.private("App.User." + this.userInfo.id).notification(r => {
-                        const data = r.data;
+                        let data = r.data;
                         this.setNew(data);
                         // #ifdef APP-PLUS
 						if (!this.isNotice) return false;
@@ -31,15 +41,9 @@
 							cover: true,
 							title: data.both.name
 						}
-						plus.push.createMessage(data.message.data.content, null, opt);
-						plus.push.addEventListener('click', function(msg){
-							console.log('3333222233');
-						    uni.navigateTo({
-								url: `/pages/message/chat/index?id=${data.both.id}&type=${data.window.both_type}`
-						    })
-							plus.push.clear();
-						}, false);
-                        // #endif
+						let content = data.message.data.content;
+						plus.push.createMessage(content, null, opt);
+						// #endif
                         uni.showTabBarRedDot({
                             index: 1
                         })
@@ -51,7 +55,6 @@
 					url: '/pages/public/login/index' + until,
 				})
 			}
-			
 			// uni.getLocation({
 			// 	type: 'gcj02',
 			// 	success: ({longitude, latitude, address}) => {
@@ -71,22 +74,16 @@
 		        let e = this.socket();
                 if (data) {
                     e.private("App.User." + this.userInfo.id).notification(r => {
-                        const data = r.data;
+                        let data = r.data;
                         this.setNew(data);
                         // #ifdef APP-PLUS
 						if (!this.isNotice) return false;
                         let opt = {
                         	cover: true,
-                        	title: data.both.name,
+                        	title: data.both.name
 						}
-                        plus.push.createMessage(data.message.data.content, null, opt);
-                        plus.push.addEventListener('click', function(msg){
-							console.log('22222233');
-                            uni.navigateTo({
-                        		url: `/pages/message/chat/index?id=${data.both.id}&type=${data.window.both_type}`
-                            })
-							plus.push.clear();
-                        }, false);
+						let content = data.message.data.content;
+                        plus.push.createMessage(content, null, opt);
                         // #endif
                         uni.showTabBarRedDot({
                             index: 1
@@ -122,7 +119,7 @@
 		},
 		computed: {
 			...mapState(['userInfo', 'hasLogin']),
-			...mapState('message', ['isNotice'])
+			...mapState('message', ['isNotice', 'new'])
 		},
         mounted() {}
 	}
