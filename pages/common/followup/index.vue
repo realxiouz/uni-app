@@ -37,7 +37,7 @@
 				</picker>
 			</view>
 			
-			<upload-files v-if="typeInx==1||typeInx==2" @imgs="handleImgs"/>
+			<upload-files v-if="typeInx==1||typeInx==2" @imgs="handleImgs" :source="['album', 'camera']"/>
 		</form>
 		
 		<save @save="handleSave" :loading="formLoading" />
@@ -56,7 +56,8 @@
 		},
 		data: _ => ({
 			formBean: {
-				content: ''
+				content: '',
+				desire: 3
 			},
 			formLoading: false,
 			date: '',
@@ -78,7 +79,7 @@
 				{text: '感兴趣', value: '4'},
 				{text: '非常感兴趣', value: '5'},
 			],
-			desireInx: -1,
+			desireInx: 2,
 			
 			customerId: ''
 		}),

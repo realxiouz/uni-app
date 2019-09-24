@@ -213,7 +213,7 @@
                         cuIcon: 'goods',
                         color: 'green',
                         name: '房源管理',
-                        path: ''
+                        path: `/pages/second/list/index`
                     },
                     {
                         cuIcon: 'shop',
