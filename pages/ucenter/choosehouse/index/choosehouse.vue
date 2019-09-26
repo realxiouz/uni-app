@@ -5,12 +5,12 @@
                 <form>
                     <view class="search">
                         <text class="cuIcon-search"></text>
-                        <input placeholder="请输入楼盘编号" v-model="keywords">
+                        <input placeholder="请输入楼盘编号" v-model="keywords" @blur="inputBlur">
 						<button type="primary" size="mini" v-if="!!keywords.toString()" @tap="searchKeywords">搜索</button>
                     </view>
                 </form>
             </view>
-            <view v-if="isShowTem" class="showchoose">
+            <view v-if="temArr.length" class="showchoose">
                 <view v-for="(item, i) of temArr" :key="i">
                     <image :src="item" mode="aspectFit"></image>
                 </view>
@@ -62,9 +62,7 @@
         data() {
             return {
                 recommendHt: '',
-                ofIsShowTem: [],
                 houseList: [],
-                isShowTem: false,
                 temArr: [],
 				page: 1,
 				per_page: 10,
@@ -72,7 +70,8 @@
 				last_page: '',
 				keywords: '',
 				isSearch: false,
-                selectedHouse: []
+                selectedHouse: [],
+                beforeSearchList: []
             }
         },
         onLoad() {
@@ -169,7 +168,6 @@
                         id: id,
                         isAdd: true
                     });
-                    this.isShowTem = true;
                 } else {
                     let i = this.temArr.findIndex(val => val === imgSrc);
                     this.temArr.splice(i, 1);
@@ -178,7 +176,6 @@
                         index: i,
                         isAdd: false
                     });
-                    this.isShowTem = Boolean(this.temArr.length >= 1);
                 }
                 /*this.houselist.forEach((ele, index) => {
                     if (e.currentTarget.dataset.item == index) {
@@ -237,19 +234,28 @@
 					const data = res.data;
 					self.total = res.total;
 					self.last_page = res.last_page;
+					let set = new Set(self.temArr);
                     data.forEach((ele, index) => {
-                        ele.isTrue = false;
+                        let i = self.houseId.findIndex(id => Number(id) === Number(ele.id));
+                        let boolean = i !== -1;
+                        ele.isTrue = boolean;
+                        boolean && set.add(ele.img);
                         Object.defineProperty(ele, 'isTrue', {
                             configurable: false,
                             writable: true,
                             enumerable: true,
-                            value: false
+                            value: boolean
                         });
                     });
+                    self.temArr = [...set];
 					if (this.isSearch && this.page === 1) {
-						self.houseList = [...data];
+                        self.houseList = [...data];
 					} else {
-						self.houseList = [...self.houseList, ...data];
+					    let list = [...self.houseList, ...data];
+						self.houseList = list;
+						if (!self.isSearch) {
+                            self.beforeSearchList = JSON.parse(JSON.stringify(list));
+                        }
 					}
 				}).catch(e => {
                     uni.hideLoading();
@@ -259,7 +265,13 @@
 				this.isSearch = true;
 				this.page = 1;
 				this.getDate();
-			}
+			},
+            inputBlur() {
+                if (this.keywords === '') {
+                    this.isSearch = false;
+                    this.houseList = this.beforeSearchList;
+                }
+            }
         }
     }
 </script>

@@ -60,7 +60,6 @@
             relayOn() {
                 if (this.isPreview) {
                     this.changeCurrentInfo(this.currentLoginUserInfo);
-                    this.changeRecommendHouse({arr: this.currentLoginUserInfo.house, replace: true});
                     this.changeImg({key: 'img_bg', url: ''});
                     this.changeImg({key: 'img_avatar', url: ''});
                 } else {
@@ -88,7 +87,7 @@
 				})
 			}
 			let num = this.currentLoginUserInfo.template_id;
-			// this.tem = JSON.parse(JSON.stringify(this.curr));
+			this.tem = JSON.parse(JSON.stringify(this.curr));
 			this.tem[num||0]['checked'] = true;
 			// 设置当前背景为已选中状态
 		},

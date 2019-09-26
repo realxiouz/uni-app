@@ -24,6 +24,7 @@ const store = new Vuex.Store({
 			}	
 		},// 用户的相关信息, 登录
 		statusBarHeight: 0, //状态栏的高度，单位px
+        defaultAvatar: 'https://st.fangxiaoke.com/common/person.png'
 	},
 	mutations: {
 		login(state, userInfo) {

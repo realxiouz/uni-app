@@ -53,7 +53,6 @@
 </template>
 
 <script>
-    import {BASE_URL} from "../../../../utils/const";
     import {mapState, mapMutations} from 'vuex';
     export default {
         data() {
@@ -73,7 +72,6 @@
         onLoad() {
             let centerLet = JSON.stringify(this.currentLoginUserInfo);
             this.editUserInfo = JSON.parse(centerLet);
-
         },
         methods: {
             ...mapMutations('ucenter', ['changeCurrentLoginUserInfo']),

@@ -7,7 +7,7 @@
 </template>
 
 <script>
-	import cardTemplate from '../../../../components/cardtemplate/cardtemplate.vue';
+	import cardTemplate from '@/components/cardtemplate/cardtemplate.vue';
 	export default {
 		data() {
 			return {
@@ -15,7 +15,7 @@
 			}
 		},
 		onReady() {
-
+			
 		},
 		components: {
 			cardTemplate

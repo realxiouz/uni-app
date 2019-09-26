@@ -22,15 +22,17 @@
 	export default {
 		data: _ => ({
 			formBean: {
-				mobile: '10000000000',
-				password: '000000'
+				mobile: '',
+				password: ''
 			}
 		}),
 		methods: {
 			...mapMutations(['login', 'changeToken']),
+            ...mapMutations('message', ['setFirstTimes']),
 			handleLogin() {
 				this.$http('wxapp/bindUser', this.formBean, 'put').then(r => {
 					uni.setStorageSync('apiToken', r.access_token);
+                    this.setFirstTimes(false);
 					this.login(r.user);
 					uni.switchTab({
 						url: '/pages/ucenter/index/index'

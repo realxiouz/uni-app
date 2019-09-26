@@ -8,7 +8,7 @@
 			<!-- <view class="action">
 				<text class="cuIcon-sound text-grey"></text>
 			</view> -->
-			<input class="solid-bottom" :adjust-position="true" :focus="false" maxlength="300" cursor-spacing="10"
+			<input class="solid-bottom" :adjust-position="false" :focus="false" maxlength="300" cursor-spacing="10"
 			 @focus="InputFocus" @blur="InputBlur" v-model="content"></input>
 			<!-- <view class="action">
 				<text class="cuIcon-emojifill text-grey"></text>
@@ -27,11 +27,11 @@
 		onLoad(opt) {
 			this.bothId = opt.id
 			this.bothType = opt.type
+			this.setCurrentBothId(opt.id);
 			if (this.bothType == "App\\User") {
 				this.bottom = uni.upx2px(100) + 'px'
 			}
 			this.getData();
-			this.setNotice(false);
 		},
 		data() {
 			return {
@@ -49,10 +49,19 @@
 			};
 		},
 		onUnload() {
-			this.setNotice(true);
+			this.setCurrentBothId('');
+		},
+		onShow() {
+			// #ifdef APP-PLUS
+			let messageArr = plus.push.getAllMessage();
+			let i = messageArr.findIndex(item => Number(item.payload) === Number(this.bothId));
+			let pushMessage = messageArr[i];
+			plus.push.remove(pushMessage);
+			this.setSpliceMessageList(pushMessage.payload);
+			// #endif
 		},
 		methods: {
-			...mapMutations('message', ['setNotice']),
+			...mapMutations('message', ['setSpliceMessageList', 'setCurrentBothId']),
 			InputFocus(e) {
 				this.InputBottom = e.detail.height
 			},
@@ -65,6 +74,10 @@
 				}
 			},
 			getData(message_id_start) {
+			    uni.showLoading({
+                    title: '加载中...',
+                    mask: true
+                });
 				this.isLoading = true
 				// user_id: this.userInfo.id,
 				let data = {
@@ -75,13 +88,14 @@
 					data.message_id_start = message_id_start
 				}
 				this.$http('message-link', data).then(r => {
+                    uni.hideLoading();
 					if (!message_id_start) {
 						this.list = r.data.reverse()
 						this.loaded = true
 						this.goTarget()
 						return
 					}
-					this.list = [...r.data.reverse(), ...this.list]
+                    this.list = [...r.data.reverse(), ...this.list];
 					this.goTarget(message_id_start)
 				}).finally(_ => {
 					this.isLoading = false
@@ -146,7 +160,13 @@
 		},
 		components: {
 			Item
-		}
+		},
+        onBackPress() {
+            uni.switchTab({
+                url: '/pages/message/index/index'
+            });
+            return true;
+        }
 	}
 </script>
 

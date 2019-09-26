@@ -1,5 +1,5 @@
 <template>
-	<view class="padding-25" v-cloak>
+	<view class="padding-25">
 		<!-- cardtemplate 组件start -->
 		<!-- :user="currentUserInfo"  -->
 		<card-template :is-show-list="false" :is-preview="showMakeBtn" :relay-on="relayOn" :personal="personal"></card-template>
@@ -48,7 +48,7 @@
 								<text>分享给好友</text>
 							</view>
 							<view class="sharetoobj-list">
-								<button @tap="showCard" data-target="bottomModal-0"></button>
+								<button @tap="modalName = 'bottomModal-0'" data-target="bottomModal-0"></button>
 								<view>
 									<image :src="imgSrcGetters('pyq.png')"></image>
 								</view>
@@ -174,7 +174,7 @@
 				canvasWidth: '', //canvas宽
 				canvasHeight: '', //canvas高
 				currentBgNum: 0, //当前名片索引
-				// shareImg: '', // 分享img
+				shareImg: '', // 分享img
                 saveImgSrc: '', // 保存img
 				modalName: '',// 用户授权时使用, 打开分享界面时也使用
 				ifShowRZbt: false,// 用户授权使用
@@ -242,6 +242,8 @@
             currentInfo(data) {
                 // 这里是因为数据都是一起修改的, 所以监听它可以省去无限调用的麻烦, 还有此时页面也已经挂载上去, 可以正常获取到宽度
                 // 这个方法是获取宽高的, 目前只可以传id, 且不带#, 需要改成标签名或者是class的可以去global-data.js下修改
+                let route = this.getCurPage().route;
+                if (!/pages\/ucenter\/businesscard\/index\/businesscard/.test(route)) return false;
                 if (!data.BrowseUser) return false;
                 const self = this;
                 let browseUser = data.BrowseUser;
@@ -263,6 +265,10 @@
                         self.setBrowseUser(browseUser);
                     })
                 }
+            },
+            modalName(data) {
+                // console.log(data, 'modalName');
+                this.modalName = data;
             }
 		},
 		methods: {
@@ -274,12 +280,10 @@
 				  url: `/pages/project/project-dev/index?id=${id}`
 				})
 		    },
-			bindViewTap: function() {
-				//事件处理函数
-				uni.navigateTo({
-					url: '../logs/logs'
-				})
-			},
+            getCurPage() {
+                let pages = getCurrentPages();
+                return pages[pages.length -1];
+            },
 			// 点击展开用户信息
 			clickShow() {
 				this.cardIs = !this.cardIs;
@@ -325,12 +329,13 @@
                     {
                         key: 'img_phone_black',
                         src: this.imgSrcGetters('phone_back.png')
-                    },
+                    }/*,
                     {
                         key: 'img_large_bg',
                         src: this.imgSrcGetters('card-mask.png')
-                    }
+                    }*/
                 ];
+                this.isRepeatDraw = false;
                 for (let item of Object.values(imgDownload)) {
                     let _key = item.key;
                     if (!this.downLoadImg[_key]) {
@@ -340,27 +345,32 @@
                         })
                     }
                 }
+                this.modalName = e.currentTarget.dataset.target;
                 uni.hideLoading();
                 // 为画布设置宽高, 在点击取消的时候会清除
                 this.canvasWidth = this.canvasWd;
-                this.modalName = e.currentTarget.dataset.target;
                 if (!this.isRepeatDraw) {
-                    this.saveImgSrc = true;
+                    this.showImage = true;
                     this.showSmallImage = true;
-                    this.isShowShare = true;
+                    this.isShowShare = false;
                     return false;
                 }
+                this.showImage = false;
+                this.showSmallImage = false;
+                this.isShowShare = true;
                 // 绘制canvas图片
-                const ctx = uni.createCanvasContext('share-card');
-                const cardSm = uni.createCanvasContext('share-sm');
-                this.currentBgNum = this.currentInfo.template_id;
-                share.canvas.call(this, e, ctx, cardSm);
+                setTimeout(() => {
+                    const ctx = uni.createCanvasContext('share-card');
+                    const cardSm = uni.createCanvasContext('share-sm');
+                    this.currentBgNum = this.currentInfo.template_id;
+                    share.canvas.call(this, e, ctx, cardSm);
+                }, 100);
 			},
 			/* 点击隐藏到分享图标 */
 			hideModal() {
 				this.modalName = null;
 				this.isShowShare = false;
-                this.saveImgSrc = false;
+                this.showImage = true;
                 this.showSmallImage = false;
 			},
 			/*拨打电话*/
@@ -378,7 +388,7 @@
 			},
 			showCard(e) {
 				// 分享到朋友圈
-				this.modalName = e.currentTarget.dataset.target;
+                this.modalName = e.currentTarget.dataset.target;
 			},
 			saveImage() {
 				// 保存图片
@@ -448,7 +458,9 @@
                 if (!uidx) return false;
                 this.$http('geren/userinfo', {uidx: uidx}).then(res => {
                     let houseArr = res.house.data;
-                    const data = Object.assign({}, {readNumber: res.readnumber}, {BrowseUser: res.Browseuser}, {house: houseArr}, res.data);
+                    let r = res.data;
+                    if (!r.avatar) r.avatar = this.defaultAvatar;
+                    const data = Object.assign({}, {readNumber: res.readnumber}, {BrowseUser: res.Browseuser}, {house: houseArr}, r);
                     this.relayOn = !this.relayOn;
                     self[boo? 'changeCurrentUserInfo': 'changeCurrentLoginUserInfo'](data);
                     if (!boo) this.setInterceptUId('');
@@ -467,7 +479,7 @@
 		},
 		computed: {
 			...mapState('ucenter', ['currentUserInfo', 'downLoadImg', 'currentLoginUserInfo', 'currentInfo', 'uId', 'browseUser']),
-			...mapState(['userInfo']),
+			...mapState(['userInfo', 'defaultAvatar']),
 			...mapGetters('ucenter', ['imgSrcGetters'])
 		},
         onShow() {

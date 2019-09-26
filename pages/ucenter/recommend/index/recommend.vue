@@ -1,6 +1,6 @@
 <template>
     <view>
-        <view class="recommend pd-left-right" :style="{'height': (style.height || recommendht) + 'px'}">
+        <view class="recommend pd-left-right" :style="{'height': style.height + 'px'}">
             <view class="prompt">提示：长按可删除楼盘,点击加号可添加楼盘</view>
             <view class="reclist pubpdtop">
                 <view v-for="(item, index) of selectedHouse" @longpress="handleLongPress" :class="[item.istrue? 'on': '', list]" :data-touchindex="index" :key="index">
@@ -30,15 +30,17 @@
                     height: 0
                 },
                 selectedHouse: [],
-				recommendht: '',
 				list: ''
             }
         },
 		onShow() {
-            console.log('111');
             const self = this;
 			this.$http('geren/recommend').then(res => {
-				self.selectedHouse = res.data;
+			    let data = res.data;
+			    for (let item of data) {
+			        this.changeHouseId({id: item.id, isAdd: true})
+                }
+				self.selectedHouse = data;
 			})
 		},
         onLoad() {},
@@ -47,7 +49,7 @@
             this.changeCurrentLoginUserInfo({house: arr});
         },
         methods: {
-            ...mapMutations('ucenter', ['changeCurrentLoginUserInfo']),
+            ...mapMutations('ucenter', ['changeCurrentLoginUserInfo', 'changeHouseId']),
             handleLongPress(e) {
                 // 长按后350ms触发
                 let touchIndex = e.currentTarget.dataset.touchindex;

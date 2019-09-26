@@ -18,7 +18,8 @@
 		
 		<!-- #ifndef H5 -->
 		<view class="text-xsl text-green text-center q-fixed" style="bottom: 160upx;top: auto">
-			<text class="cuIcon cuIcon-weixin" @click="wxLogin"></text>
+			<button open-type="getUserInfo" @getuserinfo="getuserinfo" class="cuIcon cuIcon-weixin border" style="background:#F1F1F1; border: 1px solid rgba(0, 0, 0, 0);color: #39B54A;"></button>
+
 		</view>
 		<!-- #endif -->
 	</view>
@@ -41,6 +42,7 @@
 			...mapMutations(['login', 'changeToken']),
             ...mapMutations('ucenter', ['setInterceptUId', 'setUId']),
             ...mapMutations('work', ['setShopId']),
+            ...mapMutations('message', ['setFirstTimes']),
 			handleLogin() {
 				this.$http('auth/login', this.formBean, 'post').then(r => {
 					// console.log(r);
@@ -49,9 +51,13 @@
 					// uni.setStorageSync('userInfo', r.user);
 					// 表示已经登录成功
 					// this.hasLogin = true;
+					this.setFirstTimes(false);
 					this.changeToken(r.access_token);
-					uni.setStorageSync('apiToken', r.access_token);
-					this.login(r.user);
+                    uni.setStorageSync('apiToken', r.access_token);
+                    if (!res.avatar) {
+                        res.avatar = this.defaultAvatar;
+                    }
+                    this.login(res);
 					if (!/(object|undefined)/.test(typeof this.interceptUId) && this.interceptUId !== '') {
 					    this.setUId('');
 					    uni.reLaunch({
@@ -71,7 +77,7 @@
 					})
 				})
 			},
-			wechatlogin() {
+			wechatlogin(data) {
 				uni.login({
 				  provider: 'weixin',
 				  success: (loginRes) => {
@@ -79,17 +85,14 @@
 					this.code = loginRes.code;
 					console.log(this.code);
 					// this.$http('wxapp/login', {code: loginRes.code}, 'post').then(r => {
-					// 	
+					//
 					// })
 				    // 获取用户信息
 				    uni.getUserInfo({
 				      provider: 'weixin',
 				      success: function (infoRes) {
 				        console.log(infoRes.userInfo);
-				      },
-					  fail: (err) => {
-					  	console.log(err);
-					  }
+				      }
 				    });
 				  },
 				  fail: (err) => {
@@ -98,54 +101,74 @@
 				})
 			},
 			getuserinfo(e) {
-				let data = {
+				/*let data = {
 					// encryptedData: e.detail.encryptedData,
 					// iv: e.detail.iv,
 					code: this.code
-				}
-				this.$http('wxapp/login', data, 'post').then(r => {
-					
-				})
+				}*/
+                if (e.detail.errMsg === 'getUserInfo:fail auth deny') {
+                    uni.showToast({
+                        title: '您拒绝了微信登录...',
+                        icon: 'none'
+                    })
+                } else {
+                    this.wxLogin();
+                }
 			},
 			wxLogin() {
+				const self = this;
 				uni.login({
 					provider: 'weixin',
 					success: (res) => {
-						this.$http('wxapp/login', {code: res.code}, 'post').then(r => {
-							this.login(r.user)
-							uni.setStorageSync('apiToken', r.access_token)
-							if (!r.user.wxbinded) {
-								uni.showModal({
-									title: '该微信还未绑定用户,是否绑定?',
-									cancelText: '暂不绑定',
-									confirmText: '去绑定',
-									success: (r) => {
-										if (r.confirm) {
-											uni.navigateTo({
-												url: '/pages/public/bind/index'
-											})
-										} else if (r.cancel) {
-											uni.switchTab({
-												url: '/pages/work/index/index'
-											})
-										}
-									},
-								})
-							} else {
-								uni.switchTab({
-									url: '/pages/work/index/index'
-								})
-							}
-						})
+                        uni.getUserInfo({
+                            provider: 'weixin',
+                            success(infoRes) {
+                                let data = {
+                                    encryptedData: infoRes.encryptedData,
+                                    iv: infoRes.iv,
+                                    code: res.code
+                                };
+                                self.$http('wxapp/login', data, 'post').then(r => {
+                                    self.login(r.user);
+                                    uni.setStorageSync('apiToken', r.access_token)
+                                    if (!r.user.wxbinded) {
+                                        uni.showModal({
+                                            title: '该微信还未绑定用户,是否绑定?',
+                                            cancelText: '暂不绑定',
+                                            confirmText: '去绑定',
+                                            success: (r) => {
+                                                if (r.confirm) {
+                                                    uni.navigateTo({
+                                                        url: '/pages/public/bind/index'
+                                                    })
+                                                } else if (r.cancel) {
+                                                    uni.switchTab({
+                                                        url: '/pages/work/index/index'
+                                                    })
+                                                }
+                                            },
+                                        })
+                                    } else {
+                                        uni.switchTab({
+                                            url: '/pages/work/index/index'
+                                        })
+                                    }
+                                })
+                            }
+                        });
 					}
 				})
 			}
 		},
 		computed: {
-			...mapState('ucenter', ['interceptUId'])
+			...mapState('ucenter', ['interceptUId']),
+            ...mapState(['defaultAvatar'])
 		}
 	}
 </script>
 
 <style>
+    .border:after {
+        border: 1px solid rgba(0, 0, 0, 0) !important;
+    }
 </style>

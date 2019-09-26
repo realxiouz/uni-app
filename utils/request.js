@@ -23,7 +23,7 @@ export const http = (url, data, method = 'GET') => {
 			switch (status) {
 				case 401:
 					reject(new Error('auth失败'))
-					uni.navigateTo({
+					uni.reLaunch({
 						url: '/pages/public/login/index'
 					})
 					break

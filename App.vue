@@ -5,15 +5,26 @@
 	import Echo from '@/utils/echo.common'
 	import client from '@/utils/weapp.socket.io'
 	import { mapState, mapMutations } from 'vuex'
-	
 	export default {
+	    data() {
+	        return {
+                id: '',
+                echo: {}
+            }
+        },
 		created() {
-			// #ifdef APP-PLUS
+            // #ifdef APP-PLUS
 			const self = this;
 			plus.push.addEventListener('click', function(msg){
+				let i = self.messageList.findIndex(item => Number(item.id) === Number(msg.payload));
+				let data = self.messageList[i];
+				uni.hideTabBarRedDot({
+					index: 1
+				});
 				uni.navigateTo({
-					url: `/pages/message/chat/index?id=${self.new.both.id}&type=${self.new.window.both_type}`
+					url: `/pages/message/chat/index?id=${data.both_id}&type=${data.both_type}`
 				})
+				self.setSpliceMessageList(msg.payload);
 			}, false);
 			// #endif
 		},
@@ -30,28 +41,16 @@
 			let token = uni.getStorageSync('apiToken');
             if (token) {
 				this.$http('auth/user').then(r => {
-					this.login(r);
-                    let e = this.socket();
-                    e.private("App.User." + this.userInfo.id).notification(r => {
-                        let data = r.data;
-                        this.setNew(data);
-                        // #ifdef APP-PLUS
-						if (!this.isNotice) return false;
-						let opt = {
-							cover: true,
-							title: data.both.name
-						}
-						let content = data.message.data.content;
-						plus.push.createMessage(content, null, opt);
-						// #endif
-                        uni.showTabBarRedDot({
-                            index: 1
-                        })
-                    })
+                    let res = r;
+                    if (!res.avatar) {
+                        res.avatar = this.defaultAvatar;
+                    }
+                    this.login(res);
+                    this.noticeMessage();
 				})
 			} else {
                 let until = !/(object|undefined)/.test(typeof query.shop_id)? `?type=${query.type}&shop_id=${query.shop_id}`: '';
-                uni.navigateTo({
+                uni.reLaunch({
 					url: '/pages/public/login/index' + until,
 				})
 			}
@@ -71,34 +70,22 @@
 		onHide: function() {},
         watch: {
 		    hasLogin(data) {
-		        let e = this.socket();
+                if (this.firstTimes) return false;
+		        // let e = this.socket();
                 if (data) {
-                    e.private("App.User." + this.userInfo.id).notification(r => {
-                        let data = r.data;
-                        this.setNew(data);
-                        // #ifdef APP-PLUS
-						if (!this.isNotice) return false;
-                        let opt = {
-                        	cover: true,
-                        	title: data.both.name
-						}
-						let content = data.message.data.content;
-                        plus.push.createMessage(content, null, opt);
-                        // #endif
-                        uni.showTabBarRedDot({
-                            index: 1
-                        })
-                    })
+                    this.noticeMessage();
                 } else {
-                    e.private("App.User." + this.userInfo.id).disconnect();
+                    // private("App.User." + this.userInfo.id)
+                    this.echo.leave("App.User." + this.id);
+                    this.echo.disconnect();
                 }
             }
         },
 		methods: {
 			...mapMutations(['login', 'setH5']),
-			...mapMutations('message', ['setNew']),
+			...mapMutations('message', ['setNew', 'setPushMessageList', 'setSpliceMessageList']),
             socket() {
-                let e = new Echo({
+                return new Echo({
                     client: client,
                     broadcaster: "socket.io",
                     // #ifdef H5
@@ -114,12 +101,45 @@
                         }
                     }
                 });
-                return e;
+            },
+            noticeMessage() {
+			    this.id = this.userInfo.id;
+                this.echo = this.socket();
+                this.echo.private("App.User." + this.userInfo.id).notification(r => {
+                    let data = r.data;
+                    this.setNew(data);
+                    uni.showTabBarRedDot({
+                        index: 1
+                    });
+                    // #ifdef APP-PLUS
+                    if (Number(this.currentBothId) === Number(data.both.id) ) return false;
+                    let i = this.messageList.findIndex(item => Number(item.id) === Number(data.both.id));
+                    let opt = {
+                        cover: false,
+                        title: data.both.name
+                    };
+                    let content = data.message.data.content;
+                    if (i === -1) {
+                        let param = {
+                            id: data.both.id,
+                            both_id: data.both.id,
+                            both_type: data.window.both_type
+                        };
+                        this.setPushMessageList(param);
+                    } else {
+                        let messageArr = plus.push.getAllMessage();
+                        let index = messageArr.findIndex(item => Number(item.payload) === Number(data.both.id));
+                        let pushMessage = messageArr[index];
+                        plus.push.remove(pushMessage);
+                    }
+                    plus.push.createMessage(content, data.both.id.toString(), opt);
+                    // #endif
+                })
             }
 		},
 		computed: {
-			...mapState(['userInfo', 'hasLogin']),
-			...mapState('message', ['isNotice', 'new'])
+			...mapState(['userInfo', 'hasLogin', 'defaultAvatar']),
+			...mapState('message', ['new', 'firstTimes', 'messageList', 'currentBothId'])
 		},
         mounted() {}
 	}

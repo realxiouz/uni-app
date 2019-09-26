@@ -6,7 +6,9 @@ const state = {
 	},
 	chats: [],
 	isLoaded: false,
-	isNotice: true
+	firstTimes: true,
+	messageList: [],
+	currentBothId: ''
 }
 
 const getters = {}
@@ -20,8 +22,24 @@ const mutations = {
 	setChats(s, a) {
 		s.chats = a
 	},
-	setNotice(state, boo) {
-		state.isNotice = boo;
+	setFirstTimes(state, boo) {
+		state.firstTimes = boo;
+	},
+	setPushMessageList(state, data) {
+		let index = state.messageList.findIndex(item => Number(item.id) === Number(data.id));
+		if (index === -1) {
+			state.messageList.push(data);
+		} else {
+			state.messageList.splice(index, 1, data);
+		}
+		
+	},
+	setSpliceMessageList(state, id) {
+		let index = state.messageList.findIndex(item => Number(item.id) === Number(id));
+		state.messageList.splice(index, 1);
+	},
+	setCurrentBothId(state, id) {
+		state.currentBothId = id;
 	}
 }
 

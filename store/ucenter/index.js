@@ -15,8 +15,8 @@ export default {
             img_bg: '',
             img_avatar: '',
             img_phone_black: '',
-            img_company_black: '',
-            img_large_bg: ''
+            img_company_black: ''/*,
+            img_large_bg: ''*/
         },
         currentLoginUserInfo: {},// 登录用户的信息
         currentInfo: {},// 当前显示使用的信息(登录或被分享的)
@@ -31,12 +31,6 @@ export default {
                 Vue.set(state.currentUserInfo, key, val);
             }
 		},
-		changeLoginUserHouseArr(state, data) {
-			state.loginUserHouseArr = data;
-		},
-        changeCurrentUserHouseArr(state, data) {
-		    state.currentUserHouseArr = data;
-        },
 		changeHouseId(state, data) {
 			if (data.isAdd) {
 				state.houseId.push(data.id);

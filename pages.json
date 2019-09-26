@@ -359,6 +359,12 @@
               "navigationBarTitleText": "密码修改"
             }
         }
+        ,{
+            "path" : "pages/ucenter/set-avatar/set-avatar",
+            "style" : {
+              "navigationBarTitleText": "头像修改"
+            }
+        }
     ],
 	"tabBar": {
 		"color": "#000000",

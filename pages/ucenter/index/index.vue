@@ -1,22 +1,25 @@
 <template>
 	<view :style="{height: height}" class="wrap">
 		<view class="user">
-            <view class="title">
+            <view class="title" @tap="toAvatar" :data-avatar="userInfo.avatar">
                 <view class="avatar">
                     <image :src="userInfo.avatar"></image>
                 </view>
                 <view class="userInfo">
-                        <view class="title-msg">
-                            <text class="name">{{userInfo.name}}</text>
-                            <text class="position">{{userInfo.role_name}}</text>
-                        </view>
-                        <view class="position">电话: {{userInfo.mobile}}</view>
-                    </view>
+					<view class="title-msg">
+						<text class="name">{{userInfo.name}}</text>
+						<text class="position">{{userInfo.role_name}}</text>
+					</view>
+					<view class="position">电话: {{userInfo.mobile}}</view>
+				</view>
+				<view class="next-icon">
+					<view class="cuIcon-right text-gray icon"></view>
+				</view>
             </view>
 			<view class="menu">
                 <view class="list" @tap="show = !show">
                     <view class="content">公司信息</view>
-                    <view :class="[show? 'cuIcon-fold': 'cuIcon-unfold',  'text-gray', 'icon']"></view>
+                    <view :class="[show? 'cuIcon-fold': 'cuIcon-unfold',  'text-gray', 'icon', 'weight']"></view>
                 </view>
                 <view v-if="show" class="show">
                     <view>{{userInfo.company.name}}</view>
@@ -69,7 +72,6 @@
                         supInfo: '渠道邀请码:' +  userInfo.company_id + '-' + userInfo.invitation_code,
                         icon: 'deliver_fill',
                     }
-
                 ];
             },
             info(data) {
@@ -129,7 +131,7 @@
 						if (res.confirm) {
 							self.logout();
 							self.clearEmpty();
-							uni.navigateTo({
+							uni.reLaunch({
 								url: '/pages/public/login/index'
 							})
 						}
@@ -140,7 +142,12 @@
 			    uni.navigateTo({
                     url: '/pages/ucenter/set-passward/set-passward'
                 })
-            }
+            },
+			toAvatar() {
+				uni.navigateTo({
+					url: '/pages/ucenter/set-avatar/set-avatar'
+				})
+			}
 		},
 		computed: {
 			...mapState(['hasLogin', 'userInfo'])
@@ -174,12 +181,12 @@
         background: #EDEDED;
         .user {
             .title {
-                background: #fff;
                 display: flex;
                 align-items: center;
                 flex-wrap: nowrap;
                 padding: 30rpx 0 30rpx 40rpx;
                 border-bottom: 1px solid #ccc;
+				background: #fff;
                 .avatar {
                     width: 115rpx;
                     height: 115rpx;
@@ -188,9 +195,11 @@
                         width: 100%;
                         height: 100%;
                         border-radius: 50%;
+                        background: #fff;
                     }
                 }
                 .userInfo {
+                    flex: 1;
                     .title-msg {
                         .name {
                             font-size: 25px;
@@ -211,9 +220,16 @@
                         color: darkgray;
                     }
                 }
+				.next-icon {
+					padding-right: 20rpx;
+					align-self: flex-end;
+					.icon {
+						font-size: 20px;
+					}
+				}
             }
             .menu {
-                padding: 8rpx 20rpx;
+                padding: 8rpx 0 8px 30rpx;
                 margin-top: 20rpx;
                 background: #fff;
                 border-bottom: 1px solid #ccc;
@@ -223,9 +239,15 @@
                     justify-content: space-between;
                     padding: 30rpx 20rpx 30rpx 10rpx;
                     border-bottom: 1px solid #ccc;
-                    font-size: 18px;
+                    font-size: 15px;
+					.content {
+						font-weight: bold;
+					}
                     .icon {
                         font-size: 20px;
+                    }
+                    .weight {
+                        font-weight: bold;
                     }
                 }
                 .show {
@@ -241,12 +263,15 @@
             .set-password {
                 display: flex;
                 justify-content: space-between;
-                padding: 30rpx 40rpx 30rpx 40rpx;
+                padding: 30rpx 20rpx 30rpx 40rpx;
                 background: #fff;
                 border-top: 1px solid #ccc;
                 border-bottom: 1px solid #ccc;
                 margin-top: 20rpx;
-                font-size: 18px;
+                font-size: 15px;
+				.content {
+					font-weight: bold;
+				}
                 .icon {
                     font-size: 20px;
                 }

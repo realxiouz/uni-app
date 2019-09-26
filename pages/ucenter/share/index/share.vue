@@ -111,9 +111,6 @@
             },
             shareImg(data) {
                 this.showSmallImage = Boolean(data);
-            },
-            cNames(data) {
-                console.log(data, 'cNames');
             }
         },
 		onLoad() {
@@ -266,7 +263,6 @@
 		},
 		onShareAppMessage(res) {
 			// 分享
-            console.log(this.userInfo.id, 'id');
             return {
 				title: this.cNames,
 				path: '/pages/ucenter/businesscard/index/businesscard?uidx='+ this.userInfo.id,

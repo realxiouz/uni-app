@@ -80,6 +80,7 @@
 
             image {
                 @include boderradius(50%);
+                background: #fff;
             }
         }
 
