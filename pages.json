@@ -364,7 +364,19 @@
             "style" : {
               "navigationBarTitleText": "头像修改"
             }
-        }
+        },
+		{
+			"path": "pages/second/list/index",
+			"style": {
+				"navigationBarTitleText": "二手房"
+			}
+		},
+		{
+			"path": "pages/second/bean/index",
+			"style": {
+				"navigationBarTitleText": "房源"
+			}
+		}
     ],
 	"tabBar": {
 		"color": "#000000",
