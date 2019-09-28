@@ -60,8 +60,12 @@
 		methods: {
 			...mapMutations('baobei', ['setSelCustomer']),
 			handleList(list) {
+				let temp = this.sels.map(i => i.split(' ')[2])
 				this.list = list.map(i =>{
 					i.checked = false
+					if (temp.findIndex(id => id==i.id) > -1) {
+						i.checked = true
+					}
 					return i
 				})
 			},
@@ -79,7 +83,7 @@
 				this.list = this.list.map(i => i)
 			},
 			handleSave() {
-				let arr = [...this.selCustomer]
+				let arr = [...this.selCustomer].filter(i => i.name || i.phone)
 				for (let i of this.sels) {
 					let [name, phone, id] = i.split(' ')
 					arr.push({
