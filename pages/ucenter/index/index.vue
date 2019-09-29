@@ -21,12 +21,12 @@
                         <!--#endif-->
                     </view>
 				</view>
-				<view class="next-icon">
+				<view class="next-icon" @tap="toAvatar">
 					<view class="cu-item arrow"></view>
 				</view>
             </view>
 			<view class="menu">
-                <view class="list" @tap="show = !show">
+                <view class="list" @tap="show = !show" v-if="userInfo.company_id !== '' && userInfo.company_id !== null">
                     <view class="content">公司信息</view>
                     <view :class="[show? 'down': 'pull-up',  'text-gray', 'icon', 'weight']"></view>
                 </view>

@@ -525,7 +525,7 @@
 			messageInformation() {
 				// 留言咨询
 				uni.navigateTo({
-					url: `/pages/message/chat/index?id=${this.currentInfo.uid}&type=App\\User`
+					url: `/pages/message/chat/index?id=${this.currentInfo.uid}&type=App\\User&send-name=${this.currentInfo.name}`
 				});
 			},
 			getElSize(id) { //得到元素的size

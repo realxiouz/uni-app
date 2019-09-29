@@ -17,7 +17,7 @@
 					<view class="flex align-center">
 						<ava :name="i.name" :url="i.avatar" class="margin-right-sm"/>
 						<view class="text-black text-bold margin-right-sm">{{i.name}}</view>
-						<view class="cu-tag bg-blue radius small">{{i.role_name}}</view>
+						<view class="cu-tag bg-blue radius small" v-if="i.lianxi.role_name !== '' && i.lianxi.role_name !== null">{{i.role_name}}</view>
 						<view class="flex-sub"></view>
 						<view class="text-xxl text-cyan margin-right-sm" @click.stop="handleMessage(i)">
 							<text class="cuIcon cuIcon-message"></text>
@@ -93,7 +93,7 @@
 			},
 			handleMessage(i) {
 				uni.navigateTo({
-					url: `/pages/message/chat/index?id=${i.id}&type=App\\User`
+					url: `/pages/message/chat/index?id=${i.id}&type=App\\User&send-name=${i.name}`
 				})
 			}
 		},

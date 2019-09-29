@@ -23,7 +23,7 @@
 			<navigator class="flex align-center bg-white padding-tb-sm content" :url="`/pages/contact/detail/index?id=${i.lianxi.id}`">
 				<ava :name="i.lianxi.name" class="margin-right-sm"/>
 				<view class="text-black text-bold margin-right-sm">{{i.lianxi.name}}</view>
-				<view class="cu-tag bg-blue radius small">{{i.lianxi.role_name}}</view>
+				<view class="cu-tag bg-blue radius small" v-if="i.lianxi.role_name !== '' && i.lianxi.role_name !== null">{{i.lianxi.role_name}}</view>
 				<view class="flex-sub"></view>
 				<view class="text-xxl text-cyan" @click.stop="handleMessage(i.lianxi)">
 					<text class="cuIcon cuIcon-message"></text>
@@ -51,7 +51,7 @@
 		methods: {
 			handleMessage(i) {
 				uni.navigateTo({
-					url: `/pages/message/chat/index?id=${i.id}&type=App\\User`
+					url: `/pages/message/chat/index?id=${i.id}&type=App\\User&send-name=${i.name}`
 				})
 			}
 		},
@@ -61,9 +61,6 @@
 		computed: {
 			...mapState(['userInfo'])
 		},
-        mounted() {
-            console.log(this.userInfo.company_id);
-            console.log(this.userInfo.company_id !== null || this.userInfo.company_id !== '');
-        }
+        mounted() {}
 	}
 </script>

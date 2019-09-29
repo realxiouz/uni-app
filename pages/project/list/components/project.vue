@@ -3,13 +3,13 @@
 		<view class="flex">
 			<view style="position:relative;width:280upx;height:210upx;" class="margin-right-sm">
 				<image :src="bean.img" mode="" style="width: 100%;height: 100%;"></image>
-				<view class="cu-tag bg-blue radius" style="position:absolute;right:0;top:0;">{{bean.status_name}}</view>
+				<view class="cu-tag bg-blue radius" style="position:absolute;right:0;top:0;" v-if="bean.status_name">{{bean.status_name}}</view>
 			</view>
 			<view class="flex flex-direction justify-between flex-sub">
 				<view>
 					<view class="margin-bottom-xs">
-						<text class="text-bold text-black text-lg margin-right-xs">{{bean.name}}</text>
-						<text class="text-red">{{bean.city.name}}</text>
+						<text class="text-bold text-black text-lg margin-right-xs">{{bean.name || ''}}</text>
+						<text class="text-red">{{bean.city.name || '未知'}}</text>
 					</view>
 					<!-- <view>
 							<view>
@@ -18,21 +18,22 @@
 							</view>
 						</view> -->
 					<view class="flex margin-top-xs">
-						<view class="cu-tag line-blue small margin-right-xs radius" v-for="(i, inx) in label" :key="inx">{{i}}</view>
+						<view class="cu-tag line-blue small margin-right-xs radius" v-for="(i, inx) in label" :key="inx" v-if="i">{{i}}</view>
 					</view>
 					<view class="text-gray margin-top-xs">
 						<text class="cuIcon cuIcon-locationfill margin-right-xs"></text>
-						<text>{{bean.address}}</text>
+						<text>{{bean.address || ''}}</text>
 					</view>
 				</view>
 				<view class="text-red">
-					<text class="text-xxl text-bold">{{bean.avg_price}}</text>
+					<text class="text-xxl text-bold">{{bean.avg_price || ''}}</text>
 					<text>元/㎡</text>
 				</view>
 			</view>
 		</view>
 		<view class="margin-top-sm flex justify-between">
-			<view class="w23 text-center bg-cyan radius padding-tb-xs padding-lr-xs text-cut">{{bean.fee_view}}</view>
+			<view class="w23 text-center bg-cyan radius padding-tb-xs padding-lr-xs text-cut" v-if="bean.fee_view">{{bean.fee_view}}</view>
+			<view class="w23 text-center bg-cyan radius padding-tb-xs padding-lr-xs text-cut bg-grey" v-else>佣金0</view>
 			<view class="w23 text-center radius padding-tb-xs padding-lr-xs text-white" :class="bean.baobei_project.filter(i => i.sell_prize).length ? 'bg-cyan': 'bg-grey'">成交奖</view>
 			<view class="w23 text-center radius padding-tb-xs padding-lr-xs text-white" :class="bean.baobei_project.filter(i => i.kan_prize).length ? 'bg-cyan': 'bg-grey'">
 				带看奖金</view>

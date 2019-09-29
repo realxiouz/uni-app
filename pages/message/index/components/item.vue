@@ -1,5 +1,5 @@
 <template>
-	<navigator class="bg-white padding-sm solids-bottom" :url="`/pages/message/chat/index?id=${bean.both_id}&type=${bean.both_type}`">
+	<navigator class="bg-white padding-sm solids-bottom" :url="`/pages/message/chat/index?id=${bean.both_id}&type=${bean.both_type}&send-name=${bean.both.name}`">
 		<view class="flex">
 			<ava :name="bean.both.name" class="margin-right-sm" is-square/>
 			<view class="flex-sub flex flex-direction justify-between margin-right-sm" style="max-width: calc(100vw - 240upx);">
