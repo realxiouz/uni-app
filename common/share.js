@@ -85,16 +85,16 @@ export default {
             "ewm": icon.ewm// 二维码
         };
         // 规则, 限定字符长度
-        if (cardInfo.companyname.length > 10) {
+        if (cardInfo.companyname && cardInfo.companyname.length > 10) {
             cardInfo.companyname = cardInfo.companyname.substring(0, 9) + '...'; //控制显示9个字符+....；
         }
-        if (cardInfo.name.length > 10) {
+        if (cardInfo.name && cardInfo.name.length > 10) {
             cardInfo.name = cardInfo.name.substring(0, 9) + '...'; //控制显示9个字符+....；
         }
-        if (smCardInfo.companyname.length > 7) {
+        if (smCardInfo.companyname && smCardInfo.companyname.length > 7) {
             smCardInfo.companyname = cardInfo.companyname.substring(0, 6) + '...'; //控制显示6个字符+....；
         }
-        if (smCardInfo.name.length > 7) {
+        if (smCardInfo.name && smCardInfo.name.length > 7) {
             smCardInfo.name = cardInfo.name.substring(0, 6) + '...'; //控制显示6个字符+....；
         }
         this.canvasHeight = (3*this.canvasWidth) / 5;
@@ -104,110 +104,123 @@ export default {
         switch (Number(this.currentBgNum)) {
             case 0:
             {
-                ctx.drawImage(bg, 0, 0, this.canvasWidth, this.canvasHeight);
+                bg && ctx.drawImage(bg, 0, 0, this.canvasWidth, this.canvasHeight);
                 // ctx.drawImage(cardInfo.ewm, this.canvasWidth * .85, this.canvasHeight * .66, 50, 50);
                 ctx.setFontSize(17);
-                ctx.fillText(cardInfo.name, 30, this.canvasHeight / 2.3);
+                cardInfo.name && ctx.fillText(cardInfo.name, 30, this.canvasHeight / 2.3);
                 ctx.setFontSize(13);
-                ctx.fillText(cardInfo.position, 30, this.canvasHeight / 1.8);
+                cardInfo.position && ctx.fillText(cardInfo.position, 30, this.canvasHeight / 1.8);
                 ctx.setFontSize(13);
-                ctx.fillText(cardInfo.companyname, 50, this.canvasHeight / 1.32);
-                ctx.drawImage(icon.companyIconWhite, 30, this.canvasHeight / 1.45, 14, 14);
-                ctx.drawImage(icon.phoneWhite, 30, this.canvasHeight / 1.22, 15, 15);
-                ctx.fillText(cardInfo.phone, 50, this.canvasHeight / 1.13);
-                // 绘制头像
-                ctx.save(); // 先保存状态 已便于画完圆再用
+                cardInfo.companyname && ctx.fillText(cardInfo.companyname, 50, this.canvasHeight / 1.32);
+                icon.companyIconWhite && ctx.drawImage(icon.companyIconWhite, 30, this.canvasHeight / 1.45, 14, 14);
+                icon.phoneWhite && ctx.drawImage(icon.phoneWhite, 30, this.canvasHeight / 1.22, 15, 15);
+                ctx.setFontSize(13);
+                cardInfo.phone && ctx.fillText(cardInfo.phone, 50, this.canvasHeight / 1.13);
+                if (cardInfo.userImg) {
+                    // 绘制头像
+                    ctx.save(); // 先保存状态 已便于画完圆再用
 
-                ctx.beginPath(); //开始绘制
-                //先画个圆
-                ctx.setLineWidth(10);
-                ctx.setStrokeStyle("#fff");
-                ctx.arc(this.canvasWidth - 100 + 25, 30 + 25, 30, 0, 2 * Math.PI, false);
-                ctx.clip(); //画了圆 再剪切 原始画布中剪切任意形状和尺寸。一旦剪切了某个区域，则所有之后的绘图都会被限制在被剪切的区域内
-                // ctx.drawImage(cardInfo.userImg, this.canvasWidth - 80, 30, 50, 50);
-                ctx.drawImage(cardInfo.userImg, this.canvasWidth - 100, 30, 50, 50);
-                ctx.stroke();
-                // ctx.drawImage(smCardInfo.userImg, 15, 46, 30, 30); // 推进去图片
-                // ctx.stroke();
-                ctx.restore(); //恢复之前保存的绘图上下文
+                    ctx.beginPath(); //开始绘制
+                    //先画个圆
+                    ctx.setLineWidth(10);
+                    ctx.setStrokeStyle("#fff");
+                    ctx.arc(this.canvasWidth - 100 + 25, 30 + 25, 30, 0, 2 * Math.PI, false);
+                    ctx.clip(); //画了圆 再剪切 原始画布中剪切任意形状和尺寸。一旦剪切了某个区域，则所有之后的绘图都会被限制在被剪切的区域内
+                    // ctx.drawImage(cardInfo.userImg, this.canvasWidth - 80, 30, 50, 50);
+                    cardInfo.userImg && ctx.drawImage(cardInfo.userImg, this.canvasWidth - 100, 30, 50, 50);
+                    ctx.stroke();
+                    // ctx.drawImage(smCardInfo.userImg, 15, 46, 30, 30); // 推进去图片
+                    // ctx.stroke();
+                    ctx.restore(); //恢复之前保存的绘图上下文
+                }
 
             }
                 break;
             case 1:
             {
-                ctx.drawImage(bg, 0, 0, this.canvasWidth, this.canvasHeight);
+                bg && ctx.drawImage(bg, 0, 0, this.canvasWidth, this.canvasHeight);
                 // ctx.drawImage(cardInfo.ewm, 2, this.canvasWidth / 1.3, this.canvasHeight - 60, 50);
                 ctx.setFontSize(17);
-                ctx.fillText(cardInfo.name, this.canvasWidth / 1.6, this.canvasHeight / 1.9);
+                cardInfo.name && ctx.fillText(cardInfo.name, this.canvasWidth / 1.6, this.canvasHeight / 1.9);
                 ctx.setFontSize(13);
-                ctx.fillText(cardInfo.position, this.canvasWidth / 1.6, this.canvasHeight / 1.57);
+                cardInfo.position && ctx.fillText(cardInfo.position, this.canvasWidth / 1.6, this.canvasHeight / 1.57);
                 ctx.setFontSize(13);
-                ctx.fillText(cardInfo.companyname, this.canvasWidth / 1.48  , this.canvasHeight / 1.28);
-                ctx.drawImage(icon.companyIconWhite, this.canvasWidth / 1.6, this.canvasHeight / 1.38, 14, 14);
-                ctx.drawImage(icon.phoneWhite, this.canvasWidth / 1.6, this.canvasHeight / 1.18, 15, 15);
-                ctx.fillText(cardInfo.phone, this.canvasWidth / 1.5, this.canvasHeight / 1.09);
-                ctx.save(); // 先保存状态 已便于画完圆再用
-                ctx.beginPath(); //开始绘制
-                ctx.setLineWidth(10);
-                ctx.setStrokeStyle("#fff");
-                ctx.arc((this.canvasWidth / 1.3) + 25, 8 + 25, 30, 0, 2 * Math.PI, false);
-                ctx.clip();
-                ctx.drawImage(cardInfo.userImg, this.canvasWidth / 1.3, 8, 50, 50);
-                ctx.stroke();
-                ctx.restore(); //恢复之前保存的绘图上下文
+                cardInfo.companyname && ctx.fillText(cardInfo.companyname, this.canvasWidth / 1.48  , this.canvasHeight / 1.28);
+                icon.companyIconWhite && ctx.drawImage(icon.companyIconWhite, this.canvasWidth / 1.6, this.canvasHeight / 1.38, 14, 14);
+                icon.phoneWhite && ctx.drawImage(icon.phoneWhite, this.canvasWidth / 1.6, this.canvasHeight / 1.18, 15, 15);
+                ctx.setFontSize(13);
+                cardInfo.phone && ctx.fillText(cardInfo.phone, this.canvasWidth / 1.5, this.canvasHeight / 1.09);
+                if (cardInfo.userImg) {
+                    ctx.save(); // 先保存状态 已便于画完圆再用
+                    ctx.beginPath(); //开始绘制
+                    ctx.setLineWidth(10);
+                    ctx.setStrokeStyle("#fff");
+                    ctx.arc((this.canvasWidth / 1.3) + 25, 8 + 25, 30, 0, 2 * Math.PI, false);
+                    ctx.clip();
+                    ctx.drawImage(cardInfo.userImg, this.canvasWidth / 1.3, 8, 50, 50);
+                    ctx.stroke();
+                    ctx.restore(); //恢复之前保存的绘图上下文
+                }
             }
                 break;
             case 2:
             {
-                ctx.drawImage(bg, 0, 0, this.canvasWidth, this.canvasHeight);
+                bg &&ctx.drawImage(bg, 0, 0, this.canvasWidth, this.canvasHeight);
                 // ctx.drawImage(cardInfo.ewm, this.canvasWidth * .005, this.canvasHeight * .66, 50, 50);
                 ctx.setFontSize(17);
-                ctx.fillText(cardInfo.name, this.canvasWidth * .58, this.canvasHeight / 2.8);
+                cardInfo.name && ctx.fillText(cardInfo.name, this.canvasWidth * .58, this.canvasHeight / 2.8);
                 ctx.setFontSize(13);
-                ctx.fillText(cardInfo.position, this.canvasWidth * .58, this.canvasHeight / 2.1);
+                cardInfo.position && ctx.fillText(cardInfo.position, this.canvasWidth * .58, this.canvasHeight / 2.1);
                 ctx.setFontSize(13);
-                ctx.fillText(cardInfo.companyname, this.canvasWidth * .63, this.canvasHeight / 1.37);
-                ctx.drawImage(icon.companyIconWhite, this.canvasWidth * .58, this.canvasHeight / 1.5, 14, 14);
-                ctx.drawImage(icon.phoneWhite, this.canvasWidth * .58, this.canvasHeight / 1.24, 15, 15);
-                ctx.fillText(cardInfo.phone, this.canvasWidth * .63, this.canvasHeight / 1.148);
-                ctx.save(); // 先保存状态 已便于画完圆再用
-                ctx.beginPath(); //开始绘制
-                ctx.setLineWidth(10);
-                ctx.setStrokeStyle("#01A63E");
-                ctx.arc(this.canvasWidth * .33 + 25, this.canvasHeight / 2 - 20 + 25, 30, 0, 2 * Math.PI, false);
-                ctx.clip();
-                ctx.drawImage(cardInfo.userImg, this.canvasWidth * .33, this.canvasHeight / 2 - 20, 50, 50);
-                ctx.stroke();
-                ctx.restore(); //恢复之前保存的绘图上下文
-                // ctx.draw()
+                cardInfo.companyname && ctx.fillText(cardInfo.companyname, this.canvasWidth * .63, this.canvasHeight / 1.37);
+                icon.companyIconWhite && ctx.drawImage(icon.companyIconWhite, this.canvasWidth * .58, this.canvasHeight / 1.5, 14, 14);
+                icon.phoneWhite && ctx.drawImage(icon.phoneWhite, this.canvasWidth * .58, this.canvasHeight / 1.24, 15, 15);
+                ctx.setFontSize(13);
+                cardInfo.phone && ctx.fillText(cardInfo.phone, this.canvasWidth * .63, this.canvasHeight / 1.148);
+                if (cardInfo.userImg) {
+                    ctx.save(); // 先保存状态 已便于画完圆再用
+                    ctx.beginPath(); //开始绘制
+                    ctx.setLineWidth(10);
+                    ctx.setStrokeStyle("#01A63E");
+                    ctx.arc(this.canvasWidth * .33 + 25, this.canvasHeight / 2 - 20 + 25, 30, 0, 2 * Math.PI, false);
+                    ctx.clip();
+                    ctx.drawImage(cardInfo.userImg, this.canvasWidth * .33, this.canvasHeight / 2 - 20, 50, 50);
+                    ctx.stroke();
+                    ctx.restore(); //恢复之前保存的绘图上下文
+                    // ctx.draw()
+                }
             }
                 break;
             case 3:
             {
-                ctx.drawImage(bg, 0, 0, this.canvasWidth, this.canvasHeight);
+                bg && ctx.drawImage(bg, 0, 0, this.canvasWidth, this.canvasHeight);
                 // ctx.drawImage(cardInfo.ewm, this.canvasWidth * .85, this.canvasHeight * .10, 50, 50);
                 ctx.setFontSize(17);
                 ctx.fillStyle = 'black';
-                ctx.fillText(cardInfo.name, 27, this.canvasHeight / 3.4);
+                cardInfo.name && ctx.fillText(cardInfo.name, 27, this.canvasHeight / 3.4);
                 ctx.setFontSize(13);
                 ctx.fillStyle = 'black';
-                ctx.fillText(cardInfo.position, 27, this.canvasHeight / 2.5);
+                cardInfo.position && ctx.fillText(cardInfo.position, 27, this.canvasHeight / 2.5);
                 ctx.setFontSize(13);
                 ctx.fillStyle = 'black';
-                ctx.fillText(cardInfo.companyname, 45, this.canvasHeight / 1.32);
-                ctx.drawImage(icon.companyIconBlack, 27, this.canvasHeight / 1.47, 14, 14);
-                ctx.drawImage(icon.phoneBlack, 27, this.canvasHeight / 1.24, 15, 15);
-                ctx.fillText(cardInfo.phone, 45, this.canvasHeight / 1.138);
-                ctx.save();
-                ctx.beginPath(); //开始绘制
-                ctx.setLineWidth(10);
-                ctx.setStrokeStyle("#fff");
-                ctx.arc(this.canvasWidth * .39 + 25, this.canvasHeight / 2 - 30 + 25, 30, 0, 2 * Math.PI, false);
-                ctx.clip();
-                ctx.drawImage(cardInfo.userImg, this.canvasWidth * .39, this.canvasHeight / 2 - 30, 50, 50);
-                ctx.stroke();
-                ctx.restore(); //恢复之前保存的绘图上下文
-                // ctx.draw()
+                cardInfo.companyname && ctx.fillText(cardInfo.companyname, 45, this.canvasHeight / 1.32);
+                icon.companyIconBlack && ctx.drawImage(icon.companyIconBlack, 27, this.canvasHeight / 1.47, 14, 14);
+                icon.phoneBlack && ctx.drawImage(icon.phoneBlack, 27, this.canvasHeight / 1.24, 15, 15);
+                ctx.setFontSize(13);
+                ctx.fillStyle = 'black';
+                cardInfo.phone && ctx.fillText(cardInfo.phone, 45, this.canvasHeight / 1.138);
+                if (cardInfo.userImg) {
+                    ctx.save();
+                    ctx.beginPath(); //开始绘制
+                    ctx.setLineWidth(10);
+                    ctx.setStrokeStyle("#fff");
+                    ctx.arc(this.canvasWidth * .39 + 25, this.canvasHeight / 2 - 30 + 25, 30, 0, 2 * Math.PI, false);
+                    ctx.clip();
+                    ctx.drawImage(cardInfo.userImg, this.canvasWidth * .39, this.canvasHeight / 2 - 30, 50, 50);
+                    ctx.stroke();
+                    ctx.restore(); //恢复之前保存的绘图上下文
+                    // ctx.draw()
+                }
             }
         }
         // 绘制文本 end
@@ -226,7 +239,7 @@ export default {
                     console.log(err);
                 }
             })
-        }, 500));
+        }, 400));
         // 绘制小图片 smWd / smHt = 1.2
         let smWd = 168; // canvas的宽
         let	smHt = 140; // canvas的高
@@ -237,106 +250,126 @@ export default {
             case 0:
             {
                 // cardSm.drawImage(largeBg, 0, 0, smWd, smHt);
-                cardSm.drawImage(bg, 0, y, smWd, h);
+                bg && cardSm.drawImage(bg, 0, y, smWd, h);
                 // cardSm.drawImage(smCardInfo.ewm, 130, 26, 25, 25);
                 cardSm.fillStyle = 'white';
                 cardSm.setFontSize(10);
-                cardSm.fillText(smCardInfo.name, 10, 50);
+                smCardInfo.name && cardSm.fillText(smCardInfo.name, 10, 50);
                 cardSm.setFontSize(8);
-                cardSm.fillText(smCardInfo.position, 10, 63);
-                cardSm.drawImage(icon.companyIconWhite, 10, 85, 8, 8);
-                cardSm.drawImage(icon.phoneWhite, 10, 100, 8, 8);
+                smCardInfo.position && cardSm.fillText(smCardInfo.position, 10, 63);
+                icon.companyIconWhite && cardSm.drawImage(icon.companyIconWhite, 10, 85, 8, 8);
+                icon.phoneWhite && cardSm.drawImage(icon.phoneWhite, 10, 100, 8, 8);
                 cardSm.setFontSize(8);
-                cardSm.fillText(smCardInfo.companyname, 20, 92);
-                cardSm.fillText(smCardInfo.phone, 20, 107);
-                // 绘制头像
-                cardSm.save(); // 先保存状态 已便于画完圆再用
-                cardSm.beginPath(); //开始绘制
-                //先画个圆
-                cardSm.arc(90 + 40, 30 + 15, 15, 0, 2 * Math.PI, false);
-                cardSm.clip(); //画了圆 再剪切 原始画布中剪切任意形状和尺寸。一旦剪切了某个区域，则所有之后的绘图都会被限制在被剪切的区域内
-                cardSm.drawImage(smCardInfo.userImg, 115, 30, 30, 30); // 推进去图片
-                cardSm.restore(); //恢复之前保存的绘图上下文
+                ctx.fillStyle = 'white';
+                smCardInfo.companyname && cardSm.fillText(smCardInfo.companyname, 20, 92);
+                cardSm.setFontSize(8);
+                ctx.fillStyle = 'white';
+                smCardInfo.phone && cardSm.fillText(smCardInfo.phone, 20, 107);
+                if (smCardInfo.userImg) {
+                    // 绘制头像
+                    cardSm.save(); // 先保存状态 已便于画完圆再用
+                    cardSm.beginPath(); //开始绘制
+                    //先画个圆
+                    cardSm.arc(90 + 40, 30 + 15, 15, 0, 2 * Math.PI, false);
+                    cardSm.clip(); //画了圆 再剪切 原始画布中剪切任意形状和尺寸。一旦剪切了某个区域，则所有之后的绘图都会被限制在被剪切的区域内
+                    cardSm.drawImage(smCardInfo.userImg, 115, 30, 30, 30); // 推进去图片
+                    cardSm.restore(); //恢复之前保存的绘图上下文
+                }
             }
                 break;
             case 1:
             {
                 // cardSm.drawImage(largeBg, 0, 0, smWd, smHt);
-                cardSm.drawImage(bg, 0, y, smWd, h);
+                bg && cardSm.drawImage(bg, 0, y, smWd, h);
                 // cardSm.drawImage(smCardInfo.ewm, 130, 26, 24, 24);
                 cardSm.fillStyle = 'white';
                 cardSm.setFontSize(10);
-                cardSm.fillText(smCardInfo.name, 85, 67);
+                smCardInfo.name && cardSm.fillText(smCardInfo.name, 85, 67);
                 cardSm.setFontSize(8);
-                cardSm.fillText(smCardInfo.position, 85, 80);
-                cardSm.drawImage(icon.companyIconWhite, 85, 92, 8, 8);
-                cardSm.drawImage(icon.phoneWhite, 85, 105, 8, 8);
+                smCardInfo.position && cardSm.fillText(smCardInfo.position, 85, 80);
+                icon.companyIconWhite && cardSm.drawImage(icon.companyIconWhite, 85, 92, 8, 8);
+                icon.phoneWhite && cardSm.drawImage(icon.phoneWhite, 85, 105, 8, 8);
                 cardSm.setFontSize(8);
-                cardSm.fillText(smCardInfo.companyname, 95, 99.5);
-                cardSm.fillText(smCardInfo.phone, 95, 112.5);
-                // 绘制头像
-                cardSm.save(); // 先保存状态 已便于画完圆再用
-                cardSm.beginPath(); //开始绘制
-                //先画个圆
-                cardSm.arc(15 + 15, 46 + 15, 15, 0, 2 * Math.PI, false);
-                cardSm.clip(); //画了圆 再剪切 原始画布中剪切任意形状和尺寸。一旦剪切了某个区域，则所有之后的绘图都会被限制在被剪切的区域内
-                cardSm.drawImage(smCardInfo.userImg, 15, 46, 30, 30); // 推进去图片
-                cardSm.restore(); //恢复之前保存的绘图上下文
+                ctx.fillStyle = 'white';
+                smCardInfo.companyname && cardSm.fillText(smCardInfo.companyname, 95, 99.5);
+                cardSm.setFontSize(8);
+                ctx.fillStyle = 'white';
+                smCardInfo.phone && cardSm.fillText(smCardInfo.phone, 95, 112.5);
+                if (smCardInfo.userImg) {
+                    // 绘制头像
+                    cardSm.save(); // 先保存状态 已便于画完圆再用
+                    cardSm.beginPath(); //开始绘制
+                    //先画个圆
+                    cardSm.arc(15 + 15, 46 + 15, 15, 0, 2 * Math.PI, false);
+                    cardSm.clip(); //画了圆 再剪切 原始画布中剪切任意形状和尺寸。一旦剪切了某个区域，则所有之后的绘图都会被限制在被剪切的区域内
+                    cardSm.drawImage(smCardInfo.userImg, 15, 46, 30, 30); // 推进去图片
+                    cardSm.restore(); //恢复之前保存的绘图上下文
+                }
 
             }
                 break;
             case 2:
             {
                 // cardSm.drawImage(largeBg, 0, 0, smWd, smHt);
-                cardSm.drawImage(bg, 0, y, smWd, h);
+                bg && cardSm.drawImage(bg, 0, y, smWd, h);
                 // cardSm.drawImage(smCardInfo.ewm, 2, 87, 24, 24);
                 cardSm.fillStyle = 'white';
                 cardSm.setFontSize(10);
-                cardSm.fillText(smCardInfo.name, 95, 52);
+                smCardInfo.name && cardSm.fillText(smCardInfo.name, 95, 52);
                 cardSm.setFontSize(8);
-                cardSm.fillText(smCardInfo.position, 95, 65);
-                cardSm.drawImage(icon.companyIconWhite, 95, 82, 8, 8);
-                cardSm.drawImage(icon.phoneWhite, 95, 96, 8, 8);
-                cardSm.setFontSize(7);
-                cardSm.fillText(smCardInfo.companyname, 105, 89);
-                cardSm.fillText(smCardInfo.phone, 105, 103);
-                // 绘制头像
-                cardSm.save(); // 先保存状态 已便于画完圆再用
-                cardSm.beginPath(); //开始绘制
-                //先画个圆
-                cardSm.arc(48 + 15, 50 + 20, 15, 0, 2 * Math.PI, false);
-                cardSm.clip(); //画了圆 再剪切 原始画布中剪切任意形状和尺寸。一旦剪切了某个区域，则所有之后的绘图都会被限制在被剪切的区域内
-                cardSm.drawImage(smCardInfo.userImg, 48, 55, 30, 30); // 推进去图片
-                cardSm.restore(); //恢复之前保存的绘图上下文
+                smCardInfo.position && cardSm.fillText(smCardInfo.position, 95, 65);
+                icon.companyIconWhite && cardSm.drawImage(icon.companyIconWhite, 95, 82, 8, 8);
+                icon.phoneWhite && cardSm.drawImage(icon.phoneWhite, 95, 96, 8, 8);
+                cardSm.setFontSize(8);
+                ctx.fillStyle = 'white';
+                smCardInfo.companyname && cardSm.fillText(smCardInfo.companyname, 105, 89);
+                cardSm.setFontSize(8);
+                ctx.fillStyle = 'white';
+                smCardInfo.phone && cardSm.fillText(smCardInfo.phone, 105, 103);
+                if (smCardInfo.userImg) {
+                    // 绘制头像
+                    cardSm.save(); // 先保存状态 已便于画完圆再用
+                    cardSm.beginPath(); //开始绘制
+                    //先画个圆
+                    cardSm.arc(48 + 15, 50 + 20, 15, 0, 2 * Math.PI, false);
+                    cardSm.clip(); //画了圆 再剪切 原始画布中剪切任意形状和尺寸。一旦剪切了某个区域，则所有之后的绘图都会被限制在被剪切的区域内
+                    cardSm.drawImage(smCardInfo.userImg, 48, 55, 30, 30); // 推进去图片
+                    cardSm.restore(); //恢复之前保存的绘图上下文
+                }
 
             }
                 break;
             case 3:
             {
                 // cardSm.drawImage(largeBg, 0, 0, smWd, smHt);
-                cardSm.drawImage(bg, 0, y, smWd, h);
+                bg && cardSm.drawImage(bg, 0, y, smWd, h);
                 // cardSm.drawImage(smCardInfo.ewm, 130, 26, 25, 25);
+                ctx.fillStyle = 'black';
                 cardSm.setFontSize(10);
-                cardSm.fillText(smCardInfo.name, 5, 50);
-                cardSm.setFontSize(7);
-                cardSm.fillText(smCardInfo.position, 5, 63);
-                cardSm.drawImage(icon.companyIconBlack, 5, 85, 8, 8);
-                cardSm.drawImage(icon.phoneBlack, 5, 95, 8, 8);
-                cardSm.setFontSize(7);
-                cardSm.fillText(smCardInfo.companyname, 15, 92);
-                cardSm.fillText(smCardInfo.phone, 15, 103);
-                // 绘制头像
-                cardSm.save(); // 先保存状态 已便于画完圆再用
-                cardSm.beginPath(); //开始绘制
-                //先画个圆
-                cardSm.arc(65 + 15, 40 + 15, 15, 0, 2 * Math.PI, false);
-                cardSm.clip(); //画了圆 再剪切 原始画布中剪切任意形状和尺寸。一旦剪切了某个区域，则所有之后的绘图都会被限制在被剪切的区域内
-                cardSm.drawImage(smCardInfo.userImg, 65, 40, 30, 30); // 推进去图片
-                cardSm.restore(); //恢复之前保存的绘图上下文
+                smCardInfo.name && cardSm.fillText(smCardInfo.name, 5, 50);
+                cardSm.setFontSize(8);
+                smCardInfo.position && cardSm.fillText(smCardInfo.position, 5, 63);
+                icon.companyIconBlack && cardSm.drawImage(icon.companyIconBlack, 5, 85, 8, 8);
+                icon.phoneBlack && cardSm.drawImage(icon.phoneBlack, 5, 95, 8, 8);
+                cardSm.setFontSize(8);
+                ctx.fillStyle = 'black';
+                smCardInfo.companyname && cardSm.fillText(smCardInfo.companyname, 15, 92);
+                cardSm.setFontSize(8);
+                ctx.fillStyle = 'black';
+                smCardInfo.phone && cardSm.fillText(smCardInfo.phone, 15, 103);
+                if (smCardInfo.userImg) {
+                    // 绘制头像
+                    cardSm.save(); // 先保存状态 已便于画完圆再用
+                    cardSm.beginPath(); //开始绘制
+                    //先画个圆
+                    cardSm.arc(65 + 15, 40 + 15, 15, 0, 2 * Math.PI, false);
+                    cardSm.clip(); //画了圆 再剪切 原始画布中剪切任意形状和尺寸。一旦剪切了某个区域，则所有之后的绘图都会被限制在被剪切的区域内
+                    cardSm.drawImage(smCardInfo.userImg, 65, 40, 30, 30); // 推进去图片
+                    cardSm.restore(); //恢复之前保存的绘图上下文
+                }
             }
                 break;
         }
-
         cardSm.draw(true, setTimeout(function() {
             uni.canvasToTempFilePath({
                 x: 0,
@@ -348,7 +381,8 @@ export default {
                     self.shareImg = res.tempFilePath;
                 }
             })
-        }, 400))
+        }, 400));
+        this.modalName = e.currentTarget.dataset.target;
         // 绘制小图片end
     },
 }

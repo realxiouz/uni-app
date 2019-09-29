@@ -27,28 +27,27 @@
 		<!-- 名片详情 end -->
 
 		<!-- 分享名片 satart -->
-		<!-- #ifdef MP-WEIXIN -->
+		<!-- #ifdef MP-WEIXIN || APP-PLUS -->
 		<view class="cardshare">
 			<button @tap="generateCard" class="cu-btn block bg-cyan" data-target="bottomModal">分享名片</button>
 			<view :class="['cu-modal', 'bottom-modal', modalName === 'bottomModal'? 'show': '']">
 				<view class="cu-dialog">
 					<view class="padding-xl">
 						<view class="sharetoobj">
+                            <!-- #ifdef MP-WEIXIN -->
 							<view class="sharetoobj-list">
-								<!--open-type="share"-->
-								<!-- #ifdef MP-WEIXIN -->
 								<button open-type="share"></button>
-								<!-- #endif -->
-								<!-- #ifdef APP-PLUS -->
+								<!-- #ifdef APP-PLUS
 								<button @tap="appShareFriend"></button>
-								<!-- #endif -->
+								 #endif -->
 								<view>
 									<image :src="imgSrcGetters('weixin.png')"></image>
 								</view>
 								<text>分享给好友</text>
 							</view>
+                            <!-- #endif -->
 							<view class="sharetoobj-list">
-								<button @tap="modalName = 'bottomModal-0'" data-target="bottomModal-0"></button>
+								<button @tap.stop="modalName = 'bottomModal-0'" data-target="bottomModal-0"></button>
 								<view>
 									<image :src="imgSrcGetters('pyq.png')"></image>
 								</view>
@@ -117,19 +116,19 @@
 			<view class="Module-title pubpdtop">
 				推荐房源
 			</view>
-			<view style="margin-bottom: 65rpx;">
-                <view class="informationlist" v-for="(items, index) of currentInfo.house" :key="index">
-                    <view @tap="toDetail(items.id)">
+			<view style="margin-bottom: 72rpx;">
+                <view class="informationlist" v-for="(item, index) of currentInfo.house" :key="index">
+                    <view @tap="toDetail(item.id)">
                         <view class="topimg">
-                            <image class="imgauto radius-top" :src="items.img"></image>
+                            <image class="imgauto radius-top" :src="item.img"></image>
                         </view>
                         <view class="housesource pd-left-right pubpdtop">
                             <view class="housesource-left">
-                                <text class="block spece-1">{{items.name}}</text>
-                                <text class="block gray">{{items.address}}</text>
+                                <text class="block spece-1">{{item.name}}</text>
+                                <text class="block gray">{{item.address}}</text>
                             </view>
                             <view class="housesource-right">
-                                <view class="houseprice" v-for="(item, i) of items.prices" :key="i">{{item.price}}元/㎡</view>
+                                <view class="houseprice" >{{item.avg_price}}元/㎡</view>
                             </view>
                         </view>
                     </view>
@@ -154,6 +153,23 @@
 		<!--制作名片按钮 start-->
 		<make-btn :on-event="onMyEvent" v-if="!showMakeBtn"></make-btn>
 		<!--制作名片按钮 end-->
+        <!--授权-->
+        <view v-if="isShowAuth" :class="['cu-modal', modalName === 1? 'show': '']">
+            <view class="cu-dialog">
+                <view class="cu-bar bg-white justify-end">
+                    <view class="content">你还未认证请认证通过</view>
+                    <view class="action" @tap="modalName = null">
+                        <text class="cuIcon-close text-red"></text>
+                    </view>
+                </view>
+                <view class="padding-xl">
+                    <button class="cu-btn bg-red margin-tb-sm lg button-hover"
+                            open-type="getUserInfo" @getuserinfo="getUserInfo">
+                        获取授权
+                    </button>
+                </view>
+            </view>
+        </view>
 	</view>
 </template>
 
@@ -183,8 +199,7 @@
 				bg_gradual_blue: 'bg-gradual-blue',
 				onMyEvent: {
 					url: '../../page_makecard/index/page_makecard',
-					title: '制作名片',
-					imgSrc: ''
+					title: '制作名片'
 				},
 				showMakeBtn: false, // 这里true显示make-btn, false反之
 				cardTop: '',// 名片信息
@@ -195,7 +210,9 @@
                 isShowShare: true,
                 relayOn: false,// 依赖, 只要是onShow都要变化, 以引起currentInfo的变化
                 showNumber: '',// 浏览记录显示的个数, 保存使用, 而且只获取一次
-                personal: 0
+                personal: 0,
+                isShowAuth: false,
+                uidx: ''
 			}
 		},
 		components: {
@@ -207,30 +224,19 @@
             const self = this;
             self.personal = Number(options.personal);
             self.showMakeBtn = options.previewB === '1';
-            let uidx = options.uidx;
-
-            if (self.personal === 1) {
-                this.getUserMsg();
-            } else if (this.currentLoginUserInfo.name !== undefined) {// 在已经获取了就不要再去请求了
-                this.changeCurrentInfo(this.currentLoginUserInfo);
+            self.uidx = options.uidx;
+            // #ifdef MP-WEIXIN
+            let token = uni.getStorageSync('apiToken');
+            if (!token) {
+                self.isShowAuth = true;
+                self.modalName = 1;
             } else {
-                this.getUserMsg();
+                self.requestBefore();
             }
-            if (uidx !== undefined) { // 在uidx为undefined时就不需要去请求了, 如果还发, 那么后端会报个错
-                if (uidx !== this.uId) {// 这个是被分享人的名片信息
-                    this.setUId(uidx);
-                    this.setInterceptUId(uidx);
-                    this.getUserMsg(uidx);
-                } else {
-                    this.changeCurrentInfo(this.currentUserInfo);
-                    this.setInterceptUId('');
-                }
-            }
-			// canvas
-			let screenWd = uni.getSystemInfoSync().windowWidth;
-			this.canvasWd = this.canvasWidth = screenWd - 20 * 1.9;
-			this.currentBgNum = this.currentInfo.template_id || 0;
-			this.onMyEvent.imgSrc = this.imgSrcGetters('card.png');
+            // #endif
+            // #ifndef MP-WEIXIN
+            self.requestBefore();
+            // #endif
 		},
 		watch: {
             saveImgSrc(data) {
@@ -242,13 +248,13 @@
             currentInfo(data) {
                 // 这里是因为数据都是一起修改的, 所以监听它可以省去无限调用的麻烦, 还有此时页面也已经挂载上去, 可以正常获取到宽度
                 // 这个方法是获取宽高的, 目前只可以传id, 且不带#, 需要改成标签名或者是class的可以去global-data.js下修改
-                let route = this.getCurPage().route;
-                if (!/pages\/ucenter\/businesscard\/index\/businesscard/.test(route)) return false;
-                if (!data.BrowseUser) return false;
+                /*let route = this.getCurPage().route;
+                if (!/pages\/ucenter\/businesscard\/index\/businesscard/.test(route)) return false;*/
+                if (!data.BrowseUser)  return false;
                 const self = this;
                 let browseUser = data.BrowseUser;
                 if (self.showNumber !== '') {
-                    browseUser = browseUser.slice(0, this.showNumber);
+                    browseUser = browseUser.slice(0, self.showNumber);
                 } else {
                     async function getSize() {
                         let widthP = await self.getElSize('browse-user');
@@ -262,13 +268,12 @@
                             browseUser = browseUser.slice(0, index);
                             self.showBrowseEllipsis = true;
                         }
-                        self.setBrowseUser(browseUser);
-                    })
+                    }).catch(err => {})
                 }
+                self.setBrowseUser(browseUser);
             },
             modalName(data) {
-                // console.log(data, 'modalName');
-                this.modalName = data;
+                console.log(data);
             }
 		},
 		methods: {
@@ -304,7 +309,7 @@
                     mask: true
                 });
                 let avatar = this.currentInfo.avatar;
-                avatar = avatar.replace('http:', 'https:');
+                avatar = avatar.replace('http://', 'https://');
                 let imgDownload = [
                     {
                         key: 'img_avatar',
@@ -342,14 +347,14 @@
                         await share.loading(item.src).then(res => {
                             this.isRepeatDraw = true;
                             this.changeImg({key: _key, url: res.tempFilePath});
-                        })
+                        }).catch(err => {})
                     }
                 }
-                this.modalName = e.currentTarget.dataset.target;
-                uni.hideLoading();
                 // 为画布设置宽高, 在点击取消的时候会清除
                 this.canvasWidth = this.canvasWd;
                 if (!this.isRepeatDraw) {
+                    uni.hideLoading();
+                    this.modalName = e.currentTarget.dataset.target;
                     this.showImage = true;
                     this.showSmallImage = true;
                     this.isShowShare = false;
@@ -364,7 +369,8 @@
                     const cardSm = uni.createCanvasContext('share-sm');
                     this.currentBgNum = this.currentInfo.template_id;
                     share.canvas.call(this, e, ctx, cardSm);
-                }, 100);
+                    uni.hideLoading();
+                }, 500);
 			},
 			/* 点击隐藏到分享图标 */
 			hideModal() {
@@ -376,20 +382,105 @@
 			/*拨打电话*/
 			tel() {
 				uni.makePhoneCall({
-					phoneNumber: this.currentInfo.mobile
+					phoneNumber: this.currentInfo.phone
 				})
 			},
+            getUserInfo(e) {
+                if (e.detail.errMsg === 'getUserInfo:fail auth deny') {
+                    uni.showToast({
+                        title: '登录失败, 您拒绝了授权...',
+                        icon: 'none',
+                        duration: 2000,
+                        mask: true
+                    });
+                } else {
+                    this.modalName = null;
+                    const self = this;
+                    uni.login({
+                        provider: 'weixin',
+                        success: (res) => {
+                            uni.getUserInfo({
+                                provider: 'weixin',
+                                success(infoRes) {
+                                    let data = {
+                                        encryptedData: infoRes.encryptedData,
+                                        iv: infoRes.iv,
+                                        code: res.code
+                                    };
+                                    self.$http('wxapp/login', data, 'post').then(r => {
+                                        self.login(r.user);
+                                        uni.setStorageSync('apiToken', r.access_token);
+                                        uni.showToast({
+                                            title: '授权成功',
+                                            icon: 'success',
+                                            duration: 3000,
+                                            mask: true
+                                        });
+                                        self.isShowAuth = false;
+                                        self.requestBefore();
+                                    })
+                                }
+                            });
+                        }
+                    })
+                }
+            },
 			/* 新建联系人 */
 			addPhoneNumber() {
-				uni.addPhoneContact({
-					firstName: this.currentInfo.name,
-					mobilePhoneNumber: this.currentInfo.mobile
-				})
+				uni.addPhoneContact(
+				    {
+					    firstName: this.currentInfo.name,
+					    mobilePhoneNumber: this.currentInfo.phone,
+                        organization: this.currentInfo.companyname,
+                        title: this.currentInfo.position,
+                        // #ifdef APP-PLUS
+                        success(res) {
+                            if (res.errMsg ===  "addPhoneContact:ok") {
+                                uni.showToast({
+                                    title: '保存成功',
+                                    duration: 1000
+                                })
+                            }
+                        },
+                        fail(err) {
+                            uni.showToast({
+                                title: '保存失败, 请确保您授权了通讯录权限',
+                                duration: 3000,
+                                icon: 'none'
+                            })
+                        }
+                        // #endif
+				    }
+				)
 			},
 			showCard(e) {
 				// 分享到朋友圈
                 this.modalName = e.currentTarget.dataset.target;
 			},
+            requestBefore() {
+			    let uidx = this.uidx;
+                if (this.personal === 1) {
+                    this.getUserMsg();
+                } else if (this.currentLoginUserInfo.name !== undefined) {// 在已经获取了就不要再去请求了
+                    this.changeCurrentInfo(this.currentLoginUserInfo);
+                } else {
+                    this.getUserMsg();
+                }
+                if (uidx !== undefined) { // 在uidx为undefined时就不需要去请求了, 如果还发, 那么后端会报个错
+                    if (uidx !== this.uId) {// 这个是被分享人的名片信息
+                        this.setUId(uidx);
+                        this.setInterceptUId(uidx);
+                        this.getUserMsg(uidx);
+                    } else {
+                        this.changeCurrentInfo(this.currentUserInfo);
+                        this.setInterceptUId('');
+                    }
+                }
+                // canvas
+                let screenWd = uni.getSystemInfoSync().windowWidth;
+                this.canvasWd = this.canvasWidth = screenWd - 20 * 1.9;
+                this.currentBgNum = this.currentInfo.template_id || 0;
+            },
 			saveImage() {
 				// 保存图片
 				const self = this;
@@ -418,15 +509,15 @@
 					provider: "weixin",
 					scene: "WXSceneSession",
 					type: 0,
-					title: '11111',
-					href: "http://uniapp.dcloud.io/",
+					title: `您好，我是${this.currentInfo.name}。这是我的名片，请惠存`,
+					href: '/pages/ucenter/businesscard/index/businesscard?uidx='+ this.currentInfo.uid,
 					summary: "房销客管理系统，管理您的客户，提高您的业绩！",
-					imgUrl: self.shareImg,
+                    imageUrl: self.shareImg,
 					success(res) {
-						console.log(res);
+                        console.log("success:" + JSON.stringify(res));
 					},
 					fail(error) {
-						console.log(error);
+                        console.log("fail:" + JSON.stringify(err));
 					}
 				});
 			},

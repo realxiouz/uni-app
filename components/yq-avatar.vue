@@ -1,8 +1,14 @@
 <template name="yq-avatar">
 	<view style="display: flex">
-		<image :src="imgSrc.imgSrc" @click="fSelect" :style="[ imgStyle ]" class="my-avatar"></image>
+		<image v-if="imgSrc.imgSrc" :src="imgSrc.imgSrc" @click="fSelect" :style="[ imgStyle ]" class="my-avatar"></image>
 		<canvas canvas-id="avatar-canvas" id="avatar-canvas" class="my-canvas" :style="{top: styleTop, height: cvsStyleHeight}" disable-scroll="false"></canvas>
-		<canvas canvas-id="oper-canvas" id="oper-canvas" class="oper-canvas" :style="{top: styleTop, height: cvsStyleHeight}" disable-scroll="false" @touchstart="fStart" @touchmove="fMove" @touchend="fEnd"></canvas>
+        <!--#ifndef MP-WEIXIN-->
+        <canvas canvas-id="oper-canvas" id="oper-canvas" class="oper-canvas" :style="{top: styleTop, height: cvsStyleHeight}" disable-scroll="false" @touchstart="fStart" @touchmove="fMove" @touchend="fEnd"></canvas>
+        <!--#endif-->
+        <!--#ifdef MP-WEIXIN-->
+		<canvas canvas-id="oper-canvas" id="oper-canvas" class="oper-canvas" :style="{top: styleTop, height: cvsStyleHeight}" disable-scroll="false"></canvas>
+        <view class="oper-canvas" :style="{top: styleTop, height: cvsStyleHeight, zIndex: 150000}" @touchstart="fStart" @touchmove="fMove" @touchend="fEnd"></view>
+        <!--#endif-->
 		<canvas canvas-id="prv-canvas" id="prv-canvas" class="prv-canvas" disable-scroll="false" @touchstart="fHideImg"	:style="{ height: cvsStyleHeight, top: prvTop }"></canvas>
 		<view class="oper-wrapper" :style="{display: styleDisplay}">
 			<view class="oper">
@@ -690,38 +696,36 @@
 				// }
 			},
 			fStart(e) {
-				let touches = e.touches,
-				touch0 = touches[0],
-				touch1 = touches[1];
-				
+				let touches = e.touches;
+				let touch0 = touches[0];
+				let touch1 = touches[1];
+                // #ifdef MP-WEIXIN
+                touch0 = touch0 && {x: touch0.pageX, y:touch0.pageY};
+                touch1 = touch1 && {x: touch1.pageX, y: touch1.pageY};
+                // #endif
 				this.touch0 = touch0;
 				this.touch1 = touch1;
 				
 				if( touch1 ) {
-					let x = touch1.x - touch0.x,
-						y = touch1.y - touch0.y;
+				    let x = touch1.x - touch0.x;
+				    let y = touch1.y - touch0.y;
 					this.fgDistance = Math.sqrt(x * x + y * y);
 				}
 			},
 			fMove(e) {
-                let touches = [];
-                // #ifndef MP-WEIXIN
-                touches = e.touches;
-                // #endif
-                // #ifdef MP_WEIXIN
-                touches = e.changedTouches;
-                // #endif
-				let	touch0 = touches[0];
+                let touches = e.touches;
+                let	touch0 = touches[0];
 				let	touch1 = touches[1];
-				
+				// #ifdef MP-WEIXIN
+                touch0 = touch0 && {x: touch0.pageX, y:touch0.pageY};
+                touch1 = touch1 && {x: touch1.pageX, y: touch1.pageY};
+				// #endif
 				if( touch1 ) {
-                    console.log(touch1.y, 'touch1.y');
-                    console.log(touch1.x, 'touch1.x');
-                    let x = touch1.x - touch0.x,
-						y = touch1.y - touch0.y,
-						fgDistance = Math.sqrt(x * x + y * y),
-						scaleSize = 0.005 * (fgDistance - this.fgDistance),
-						beScaleSize = this.scaleSize + scaleSize;
+                    let x = touch1.x - touch0.x;
+                    let y = touch1.y - touch0.y;
+                    let fgDistance = Math.sqrt(x * x + y * y);
+                    let scaleSize = 0.005 * (fgDistance - this.fgDistance);
+                    let beScaleSize = this.scaleSize + scaleSize;
 						
 					do	{
 						if( !this.letScale ) break;
@@ -800,9 +804,13 @@
 				}
 			},
 			fEnd(e) {
-				let touches = e.touches,
+                let touches = e.touches,
 					touch0 = touches && touches[0],
 					touch1 = touches && touches[1];
+                // #ifdef MP-WEIXIN
+                touch0 = touch0 && {x: touch0.pageX, y:touch0.pageY};
+                touch1 = touch1 && {x: touch1.pageX, y: touch1.pageY};
+                // #endif
 				if(touch0) {
 					this.touch0 = touch0;
 				} else {

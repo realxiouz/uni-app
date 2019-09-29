@@ -5,3 +5,14 @@
 .cu-form-group {
     justify-content: center;
 }
+.get-phone {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+}
+.get-phone input {
+    flex: 1;
+}
+.get-phone button {
+    margin-right: 10rpx;
+}

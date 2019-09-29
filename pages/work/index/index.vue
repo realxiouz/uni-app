@@ -29,7 +29,7 @@
                 </view>
             </view>
             <view class="cu-list grid col-4 no-border">
-                <view class="cu-item" v-for="(item,index) in projectList" :key="index" v-if="hasFeature(item.hasFeatures)">
+                <view class="cu-item" v-for="(item,index) in projectList" :key="index" v-if="hasFeature(item.hasFeatures) || (item.name === '云端楼盘' && userInfo.company_id === null)">
                     <view :class="['cuIcon-' + item.cuIcon,'text-' + item.color]" @click="handleNav(item.path)">
                         <view class="cu-tag badge" v-if="item.badge">
                             <block v-if="item.badge!=1">{{item.badge>99?'99+':item.badge}}</block>

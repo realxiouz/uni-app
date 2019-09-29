@@ -82,7 +82,8 @@
 					    icon: 'success',
 					    duration: 1000,
 					    position: 'center'
-					})
+					});
+                    self.changeHouseId({id: deleteIndex, isAdd: false})
 				}).catch(err => {
 					uni.hideLoading();
 				})

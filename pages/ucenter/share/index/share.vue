@@ -148,7 +148,7 @@
                     mask: true
                 });
                 let avatar = this.currentInfo.avatar;
-                avatar = avatar.replace('http:', 'https:');
+                avatar = avatar.replace('http://', 'https://');
                 let imgDownload = [
                     {
                         key: 'img_avatar',
@@ -185,7 +185,7 @@
                         await share.loading(item.src).then(res => {
                             this.isRepeatDraw = true;
                             this.changeImg({key: _key, url: res.tempFilePath});
-                        })
+                        }).catch(err => {});
                     }
                 }
                 uni.hideLoading();

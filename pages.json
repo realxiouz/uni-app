@@ -377,6 +377,10 @@
 				"navigationBarTitleText": "房源"
 			}
 		}
+        ,{
+            "path" : "pages/ucenter/get-phone/get-phone",
+            "style" : {}
+        }
     ],
 	"tabBar": {
 		"color": "#000000",

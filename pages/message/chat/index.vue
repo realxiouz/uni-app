@@ -4,7 +4,7 @@
 			:style="{position: 'fixed', top: isH5?'44px':'0', left:0, right:0, bottom: bottom}">
 			<item v-for="(i, inx) in list" :key="inx" :bean="i" :id="`message-${i.message_id}`"/>
 		</scroll-view>
-		<view class="cu-bar foot input" :style="[{bottom:InputBottom+'px'}]" v-if="bothType == 'App\\User'">
+		<view class="cu-bar foot input" :style="[{bottom:InputBottom+ 15+'px'}]" v-if="bothType === 'App\\User'">
 			<!-- <view class="action">
 				<text class="cuIcon-sound text-grey"></text>
 			</view> -->
@@ -29,7 +29,7 @@
 			this.bothType = opt.type
 			this.setCurrentBothId(opt.id);
 			if (this.bothType == "App\\User") {
-				this.bottom = uni.upx2px(100) + 'px'
+				this.bottom = uni.upx2px(100+25) + 'px'
 			}
 			this.getData();
 		},
@@ -174,4 +174,11 @@
 /* page{
   padding-bottom: 100upx;
 } */
+.cu-bar.input .solid-bottom {
+    height: 110rpx !important;
+}
+.cu-bar.input button {
+    align-self: flex-end;
+    margin-bottom: 13rpx;
+}
 </style>
