@@ -51,8 +51,7 @@
 						</template>
 					</view>
 					<view v-else-if="type==='up'">
-						<button class="cu-btn bg-cyan small shadow" @click="handleConfirm" v-if="canDaikanQueren(bean)">带看确认</button>
-						<button class="cu-btn bg-cyan small shadow margin-right-xs" v-if="bean.status ===4" @click="navDaikan">带看单</button>
+						<button class="cu-btn bg-cyan small shadow margin-right-xs" v-if="bean.status ==1 ||bean.status ==3 ||bean.status ==4 ||bean.status ==6 ||bean.status ==7" @click="navDaikan">带看单</button>
 					</view>
 				</view>
 			</view>
