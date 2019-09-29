@@ -13,13 +13,13 @@
 					</view>
 					<view class="flex-sub">
 						<text class="text-gray">看房人数:</text>
-						<text>{{beanUp.peoples}}</text>
+						<text>{{beanUp.peoples?beanUp.peoples:''}}</text>
 					</view>
 				</view>
 				<view class="flex margin-top-xs">
 					<view class="flex-sub">
 						<text class="text-gray">带看情况:</text>
-						<text>{{beanUp.remark}}</text>
+						<text>{{beanUp.remark?beanUp.remark:''}}</text>
 					</view>
 				</view>
 				<view class="margin-top-xs" v-if="beanUp.img">
@@ -55,7 +55,7 @@
 			</template>
 
 			<view v-else class="flex padding justify-center">
-				<button class="cu-btn radius bg-blue" @click="toDaikan" v-if="canTianXieDaiKan">写带看</button>
+				<button class="cu-btn radius bg-blue" @click="toDaikan" v-if="canTianXieDaiKan&&!isZhongJie">写带看</button>
 				<text v-else>暂无记录</text>
 			</view>
 
@@ -73,13 +73,13 @@
 					</view>
 					<view class="flex-sub">
 						<text class="text-gray">看房人数:</text>
-						<text>{{beanDown.peoples}}</text>
+						<text>{{beanDown.peoples?beanDown.peoples:''}}</text>
 					</view>
 				</view>
 				<view class="flex margin-top-xs">
 					<view class="flex-sub">
 						<text class="text-gray">带看情况:</text>
-						<text>{{beanDown.remark}}</text>
+						<text>{{beanDown.remark?beanDown.remark:''}}</text>
 					</view>
 				</view>
 				<view class="margin-top-xs" v-if="beanDown.img">
@@ -114,7 +114,7 @@
 				</view>
 			</template>
 			<view v-else class="flex padding justify-center">
-				<button class="cu-btn radius bg-blue" @click="toDaikan" v-if="canTianXieDaiKan">写带看</button>
+				<button class="cu-btn radius bg-blue" @click="toDaikan" v-if="canTianXieDaiKan&&isZhongJie">写带看</button>
 				<text v-else>暂无记录</text>
 			</view>
 		</view>
@@ -174,6 +174,10 @@
 						return false;
 					}
 				}
+			},
+			isZhongJie() {
+				let item = this.DaiKanItem
+				return item.from_company_id === this.userInfo.company_id
 			}
 		},
 		methods: {

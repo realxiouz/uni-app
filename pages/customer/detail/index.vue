@@ -159,10 +159,10 @@
 							name: this.userInfo.name,
 							phone: this.userInfo.mobile
 						})
-						this.setSelCustomer([{
-							name: this.bean.name,
-							phone: this.bean.phone
-						}])
+						// this.setSelCustomer([{
+						// 	name: this.bean.name,
+						// 	phone: this.bean.phone
+						// }])
 						this.setSelProject([])
 						uni.navigateTo({
 							url: `/pages/baobei/bean/index`

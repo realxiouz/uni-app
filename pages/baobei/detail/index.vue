@@ -86,11 +86,13 @@
 			this.rData = {
 					baobei_id: this.id
 				}
-			this.getDetail()
 			this.type = opt.type
 			this.$nextTick(_ => {
 				this.$refs.list.getData()
 			})
+		},
+		onShow() {
+			this.getDetail()
 		},
 		data() {
 			return {

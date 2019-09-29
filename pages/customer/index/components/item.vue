@@ -1,5 +1,5 @@
 <template>
-	<navigator class="bg-white margin-top-sm" :url="`/pages/customer/detail/index?id=${bean.id}&type=${bean.type}`">
+	<view class="bg-white margin-top-sm" @click="handleGo">
 			<view class="content flex align-center padding-tb-xs padding-lr-sm">
 				<view class="margin-right-sm">
 					<ava :name="bean.name"></ava>
@@ -14,10 +14,11 @@
 					<view>录入时间：{{bean.created_at}}</view>
 				</view>
 			</view>
-	</navigator>
+	</view>
 </template>
 
 <script>
+	import { mapState, mapMutations } from 'vuex'
 	import Ava from '@/components/avatar.vue'
 	export default {
 		props: {
@@ -30,9 +31,17 @@
 			Ava
 		},
 		methods: {
-			editCustomer(bean) {
+			...mapMutations('baobei', ['setSelCustomer']),
+			handleGo(bean) {
+				this.setSelCustomer([
+					{
+						name: this.bean.name,
+						phone: this.bean.phone,
+						id: this.bean.id
+					}
+				])
 				uni.navigateTo({
-					url: `/pages/customer/bean/index?id=${bean.id}&type=${bean.type}`
+					url: `/pages/customer/detail/index?id=${this.bean.id}&type=${this.bean.type}`
 				})
 			}
 		}
