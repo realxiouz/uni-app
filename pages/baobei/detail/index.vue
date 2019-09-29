@@ -6,7 +6,6 @@
 					<text class="num">{{inx+1}}</text> {{i}}
 				</view>
 			</view>
-
 			<view class="cu-card">
 				<view class="cu-item shadow padding-sm">
 					<view class="margin-bottom-sm">
@@ -39,23 +38,20 @@
 					</view>
 
 					<view v-if="type==='in'">
+						<button v-if="canDaikanQueren(bean)" class="cu-btn bg-cyan small shadow margin-right-xs" @click="handleConfirm">带看确认</button>
+						<button class="cu-btn bg-cyan small shadow margin-right-xs" v-if="!canDaikanQueren(bean)&&showDaikanList(bean.status)"
+						 @click="navDaikan">带看记录</button>
 						<template v-if="isShowDoneNot(bean)">
 							<picker class="cu-btn bg-cyan small shadow margin-right-xs" range-key="name" :range="employees" @change="handlePass"
 							 v-if="canApprove(bean)">
 								<view>报备通过</view>
 							</picker>
-							<button class="cu-btn bg-cyan small shadow margin-right-xs" @click="handleConfirm" v-if="canDaikanQueren(bean)">带看确认</button>
-							
-							<button class="cu-btn bg-red small shadow margin-right-xs"
-								v-if="bean.status==2||bean.status==3||bean.status==5||bean.status==9"
-								@click="navReject(bean.id)">驳回</button>
+							<button class="cu-btn bg-red small shadow margin-right-xs" v-if="bean.status==2||bean.status==3||bean.status==5||bean.status==9"
+							 @click="navReject(bean.id)">驳回</button>
 						</template>
-						<button class="cu-btn bg-cyan small shadow margin-right-xs"
-							v-if="stepInx==1||stepInx==2||stepInx==3"
-							@click="navDaikan">带看列表</button>
 					</view>
 					<view v-else-if="type==='up'">
-						<button class="cu-btn bg-cyan small shadow" @click="handleConfirm" v-if="canDaikanQueren(bean)">带看确认</button>
+						<button class="cu-btn bg-cyan small shadow margin-right-xs" v-if="bean.status ==1 ||bean.status ==3 ||bean.status ==4 ||bean.status ==6 ||bean.status ==7" @click="navDaikan">带看单</button>
 					</view>
 				</view>
 			</view>
@@ -89,8 +85,8 @@
 			this.id = opt.id
 			this.rData = {
 					baobei_id: this.id
-				},
-				this.getDetail()
+				}
+			this.getDetail()
 			this.type = opt.type
 			this.$nextTick(_ => {
 				this.$refs.list.getData()
@@ -179,18 +175,26 @@
 			},
 			navDaikan() {
 				uni.navigateTo({
-					url: `/pages/daikan/list/index?bId=${this.id}`
+					url: `/pages/baobei/daikan/list?bId=${this.id}`
 				})
 			},
 
 			canDaikanQueren(item) {
+
 				if (
-					item.status === 1 &&
-					item.baobei_project.daikan_audit_id === this.userInfo.id
+					item.agent_id === this.userInfo.company_id &&
+					item.baobei_project.project.is_agent_can_confirm_daikan === false
 				) {
-					return true;
-				} else {
 					return false;
+				} else {
+					if (
+						item.status === 1 &&
+						item.baobei_project_my.daikan_audit_id === this.userInfo.id
+					) {
+						return true;
+					} else {
+						return false;
+					}
 				}
 			},
 			canApprove(baobei) {
@@ -225,9 +229,9 @@
 				let userId = this.userInfo.id;
 
 				if (item.agent_id === this.userInfo.company_id) {
-					obj = item.agent_project;
+					obj = item.agent_project || {};
 				} else {
-					obj = item.developer_project;
+					obj = item.developer_project || {};
 				}
 				if (
 					obj.charger_id === userId ||
@@ -253,6 +257,13 @@
 					return false;
 				}
 			},
+			showDaikanList(status) {
+				if (status === 1 || status === 4 || status === 6 || status === 7) {
+					return true;
+				} else {
+					return false;
+				}
+			}
 		},
 		components: {
 			DataList

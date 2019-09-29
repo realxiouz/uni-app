@@ -1,6 +1,6 @@
 <template>
 	<view class="bg-white margin-top-sm">
-			<view class="content flex align-center padding-tb-xs padding-lr-sm">
+			<view class="content flex flex-direction align-center padding-tb-xs padding-lr-sm">
 				<view style="word-wrap:break-word">
 					<text class="cu-tag bg-blue radius">{{bean.status_name}}</text>
 				</view>

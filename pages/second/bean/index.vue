@@ -5,37 +5,37 @@
 				<view class="title">
 					房号
 				</view>
-				<input placeholder="填写房号"/>
+				<input placeholder="填写房号" v-model="formBean.room" />
 			</view>
 			<view class="cu-form-group">
 				<view class="title">
 					楼层
 				</view>
-				<input placeholder="填写楼层"/>
+				<input placeholder="填写楼层" v-model="formBean.floor" />
 			</view>
 			<view class="cu-form-group">
 				<view class="title">
 					总层
 				</view>
-				<input placeholder="填写总层"/>
+				<input placeholder="填写总层" v-model="formBean.total_floors" />
 			</view>
 			<view class="cu-form-group">
 				<view class="title">{{showStar('transaction')}}状态</view>
-				<single-picker :range="jiaoyi2s" v-model="formBean.jiaoyi2" />
+				<single-picker :range="jiaoyi2s" v-model="formBean.jiaoyi_status" />
 			</view>
 			<view class="cu-form-group">
 				<view class="title">{{showStar('transaction')}}公私盘</view>
-				<single-picker :range="jiaoyi3s" v-model="formBean.jiaoyi3" />
+				<single-picker :range="jiaoyi3s" v-model="formBean.jiaoyi_pan" />
 			</view>
 			<view class="cu-form-group">
 				<view class="title">
 					房源编号
 				</view>
-				<input placeholder="填写房源编号"/>
+				<input placeholder="填写房源编号" v-model="formBean.sn" />
 			</view>
 			<view class="cu-form-group">
 				<view class="title">{{showStar('transaction')}}类型</view>
-				<single-picker :range="yongtu2s" v-model="formBean.yongtu2" />
+				<single-picker :range="yongtu2s" v-model="formBean.leixing" />
 			</view>
 			<view class="cu-form-group">
 				<view class="title">{{showStar('transaction')}}建筑</view>
@@ -43,9 +43,9 @@
 			</view>
 			<view class="cu-form-group">
 				<view class="title">{{showStar('transaction')}}结构</view>
-				<single-picker :range="yongtu4s" v-model="formBean.yongtu4" />
+				<single-picker :range="yongtu4s" v-model="formBean.jiegou" />
 			</view>
-			
+
 			<view class="cu-form-group">
 				<view class="title">户型</view>
 				<picker mode="multiSelector" @change="multiChange" :value="multiInx" :range="multiTypes" range-key="text">
@@ -58,35 +58,56 @@
 				<view class="title">
 					售价
 				</view>
-				<input placeholder="填写售价"/>
+				<input placeholder="填写售价" v-model="formBean.sell_price" />
 				<text>万元</text>
 			</view>
 			<view class="cu-form-group">
 				<view class="title">
 					单价
 				</view>
-				<input placeholder="填写单价"/>
+				<input placeholder="填写单价" v-model="formBean.sell_price_per_unit" />
 				<text>元/㎡</text>
 			</view>
 			<view class="cu-form-group">
 				<view class="title">
 					底价
 				</view>
-				<input placeholder="填写底价"/>
+				<input placeholder="填写底价" v-model="formBean.sell_price_limit" />
+				<text>万元</text>
+			</view>
+			<view class="cu-form-group">
+				<view class="title">
+					租价
+				</view>
+				<input placeholder="填写租价" v-model="formBean.rent_price" />
+				<text>元/月</text>
+			</view>
+			<view class="cu-form-group">
+				<view class="title">
+					租金
+				</view>
+				<input placeholder="填写租金" v-model="formBean.rent_price_per_unit" />
+				<text>元/㎡</text>
+			</view>
+			<view class="cu-form-group">
+				<view class="title">
+					底价
+				</view>
+				<input placeholder="填写底价" v-model="formBean.rent_price_limit" />
 				<text>万元</text>
 			</view>
 			<view class="cu-form-group">
 				<view class="title">
 					面积
 				</view>
-				<input placeholder="填写面积"/>
+				<input placeholder="填写面积" v-model="formBean.size" />
 				<text>㎡</text>
 			</view>
 			<view class="cu-form-group">
 				<view class="title">
 					套内
 				</view>
-				<input placeholder="填写套内" v-model="formBean.taonei"/>
+				<input placeholder="填写套内" v-model="formBean.taonei" />
 				<text>㎡</text>
 			</view>
 			<view class="cu-form-group">
@@ -101,14 +122,14 @@
 				<view class="title">
 					建房年代
 				</view>
-				<input placeholder="填写建房年代"/>
+				<input placeholder="填写建房年代" v-model="formBean.year" />
 			</view>
-			
+
 			<view class="cu-form-group">
 				<view class="title">需求省市</view>
 				<pcd v-model="pcd" />
 			</view>
-			
+
 			<view class="cu-form-group">
 				<view class="title">{{showStar('transaction')}}看房</view>
 				<single-picker :range="kanfangs" v-model="formBean.kanfang" />
@@ -121,7 +142,7 @@
 				<view class="title">
 					钥匙说明
 				</view>
-				<input placeholder="填写钥匙说明"/>
+				<input placeholder="填写钥匙说明" />
 			</view>
 			<view class="cu-form-group">
 				<view class="title">{{showStar('transaction')}}来源</view>
@@ -133,56 +154,56 @@
 			</view>
 			<view class="cu-form-group">
 				<view class="title">{{showStar('guanzhu')}}家具</view>
-				<multi-picker class="show-arrow" :range="jiajus" v-model="formBean.jiaju" rangeKey="text"/>
+				<multi-picker class="show-arrow" :range="jiajus" v-model="formBean.jiaju" rangeKey="text" />
 			</view>
 			<view class="cu-form-group">
 				<view class="title">{{showStar('guanzhu')}}标签</view>
-				<multi-picker class="show-arrow" :range="biaoqians" v-model="formBean.biaoqian" rangeKey="text"/>
+				<multi-picker class="show-arrow" :range="biaoqians" v-model="formBean.biaoqian" rangeKey="text" />
 			</view>
 			<view class="cu-form-group">
 				<view class="title">{{showStar('guanzhu')}}配套</view>
-				<multi-picker class="show-arrow" :range="peitaos" v-model="formBean.peitao" rangeKey="text"/>
+				<multi-picker class="show-arrow" :range="peitaos" v-model="formBean.peitao" rangeKey="text" />
 			</view>
-			
+
 			<view class="cu-form-group">
 				<textarea :maxlength="200" @input="textareaInput" placeholder="备注" :value="remark"></textarea>
 			</view>
-			
+
 			<view class="cu-form-group">
 				<view class="title">
 					产证人
 				</view>
-				<input placeholder="填写产证人"/>
+				<input placeholder="填写产证人" />
 			</view>
 			<view class="cu-form-group">
 				<view class="title">
 					手机
 				</view>
-				<input placeholder="手机"/>
+				<input placeholder="手机" />
 			</view>
 			<view class="cu-form-group">
 				<view class="title">
 					看房人
 				</view>
-				<input placeholder="填写看房人"/>
+				<input placeholder="填写看房人" />
 			</view>
 			<view class="cu-form-group">
 				<view class="title">
 					手机
 				</view>
-				<input placeholder="手机"/>
+				<input placeholder="手机" />
 			</view>
 			<view class="cu-form-group">
 				<view class="title">
 					产证号
 				</view>
-				<input placeholder="填写产证号"/>
+				<input placeholder="填写产证号" />
 			</view>
 			<view class="cu-form-group">
 				<view class="title">
 					核实码
 				</view>
-				<input placeholder="填写核实码"/>
+				<input placeholder="填写核实码" />
 			</view>
 			<view class="cu-form-group">
 				<view class="title">挂牌日期</view>
@@ -196,11 +217,32 @@
 				<view class="title">
 					操作码
 				</view>
-				<input placeholder="填写操作码"/>
+				<input placeholder="填写操作码" />
+			</view>
+			<view class="cu-form-group">
+				<view class="title">归属员工1</view>
+				<navigator class="show-arrow" url="/pages/customer/employee/index" hover-class="none">
+					<ava v-if="selEmployee.id" :name="selEmployee.name" :url="selEmployee.avatar" />
+					<view v-else>未选择归属</view>
+				</navigator>
+			</view>
+			<view class="cu-form-group">
+				<view class="title">归属员工2</view>
+				<navigator class="show-arrow" url="/pages/customer/employee/index" hover-class="none">
+					<ava v-if="selEmployee.id" :name="selEmployee.name" :url="selEmployee.avatar" />
+					<view v-else>未选择归属</view>
+				</navigator>
+			</view>
+			<view class="cu-form-group">
+				<view class="title">首录人</view>
+				<navigator class="show-arrow" url="/pages/customer/employee/index" hover-class="none">
+					<ava v-if="selEmployee.id" :name="selEmployee.name" :url="selEmployee.avatar" />
+					<view v-else>未选择归属</view>
+				</navigator>
 			</view>
 		</form>
 
-		<save @save="handleSave" :loading="formLoading"/>
+		<save @save="handleSave" :loading="formLoading" />
 	</view>
 </template>
 
@@ -210,7 +252,12 @@
 	import SinglePicker from '@/components/single-picker'
 	import Save from '@/components/buttom-button'
 	import Pcd from '@/components/pcd'
-	import {priceMap, priceUnitMap, unitMap} from '@/utils/const'
+	import {
+		priceMap,
+		priceUnitMap,
+		unitMap
+	} from '@/utils/const'
+	import Ava from '@/components/avatar'
 
 	export default {
 		onLoad(opt) {
@@ -221,7 +268,8 @@
 			this.type = opt.type
 			this.customerId = opt.cId
 			this.$http('path').then(r => {
-				this.rules = r.data.find(i => i.field == 'CustomerDemand').values.filter(i => i.mapping == this.type).filter(i => i.required)
+				this.rules = r.data.find(i => i.field == 'CustomerDemand').values.filter(i => i.mapping == this.type).filter(i =>
+					i.required)
 			})
 			this.$http('attribute').then(r => {
 				this.allSels = r.data['CustomerDemand']
@@ -236,7 +284,7 @@
 			formLoading: false,
 			id: '',
 			type: '',
-			
+
 			rules: [],
 			multiTypes: [
 				[{
@@ -321,11 +369,11 @@
 				]
 			],
 			multiInx: [0, 0, 0, 0],
-			
+
 			priceMap,
 			priceUnitMap,
 			unitMap,
-			
+
 			vRange: [],
 			uRange: [],
 			sRange: [],
@@ -541,140 +589,353 @@
 			customerId: '',
 
 			remark: '',
-			
+
 			pcd: [],
-			
-			
-			jiaoyi2s: [
-				{ id: 1, name: "有效" },
-				  { id: 2, name: "预定" },
-				  { id: 3, name: "暂缓" },
-				  { id: 4, name: "已售" },
-				  { id: 5, name: "已租" },
-				  { id: 6, name: "无效" },
-				  { id: 7, name: "未知" }
+
+
+			jiaoyi2s: [{
+					id: 1,
+					name: "有效"
+				},
+				{
+					id: 2,
+					name: "预定"
+				},
+				{
+					id: 3,
+					name: "暂缓"
+				},
+				{
+					id: 4,
+					name: "已售"
+				},
+				{
+					id: 5,
+					name: "已租"
+				},
+				{
+					id: 6,
+					name: "无效"
+				},
+				{
+					id: 7,
+					name: "未知"
+				}
 			],
-			jiaoyi3s: [
-				{ id: 1, name: "私盘" }, { id: 2, name: "公盘" }
+			jiaoyi3s: [{
+				id: 1,
+				name: "私盘"
+			}, {
+				id: 2,
+				name: "公盘"
+			}],
+			yongtu2s: [{
+					id: 1,
+					name: "普通住宅"
+				},
+				{
+					id: 2,
+					name: "商住两用"
+				},
+				{
+					id: 3,
+					name: "公寓"
+				},
+				{
+					id: 4,
+					name: "酒店公寓"
+				},
+				{
+					id: 5,
+					name: "别墅"
+				}
 			],
-			yongtu2s: [
-				{ id: 1, name: "普通住宅" },
-			  { id: 2, name: "商住两用" },
-			  { id: 3, name: "公寓" },
-			  { id: 4, name: "酒店公寓" },
-			  { id: 5, name: "别墅" }
+			yongtu3s: [{
+					id: 1,
+					name: "板式楼"
+				},
+				{
+					id: 2,
+					name: "典式楼"
+				},
+				{
+					id: 3,
+					name: "板典结合"
+				}
 			],
-			yongtu3s: [
-				{ id: 1, name: "板式楼" },
-				      { id: 2, name: "典式楼" },
-				      { id: 3, name: "板典结合" }
+			yongtu4s: [{
+					id: 1,
+					name: "平层"
+				},
+				{
+					id: 2,
+					name: "跃层"
+				},
+				{
+					id: 3,
+					name: "复式"
+				},
+				{
+					id: 4,
+					name: "错间"
+				},
+				{
+					id: 5,
+					name: "开间"
+				},
+				{
+					id: 6,
+					name: "挑高"
+				}
 			],
-			yongtu4s: [
-				{ id: 1, name: "平层" },
-				      { id: 2, name: "跃层" },
-				      { id: 3, name: "复式" },
-				      { id: 4, name: "错间" },
-				      { id: 5, name: "开间" },
-				      { id: 6, name: "挑高" }
+			zhuangxius: [{
+					id: 1,
+					name: "毛坯"
+				},
+				{
+					id: 2,
+					name: "简装"
+				},
+				{
+					id: 3,
+					name: "精装"
+				},
+				{
+					id: 4,
+					name: "清水"
+				},
+				{
+					id: 5,
+					name: "中装"
+				},
+				{
+					id: 6,
+					name: "豪装"
+				},
+				{
+					id: 7,
+					name: "高装"
+				},
+				{
+					id: 8,
+					name: "新装修"
+				}
 			],
-			zhuangxius: [
-				{ id: 1, name: "毛坯" },
-				      { id: 2, name: "简装" },
-				      { id: 3, name: "精装" },
-				      {
-				        id: 4,
-				        name: "清水"
-				      },
-				      { id: 5, name: "中装" },
-				      {
-				        id: 6,
-				        name: "豪装"
-				      },
-				      {
-				        id: 7,
-				        name: "高装"
-				      },
-				      {
-				        id: 8,
-				        name: "新装修"
-				      }
+			chaoxiangs: [{
+					id: 1,
+					name: "南北"
+				},
+				{
+					id: 2,
+					name: "东西"
+				},
+				{
+					id: 3,
+					name: "正东"
+				},
+				{
+					id: 4,
+					name: "正南"
+				},
+				{
+					id: 5,
+					name: "正北"
+				},
+				{
+					id: 6,
+					name: "正西"
+				},
+				{
+					id: 7,
+					name: "东北"
+				},
+				{
+					id: 8,
+					name: "东南"
+				},
+				{
+					id: 9,
+					name: "西南"
+				},
+				{
+					id: 10,
+					name: "西北"
+				}
 			],
-			chaoxiangs: [
-			      { id: 1, name: "南北" },
-			      { id: 2, name: "东西" },
-			      { id: 3, name: "正东" },
-			      { id: 4, name: "正南" },
-			      { id: 5, name: "正北" },
-			      { id: 6, name: "正西" },
-			      { id: 7, name: "东北" },
-			      { id: 8, name: "东南" },
-			      { id: 9, name: "西南" },
-			      { id: 10, name: "西北" }
-			    ],
 			kanfangs: ["", "早晨", "中午", "晚上", "周末", "工作日", "随时", "预约"],
-			    yaohsis: ["", "借钥匙", "无钥匙"],
-				laiyuans: [
-				      { text: "公司官网", id: 1 },
-				      { text: "赶集网", id: 2 },
-				      { text: "58同城", id: 3 },
-				      { text: "搜房", id: 4 },
-				      { text: "安居客", id: 5 },
-				      { text: "其他网", id: 6 },
-				      { text: "派单/驻守", id: 7 },
-				      { text: "来访", id: 8 },
-				      { text: "朋友介绍", id: 9 },
-				      { text: "洗客/盘", id: 10 }
-				    ],
-				xianzhuangs: [
-				      { text: "租客住", id: 1 },
-				      { text: "业主住", id: 2 },
-				      { text: "空房", id: 3 }
-				    ],
-				jiajus: [
-				      { text: "床", id: 1 },
-				      { text: "宽带", id: 2 },
-				      { text: "电视", id: 3 },
-				      { text: "冰箱", id: 4 },
-				      { text: "洗衣机", id: 5 },
-				      { text: "空调", id: 6 },
-				      { text: "热水器", id: 7 },
-				      { text: "暖气", id: 8 },
-				      { text: "沙发", id: 9 },
-				      { text: "家具", id: 10 },
-				      { text: "家具", id: 11 },
-				      { text: "厨具", id: 12 },
-				      { text: "地板", id: 13 },
-				      { text: "地砖", id: 14 }
-				    ],
-					biaoqians: [
-					      "交通便利",
-					      "随时看房",
-					      "家电齐全",
-					      "紧急租售",
-					      "免中介费",
-					      "学校周边",
-					      "小户型",
-					      "端头房"
-					    ],
-					peitaos: [
-					      { text: "煤气/天然气", id: 1 },
-					      { text: "暖气", id: 2 },
-					      { text: "电梯", id: 3 },
-					      { text: "车位/车库", id: 4 },
-					      { text: "储藏室/地下室", id: 5 },
-					      { text: "花园/小院", id: 6 },
-					      { text: "露台", id: 7 },
-					      { text: "阁楼", id: 8 },
-					      { text: "宽带", id: 9 },
-					      { text: "游泳池", id: 10 },
-					      { text: "阳光房", id: 11 }
-					    ],
+			yaohsis: ["", "借钥匙", "无钥匙"],
+			laiyuans: [{
+					text: "公司官网",
+					id: 1
+				},
+				{
+					text: "赶集网",
+					id: 2
+				},
+				{
+					text: "58同城",
+					id: 3
+				},
+				{
+					text: "搜房",
+					id: 4
+				},
+				{
+					text: "安居客",
+					id: 5
+				},
+				{
+					text: "其他网",
+					id: 6
+				},
+				{
+					text: "派单/驻守",
+					id: 7
+				},
+				{
+					text: "来访",
+					id: 8
+				},
+				{
+					text: "朋友介绍",
+					id: 9
+				},
+				{
+					text: "洗客/盘",
+					id: 10
+				}
+			],
+			xianzhuangs: [{
+					text: "租客住",
+					id: 1
+				},
+				{
+					text: "业主住",
+					id: 2
+				},
+				{
+					text: "空房",
+					id: 3
+				}
+			],
+			jiajus: [{
+					text: "床",
+					id: 1
+				},
+				{
+					text: "宽带",
+					id: 2
+				},
+				{
+					text: "电视",
+					id: 3
+				},
+				{
+					text: "冰箱",
+					id: 4
+				},
+				{
+					text: "洗衣机",
+					id: 5
+				},
+				{
+					text: "空调",
+					id: 6
+				},
+				{
+					text: "热水器",
+					id: 7
+				},
+				{
+					text: "暖气",
+					id: 8
+				},
+				{
+					text: "沙发",
+					id: 9
+				},
+				{
+					text: "家具",
+					id: 10
+				},
+				{
+					text: "家具",
+					id: 11
+				},
+				{
+					text: "厨具",
+					id: 12
+				},
+				{
+					text: "地板",
+					id: 13
+				},
+				{
+					text: "地砖",
+					id: 14
+				}
+			],
+			biaoqians: [
+				"交通便利",
+				"随时看房",
+				"家电齐全",
+				"紧急租售",
+				"免中介费",
+				"学校周边",
+				"小户型",
+				"端头房"
+			],
+			peitaos: [{
+					text: "煤气/天然气",
+					id: 1
+				},
+				{
+					text: "暖气",
+					id: 2
+				},
+				{
+					text: "电梯",
+					id: 3
+				},
+				{
+					text: "车位/车库",
+					id: 4
+				},
+				{
+					text: "储藏室/地下室",
+					id: 5
+				},
+				{
+					text: "花园/小院",
+					id: 6
+				},
+				{
+					text: "露台",
+					id: 7
+				},
+				{
+					text: "阁楼",
+					id: 8
+				},
+				{
+					text: "宽带",
+					id: 9
+				},
+				{
+					text: "游泳池",
+					id: 10
+				},
+				{
+					text: "阳光房",
+					id: 11
+				}
+			],
 			formBean: {
-				jiaoyi2: '',
-				jiaoyi3: '',
-				yongtu2: '',
+				jiaoyi_status: '',
+				jiaoyi_pan: '',
+				leixing: '',
 				yongtu3: '',
-				yongtu4: '',
+				jiegou: '',
 				zhuangxiu: '',
 				chaoxiang: '',
 				kanfang: '',
@@ -683,7 +944,9 @@
 				biaoqian: [],
 				peitao: [],
 				gp_date: ''
-			}
+			},
+
+			selEmployee: {}
 		}),
 		methods: {
 			dateChange(e) {
@@ -719,16 +982,16 @@
 					tai: this.multiInx[3] + 1,
 
 					remark: this.remark,
-					
+
 					term: this.selTerm,
 					floor: this.selFloor,
 					renovation: this.selRenovation,
 					orientation: this.selOrientation,
-					
-					province_id : this.pcd.length ? this.pcd[0] : null,
-					city_id : this.pcd.length ? this.pcd[1] : null,
-					district_id : this.pcd.length ? this.pcd[2] : null,
-					area_id : this.pcd.length ? this.pcd[3] : null
+
+					province_id: this.pcd.length ? this.pcd[0] : null,
+					city_id: this.pcd.length ? this.pcd[1] : null,
+					district_id: this.pcd.length ? this.pcd[2] : null,
+					area_id: this.pcd.length ? this.pcd[3] : null
 				}
 				if (!this.validateForm(data)) {
 					return
@@ -779,29 +1042,29 @@
 					this.selRenovation = d.renovation
 					this.selTransaction = d.transaction
 					this.remark = d.remark
-					
+
 					this.multiInx = [
 						d.shi ? d.shi - 1 : 0,
 						d.ting ? d.ting - 1 : 0,
 						d.wei ? d.wei - 1 : 0,
 						d.tai ? d.tai - 1 : 0
 					]
-					
+
 					this.vRange = [
 						d.price_start ? d.price_start : 0,
 						d.price_end ? d.price_end : 0
 					]
-					
+
 					this.uRange = [
 						d.unit_price_start ? d.unit_price_start : 0,
 						d.unit_price_end ? d.unit_price_end : 0
 					]
-					
+
 					this.sRange = [
 						d.area_start ? d.area_start : 0,
 						d.area_end ? d.area_end : 0
 					]
-					
+
 					this.pcd = [
 						d.province_id, d.city_id, d.district_id, d.area_id
 					]
@@ -813,7 +1076,8 @@
 			Save,
 			MultiPicker,
 			SinglePicker,
-			Pcd
+			Pcd,
+			Ava
 		}
 	}
 </script>

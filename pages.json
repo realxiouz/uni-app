@@ -331,6 +331,12 @@
 			}
 		},
 		{
+			"path": "pages/baobei/daikan/list",
+			"style": {
+				"navigationBarTitleText": "带看单"
+			}
+		},
+		{
 			"path": "pages/baobei/reject/index",
 			"style": {
 				"navigationBarTitleText": "报备驳回"
