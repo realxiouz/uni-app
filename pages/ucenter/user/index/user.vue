@@ -15,12 +15,15 @@
                 </view>
                 <input name="companyname" v-model="editUserInfo.companyname"></input>
             </view>
-            <view class="cu-form-group">
+            <view class="cu-form-group get-phone">
                 <view class="title">
                     <text class="text-red">*</text>
                     手机
                 </view>
                 <input name="phone" v-model="editUserInfo.phone" maxlength="11"></input>
+                <!--#ifdef MP-WEIXIN-->
+                <get-phone @get-phone="getPhone" v-if="!currentLoginUserInfo.phone"/>
+                <!--#endif-->
             </view>
             <view class="cu-form-group">
                 <view class="title">
@@ -54,6 +57,7 @@
 
 <script>
     import {mapState, mapMutations} from 'vuex';
+    import getPhone from '../../get-phone/get-phone';
     export default {
         data() {
             return {
@@ -135,10 +139,16 @@
 				}).catch(err => {
 					uni.hideLoading();
 				})
+            },
+            getPhone(res) {
+                this.$set(this.editUserInfo, 'phone', res.purePhoneNumber);
             }
         },
+        components: {
+            getPhone
+        },
         computed: {
-			...mapState('ucenter', ['token', 'currentLoginUserInfo'])
+			...mapState('ucenter', ['currentLoginUserInfo'])
         }
     }
 </script>

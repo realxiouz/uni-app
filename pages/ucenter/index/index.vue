@@ -1,25 +1,34 @@
 <template>
 	<view :style="{height: height}" class="wrap">
 		<view class="user">
-            <view class="title" @tap="toAvatar" :data-avatar="userInfo.avatar">
-                <view class="avatar">
+            <view class="title" :data-avatar="userInfo.avatar">
+                <view class="avatar" @tap="toAvatar">
                     <image :src="userInfo.avatar"></image>
                 </view>
                 <view class="userInfo">
 					<view class="title-msg">
-						<text class="name">{{userInfo.name}}</text>
-						<text class="position">{{userInfo.role_name}}</text>
+						<text class="name">{{userInfo.name || ''}}</text>
+						<text class="position" v-if="userInfo.role_name">{{userInfo.role_name}}</text>
 					</view>
-					<view class="position">电话: {{userInfo.mobile}}</view>
+					<view class="position get-phone">
+                        <view>电话: </view>
+                        <!--#ifndef MP-WEIXIN-->
+                        <view >{{userInfo.mobile || ''}}</view>
+                        <!--#endif-->
+                        <!--#ifdef MP-WEIXIN-->
+                        <view v-if="userInfo.mobile">{{userInfo.mobile}}</view>
+                        <get-phone @get-phone="getPhone" v-else :my-style="true"/>
+                        <!--#endif-->
+                    </view>
 				</view>
 				<view class="next-icon">
-					<view class="cuIcon-right text-gray icon"></view>
+					<view class="cu-item arrow"></view>
 				</view>
             </view>
 			<view class="menu">
                 <view class="list" @tap="show = !show">
                     <view class="content">公司信息</view>
-                    <view :class="[show? 'cuIcon-fold': 'cuIcon-unfold',  'text-gray', 'icon', 'weight']"></view>
+                    <view :class="[show? 'down': 'pull-up',  'text-gray', 'icon', 'weight']"></view>
                 </view>
                 <view v-if="show" class="show">
                     <view>{{userInfo.company.name}}</view>
@@ -29,12 +38,12 @@
                 </view>
                 <view class="list" @tap="handleNav('/pages/ucenter/businesscard/index/businesscard?personal=1')" style="border-width: 0">
                     <view class="content">个人名片</view>
-                    <view class="cuIcon-right text-gray icon"></view>
+                    <view class="cu-item arrow icon"></view>
                 </view>
             </view>
             <view class="set-password" @tap="setPassword">
                 <view class="content">修改密码</view>
-                <view class="cuIcon-right text-gray icon"></view>
+                <view class="cu-item arrow icon"></view>
             </view>
             <view class="btn" @tap="btnSignOut">
                 <view class="content">退出登录</view>
@@ -44,7 +53,8 @@
 </template>
 
 <script>
-    import { mapState, mapMutations } from 'vuex'
+    import { mapState, mapMutations } from 'vuex';
+    import getPhone from '../get-phone/get-phone';
 	export default {
 		data() {
 			return {
@@ -53,31 +63,7 @@
                 icon: 'unfold'
 			};
 		},
-        watch: {
-		    userInfo(data) {
-		        const userInfo = data;
-                this.info = [
-                    {
-                        subInfo: userInfo.phone,
-                        supInfo: '所属公司: ' + userInfo.department.name,
-                        icon: 'phone',
-                    },
-                    {
-                        subInfo: userInfo.company.name,
-                        supInfo: '公司ID:' + userInfo.company.id,
-                        icon: 'radioboxfill',
-                    },
-                    {
-                        subInfo: '报备邀请码:' + userInfo.invitation_code,
-                        supInfo: '渠道邀请码:' +  userInfo.company_id + '-' + userInfo.invitation_code,
-                        icon: 'deliver_fill',
-                    }
-                ];
-            },
-            info(data) {
-		        this.info = data;
-            }
-        },
+        watch: {},
 		onLoad() {
 			//#ifdef MP-WEIXIN
 			/*uni.startWifi({
@@ -111,7 +97,7 @@
 			
 		},
 		methods: {
-			...mapMutations(['logout']),
+			...mapMutations(['logout', 'login']),
             ...mapMutations('ucenter', ['clearEmpty']),
 			handleNav(url) {
 				uni.navigateTo({
@@ -147,17 +133,22 @@
 				uni.navigateTo({
 					url: '/pages/ucenter/set-avatar/set-avatar'
 				})
-			}
+			},
+            getPhone(res) {
+                let purePhoneNumber = res.purePhoneNumber;
+			    let userInfo = JSON.parse(JSON.stringify(this.userInfo));
+			    userInfo.mobile = purePhoneNumber;
+			    this.login(userInfo);
+            }
 		},
 		computed: {
 			...mapState(['hasLogin', 'userInfo'])
 		},
 		mounted() {
-            const userInfo = this.userInfo;
-            this.info = [
+            /*this.info = [
                 {
                     subInfo: userInfo.phone,
-                    supInfo: '所属公司: ' + userInfo.department.name,
+                    supInfo: '所属公司: ' + (userInfo.department? userInfo.department.name: ''),
                     icon: 'phone',
                 },
                 {
@@ -171,7 +162,10 @@
                     icon: 'deliver_fill',
                 }
 
-            ];
+            ];*/
+        },
+        components: {
+            getPhone
         }
 	}
 </script>
@@ -185,7 +179,7 @@
                 align-items: center;
                 flex-wrap: nowrap;
                 padding: 30rpx 0 30rpx 40rpx;
-                border-bottom: 1px solid #ccc;
+                border-bottom: 1rpx solid #ddd;
 				background: #fff;
                 .avatar {
                     width: 115rpx;
@@ -211,6 +205,11 @@
                             border-radius: 20rpx;
                         }
                     }
+                    .get-phone {
+                        display: flex;
+                        flex-wrap: nowrap;
+                        align-items: center;
+                    }
                     .phone {
                         font-size: 18px;
                         font-weight: bold;
@@ -229,16 +228,16 @@
 				}
             }
             .menu {
-                padding: 8rpx 0 8px 30rpx;
+                /*padding: 8rpx 0 8px 30rpx;*/
                 margin-top: 20rpx;
                 background: #fff;
-                border-bottom: 1px solid #ccc;
-                border-top: 1px solid #ccc;
+                border-bottom: 1rpx solid #eee;
+                border-top: 1rpx solid #eee;
                 .list {
                     display: flex;
                     justify-content: space-between;
-                    padding: 30rpx 20rpx 30rpx 10rpx;
-                    border-bottom: 1px solid #ccc;
+                    padding: 30rpx 20rpx 38rpx 40rpx;
+                    border-bottom: 1rpx solid #eee;
                     font-size: 15px;
 					.content {
 						font-weight: bold;
@@ -251,8 +250,8 @@
                     }
                 }
                 .show {
-                    padding: 0 20rpx;
-                    border-bottom: 1px solid #ccc;
+                    padding: 10rpx 20rpx 10rpx 60rpx;
+                    border-bottom: 1rpx solid #eee;
                     background: #fff;
                     font-size: 15px;
                     view {
@@ -265,8 +264,8 @@
                 justify-content: space-between;
                 padding: 30rpx 20rpx 30rpx 40rpx;
                 background: #fff;
-                border-top: 1px solid #ccc;
-                border-bottom: 1px solid #ccc;
+                border-top: 1rpx solid #eee;
+                border-bottom: 1rpx solid #eee;
                 margin-top: 20rpx;
                 font-size: 15px;
 				.content {
@@ -279,13 +278,48 @@
             .btn {
                 padding: 30rpx 20rpx 30rpx 10rpx;
                 background: #fff;
-                border-bottom: 1px solid #ccc;
-                border-top: 1px solid #ccc;
+                border-bottom: 1rpx solid #eee;
+                border-top: 1rpx solid #eee;
                 margin-top: 20rpx;
                 color: red;
                 font-size: 18px;
                 text-align: center;
             }
         }
+    },
+    .arrow:after {
+        display: block;
+        margin: auto;
+        padding-right: 6rpx;
+        color: #8799a3;
+        content: "\E6A3";
+        text-align: center;
+        font-size: 17px;
+        font-family: cuIcon;
+        line-height: 1.5;
+    }
+    .down:after {
+        content: '\e661';
+        display: block;
+        margin: auto;
+        padding-right: 6rpx;
+        color: #8799a3;
+        text-align: center;
+        font-size: 17px;
+        font-family: cuIcon;
+        font-weight: bold;
+        line-height: 1.5;
+    }
+    .pull-up:after {
+        display: block;
+        margin: auto;
+        padding-right: 6rpx;
+        color: #8799a3;
+        content: "\e6de";
+        text-align: center;
+        font-size: 17px;
+        font-family: cuIcon;
+        font-weight: bold;
+        line-height: 1.5;
     }
 </style>

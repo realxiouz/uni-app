@@ -109,7 +109,9 @@
                 if (e.detail.errMsg === 'getUserInfo:fail auth deny') {
                     uni.showToast({
                         title: '您拒绝了微信登录...',
-                        icon: 'none'
+                        icon: 'none',
+                        duration: 2000,
+                        mask: true
                     })
                 } else {
                     this.wxLogin();

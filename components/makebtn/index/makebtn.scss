@@ -2,7 +2,6 @@
 //制作名片按钮
 .makecard {
     position: fixed;
-    //background: url('/static/images/img/card.png');
     @include boderradius(50%);
     width: 70px;
     height: 70px;
@@ -12,14 +11,14 @@
     color: $white;
     bottom: 15%;
 
-    > image {
+    > view {
         position: absolute;
         top: 0;
         left: 0;
         width: 100%;
         height: 100%;
         @include boderradius(50%);
-        background: #ffc800;
+        background: #0081FF;
     }
 
     > text {

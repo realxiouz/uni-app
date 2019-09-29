@@ -1,7 +1,7 @@
 <template>
 	<view>
 		<view class="makecard" @tap="topMakeCard">
-			<image :src="onEvent.imgSrc" mode="top center" class="bg-img"></image>
+			<view></view>
 			<text>
 				{{onEvent.title}}
 			</text>

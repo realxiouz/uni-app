@@ -141,7 +141,6 @@
                     value: false
                 })
             });
-			this.$set(this.onMyEvent, 'imgSrc', this.imgSrcGetters('card.png'));
         }
     }
 </script>

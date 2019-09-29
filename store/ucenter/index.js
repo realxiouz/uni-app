@@ -32,11 +32,13 @@ export default {
             }
 		},
 		changeHouseId(state, data) {
+		    let houseId = state.houseId;
 			if (data.isAdd) {
-				state.houseId.push(data.id);
+                houseId.unshift(data.id);
 			} else {
-				state.houseId.splice(data.index, 1);
+                houseId.splice(data.index, 1);
 			}
+			state.houseId = [...new Set(houseId)];
 		},
         changeImg(state, obj) {
             Vue.set(state.downLoadImg, obj.key, obj.url);

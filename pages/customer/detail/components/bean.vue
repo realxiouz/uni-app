@@ -18,7 +18,8 @@
 					<button
 						class="cu-btn bg-cyan small radius shadow margin-right-xs" @click.stop="handleCopy">复制
 					</button>
-					<button
+                    <button v-if="!/\*/.test(bean.phone) && bean.phone" class="cu-btn bg-blue small radius shadow margin-right-xs" @click.stop="callPhone" :data-number="bean.phone">呼叫</button>
+                    <button
 						v-if="bean.phone&&bean.phone.indexOf('*') != -1 && !usingMiddlePhone"
 						class="cu-btn bg-blue radius shadow small"
 						@click="getPhone"
@@ -204,7 +205,13 @@
 						});
 					}
 				});
-			}
+			},
+            callPhone(e) {
+			    let number = e.currentTarget.dataset.number;
+                uni.makePhoneCall({
+                    phoneNumber: number
+                })
+            }
 		}
 	}
 </script>

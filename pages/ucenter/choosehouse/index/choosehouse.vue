@@ -145,8 +145,7 @@
 					}
 				})
             },
-			pushToTem(e, i) {
-				// const self = this;
+			pushToTem(e) {
 				const target = e.currentTarget.dataset;
 				const index = target.item;
                 const isTrue = this.houseList[index]['isTrue'];

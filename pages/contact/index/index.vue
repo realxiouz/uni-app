@@ -1,7 +1,7 @@
 <template>
   <view>
     <view class="cu-list menu">
-		<navigator class="cu-item arrow" url="/pages/contact/list/index?type=1">
+		<navigator class="cu-item arrow" url="/pages/contact/list/index?type=1" v-if="userInfo.company_id !== null && userInfo.company_id !== ''">
 			<view class="content padding-tb-sm">
 				<view class="text-black text-bold">{{userInfo.company.name}}</view>
 				<view class="text-gray text-sm">本公司联系人</view>
@@ -60,6 +60,10 @@
 		},
 		computed: {
 			...mapState(['userInfo'])
-		}
+		},
+        mounted() {
+            console.log(this.userInfo.company_id);
+            console.log(this.userInfo.company_id !== null || this.userInfo.company_id !== '');
+        }
 	}
 </script>
