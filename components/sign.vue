@@ -33,10 +33,19 @@
 	import moment from 'moment'
 	import {mapState} from 'vuex'
 	
+	let width = 375
+	uni.getSystemInfo({
+		success: e => {
+			width = e.screenWidth
+		}
+	});
+	
 	export default {
 		mounted() {
 			this.touchs = []
 			this.content = uni.createCanvasContext('canvas-sign', this)
+			this.content.fillStyle = "#fff";   
+			this.content.fillRect(0, 0, width, uni.upx2px(400))
 			this.content.setLineWidth(5)
 			this.content.setLineCap('round')
 			this.content.setLineJoin('round')
@@ -56,7 +65,12 @@
 		methods: {
 			handleCancel() {
 				this.touchs = []
-				this.content.clearRect(0, 0, 375, uni.upx2px(400))
+				this.content.clearRect(0, 0, width, uni.upx2px(400))
+				this.content.fillStyle = "#fff"
+				this.content.fillRect(0, 0, width, uni.upx2px(400))
+				this.content.setLineWidth(5)
+				this.content.setLineCap('round')
+				this.content.setLineJoin('round')
 				this.content.draw(true)
 				this.signed = false
 			},
@@ -88,12 +102,10 @@
 								if (res.statusCode === 200) {
 									let data = JSON.parse(res.data)
 									this.img = `${QINIU_PUBLIC}${data.key}`
+									this.handleCancel()
 									this.show = false
-									this.content.setLineWidth(5)
-									this.content.setLineCap('round')
-									this.content.setLineJoin('round')
-									this.$emit('signed', this.img)
 									this.signed = false
+									this.$emit('signed', this.img)
 								}
 							},
 							fail: e => {

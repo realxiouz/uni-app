@@ -25,7 +25,7 @@
 				<view class="title">带看情况</view>
 				<input placeholder="填写带看情况" v-model="formBean.remark"></input>
 			</view>
-			<upload-files @imgs="handleImgs1" :max-count="1" title="现场照片"/>
+			<upload-files @imgs="handleImgs1" :max-count="3" title="现场照片"/>
 			<upload-files @imgs="handleImgs2" :max-count="1" title="带看确认单"/>
 			<view class="cu-form-group">
 				<view class="title">签名</view>
