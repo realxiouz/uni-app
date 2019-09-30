@@ -27,21 +27,14 @@
 				this.reason = e.detail.value
 			},
 			handleSave() {
-				if (!this.reason) {
-					uni.showToast({
-						title: '填写驳回原因',
-						icon: 'none'
-					})
-				} else {
-					this.formLoading = true
-					this.$http(`baobei/reject/${this.bId}`, {
-						reject_reason: this.reason
-					} , 'put').then(r => {
-						uni.navigateBack()
-					}).finally(_ => {
-						this.formLoading = false
-					})
-				}
+				this.formLoading = true
+				this.$http(`baobei/reject/${this.bId}`, {
+					reject_reason: this.reason
+				} , 'put').then(r => {
+					uni.navigateBack()
+				}).finally(_ => {
+					this.formLoading = false
+				})
 			},
 			
 		},
