@@ -118,9 +118,10 @@
 				if (this.type === '分销' && this.currentRange[this.chargeIndex] === undefined) {
 				    uni.showToast({
                         title: `${this.currentTitle}未选择`,
-                        duration: 3000,
+                        duration: 2000,
                         icon: 'none'
                     });
+                    this.formLoading = false;
 				    return false;
                 }
 				this.$http('daikan', this.formBean, 'post').then(r => {
@@ -152,7 +153,14 @@
 				this.formBean.img = e
 			},
             timeChange(e) {
-                this.time = e.detail.value;
+                let chargeTime = e.detail.value;
+			    // #ifdef APP-PLUS
+                /*let now = moment().format('HH:MM');
+                chargeTime = chargeTime.replace('-', ':');
+                console.log(now, chargeTime);
+                console.log(moment(chargeTime).from(now), '时间比较');*/
+                // #endif
+                this.time = chargeTime;
             },
             dateChange(e) {
                 this.date = e.detail.value;
