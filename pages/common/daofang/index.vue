@@ -102,15 +102,17 @@
 			},
 			handleSave() {
 				this.formBean.customer_id = this.customerId;
-				this.formBean.kan_time = this.date + ' ' + this.time;
+				this.formBean.kan_time = this.date + (this.time? ' ': '') + this.time;
 				this.formLoading = true;
 				if (this.type === '分销') {
                     if (this.typeIndex === 1) {
                         this.formBean.type = '报备';
                         this.formBean.baobei_id = this.baoBeiHistory[this.chargeIndex].id;
+                        Reflect.deleteProperty(this.formBean, 'baobei_project_id')
                     } else if (this.typeIndex === 2) {
                         this.formBean.type = '楼盘';
                         this.formBean.baobei_project_id = this.ProjectRange[this.chargeIndex].id;
+                        Reflect.deleteProperty(this.formBean, 'baobei_id')
                     }
                 }
 				if (this.type === '分销' && this.currentRange[this.chargeIndex] === undefined) {
@@ -156,7 +158,6 @@
                 this.date = e.detail.value;
             },
             relevanceChange(e) {
-                console.log(Number(e.detail.value), 'xiugai');
                 this.typeIndex = Number(e.detail.value);
             },
             chargeChange(e) {
@@ -171,7 +172,6 @@
 		},
         watch: {
 		    typeIndex(index) {
-                console.log(index, 'index');
                 if (index === 1) {
                     this.currentRange = this.baoBeiHistory;
                     this.currentTitle = '关联报备';
@@ -183,9 +183,6 @@
                 }
                 this.chargeIndex = -1;
                 this.currentContent = '请选择(必选)';
-            },
-            currentContent(data) {
-                console.log(data, 'data');
             }
         },
 		components: {
