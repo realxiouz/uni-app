@@ -43,7 +43,7 @@
 							v-if="!canDaikanQueren(bean)&&showDaikanList(bean.status)"
 						 @click="navDaikan">带看记录</button>
 						<template v-if="show">
-							<picker class="cu-btn bg-cyan small shadow margin-right-xs" range-key="name" :range="employees" @change="handlePass"
+							<picker class="cu-btn bg-cyan radius small shadow margin-right-xs" range-key="name" :range="employees" @change="handlePass"
 							 v-if="canApprove(bean)">
 								<view>报备通过</view>
 							</picker>
@@ -52,7 +52,7 @@
 							 @click="navReject(bean.id)">驳回</button>
 						</template>
 					</view>
-					<view v-else-if="type==='up'">
+					<view v-else-if="type==='up'" class="flex">
 						<button class="cu-btn bg-cyan small shadow margin-right-xs" v-if="bean.status ==1 ||bean.status ==3 ||bean.status ==4 ||bean.status ==6 ||bean.status ==7" @click="navDaikan">带看单</button>
 						<modal
 							v-if="canApprove(bean)"
