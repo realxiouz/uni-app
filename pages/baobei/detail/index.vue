@@ -14,7 +14,7 @@
 					</view>
 					<view class="margin-bottom-sm">
 						<text class="text-gray baobei-label">客户姓名:</text>
-						<text>{{bean.customer_name}}({{bean.customer_sex}})</text>
+						<text>{{bean.customer_name}}({{bean.customer_sex == 1 ? '男' : '女'}})</text>
 					</view>
 					<view class="margin-bottom-sm">
 						<text class="text-gray baobei-label">客户电话:</text>
@@ -40,7 +40,9 @@
 					</view>
 
 					<view v-if="type==='in'">
-						<button v-if="canDaikanQueren(bean)" class="cu-btn bg-cyan small shadow margin-right-xs" @click="handleConfirm">带看确认</button>
+						<button
+						v-if="canDaikanQueren(bean)"
+						class="cu-btn bg-cyan small shadow margin-right-xs" @click="handleConfirm">带看确认</button>
 						<button class="cu-btn bg-cyan small shadow margin-right-xs"
 							v-if="!canDaikanQueren(bean)&&showDaikanList(bean.status)"
 						 @click="navDaikan">带看记录</button>
@@ -196,7 +198,7 @@
 			},
 			handleConfirm() {
 				uni.navigateTo({
-					url: `/pages/baobei/daikan/index?bId=${this.id}`
+					url: `/pages/baobei/daikan/index?bId=${this.id}&type=${this.type}`
 				})
 			},
 			navReject(id) {

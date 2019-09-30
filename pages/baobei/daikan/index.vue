@@ -25,9 +25,9 @@
 				<view class="title">带看情况</view>
 				<input placeholder="填写带看情况" v-model="formBean.remark"></input>
 			</view>
-			<upload-files @imgs="handleImgs1" :max-count="3" title="现场照片"/>
-			<upload-files @imgs="handleImgs2" :max-count="1" title="带看确认单"/>
-			<view class="cu-form-group">
+			<upload-files @imgs="handleImgs1" :max-count="3" title="现场照片" :source="['camera', 'album ']"/>
+			<upload-files @imgs="handleImgs2" :max-count="1" title="带看确认单" :source="['camera', 'album ']"/>
+			<view class="cu-form-group" v-if="type=='in'">
 				<view class="title">签名</view>
 				<sign @signed="formBean.sign_img = $event"/>
 			</view>
@@ -46,6 +46,7 @@
 	export default {
 		onLoad(opt) {
 			this.formBean.baobei_id = opt.bId
+			this.type = opt.type
 		},
 		data: _ => ({
 			formBean: {
@@ -55,6 +56,7 @@
 			formLoading: false,
 			date: '',
 			time: '',
+			type: ''
 		}),
 		methods: {
 			timeChange(e) {

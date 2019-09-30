@@ -9,8 +9,18 @@
 				<view class="flex margin-top-xs">
 					<view class="flex-sub">
 						<text class="text-gray">看房时间:</text>
-						<text>{{beanUp.kan_time|moment('MM-DD HH:mm')}}</text>
+						<text v-if="beanUp">{{beanUp.kan_time}}</text>
 					</view>
+					<!-- <view class="flex-sub">
+						<text class="text-gray">看房人数:</text>
+						<text>{{beanUp.peoples?beanUp.peoples:''}}</text>
+					</view> -->
+				</view>
+				<view class="flex margin-top-xs">
+					<!-- <view class="flex-sub">
+						<text class="text-gray">看房时间:</text>
+						<text v-if="beanUp">{{beanUp.kan_time}}</text>
+					</view> -->
 					<view class="flex-sub">
 						<text class="text-gray">看房人数:</text>
 						<text>{{beanUp.peoples?beanUp.peoples:''}}</text>
@@ -55,7 +65,7 @@
 			</template>
 
 			<view v-else class="flex padding justify-center">
-				<button class="cu-btn radius bg-blue" @click="toDaikan" v-if="canTianXieDaiKan&&!isZhongJie">写带看</button>
+				<button class="cu-btn radius bg-blue" @click="toDaikan('in')" v-if="canTianXieDaiKan&&!isZhongJie">写带看</button>
 				<text v-else>暂无记录</text>
 			</view>
 
@@ -69,8 +79,18 @@
 				<view class="flex margin-top-xs">
 					<view class="flex-sub">
 						<text class="text-gray">看房时间:</text>
-						<text>{{beanDown.kan_time|moment('MM-DD HH:mm')}}</text>
+						<text>{{beanDown.kan_time}}</text>
 					</view>
+					<!-- <view class="flex-sub">
+						<text class="text-gray">看房人数:</text>
+						<text>{{beanDown.peoples?beanDown.peoples:''}}</text>
+					</view> -->
+				</view>
+				<view class="flex margin-top-xs">
+					<!-- <view class="flex-sub">
+						<text class="text-gray">看房时间:</text>
+						<text>{{beanDown.kan_time}}</text>
+					</view> -->
 					<view class="flex-sub">
 						<text class="text-gray">看房人数:</text>
 						<text>{{beanDown.peoples?beanDown.peoples:''}}</text>
@@ -114,7 +134,7 @@
 				</view>
 			</template>
 			<view v-else class="flex padding justify-center">
-				<button class="cu-btn radius bg-blue" @click="toDaikan" v-if="canTianXieDaiKan&&isZhongJie">写带看</button>
+				<button class="cu-btn radius bg-blue" @click="toDaikan('up')" v-if="canTianXieDaiKan&&isZhongJie">写带看</button>
 				<text v-else>暂无记录</text>
 			</view>
 		</view>
@@ -191,9 +211,9 @@
 					})
 				})
 			},
-			toDaikan() {
+			toDaikan(type) {
 				uni.navigateTo({
-					url: `/pages/baobei/daikan/index?bId=${this.bId}`
+					url: `/pages/baobei/daikan/index?bId=${this.bId}&type=${type}`
 				})
 			},
 			viewImage(urls, current) {
