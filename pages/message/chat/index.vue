@@ -25,13 +25,16 @@
 	
 	export default {
 		onLoad(opt) {
-			this.bothId = opt.id
-			this.bothType = opt.type
+			this.bothId = opt.id;
+			this.bothType = opt.type;
 			this.setCurrentBothId(opt.id);
 			if (this.bothType == "App\\User") {
-				this.bottom = uni.upx2px(100+25) + 'px'
+				this.bottom = uni.upx2px(100+25) + 'px';
 			}
 			this.getData();
+            uni.setNavigationBarTitle({
+                title: opt['send-name']
+            })
 		},
 		data() {
 			return {
@@ -83,7 +86,7 @@
 				let data = {
 					both_id: this.bothId,
 					both_type: this.bothType
-				}
+				};
 				if (message_id_start) {
 					data.message_id_start = message_id_start
 				}

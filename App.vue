@@ -22,7 +22,7 @@
 					index: 1
 				});
 				uni.navigateTo({
-					url: `/pages/message/chat/index?id=${data.both_id}&type=${data.both_type}`
+					url: `/pages/message/chat/index?id=${data.both_id}&type=${data.both_type}&send-name=${data.name}`
 				})
 				self.setSpliceMessageList(msg.payload);
 			}, false);
@@ -123,7 +123,8 @@
                         let param = {
                             id: data.both.id,
                             both_id: data.both.id,
-                            both_type: data.window.both_type
+                            both_type: data.window.both_type,
+                            name: data.send.name
                         };
                         this.setPushMessageList(param);
                     } else {

@@ -8,17 +8,17 @@
 		<view class="padding bg-white">
 			<view class="flex justify-between">
 				<view>
-					<text class="text-bold text-black text-lg margin-right-xs">{{bean.name}}</text>
-					<text class="cu-tag bg-cyan radius sm">{{bean.status_name}}</text>
+					<text class="text-bold text-black text-lg margin-right-xs">{{bean.name || ''}}</text>
+					<text class="cu-tag bg-cyan radius sm">{{bean.status_name || ''}}</text>
 				</view>
 				<view class="text-red">
-					<text class="text-bold text-xl margin-right-xs">{{bean.avg_price}}</text>
+					<text class="text-bold text-xl margin-right-xs">{{bean.avg_price || ''}}</text>
 					<text>元/㎡</text>
 				</view>
 			</view>
 			<view class="text-gray margin-top-xs">
 				<text class="cuIcon cuIcon-locationfill margin-right-xs"></text>
-				<text>{{bean.address}}</text>
+				<text>{{bean.address || ''}}</text>
 			</view>
 			<view class="flex margin-top-xs">
 				<view class="cu-tag line-blue small margin-right-xs radius" v-for="(i, inx) in bean.c" :key="inx">{{i}}</view>
@@ -26,11 +26,11 @@
 			<view class="flex margin-top-xs">
 				<view class="flex-sub">
 					<text class="text-gray">开盘时间:</text>
-					<text>{{bean.kaipan_date}}</text>
+					<text>{{bean.kaipan_date || ''}}</text>
 				</view>
 				<view class="flex-sub">
 					<text class="text-gray">交房时间:</text>
-					<text>{{bean.jiaofang_date}}</text>
+					<text>{{bean.jiaofang_date || ''}}</text>
 				</view>
 			</view>
 		</view>

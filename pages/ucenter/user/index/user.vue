@@ -75,7 +75,12 @@
         },
         onLoad() {
             let centerLet = JSON.stringify(this.currentLoginUserInfo);
-            this.editUserInfo = JSON.parse(centerLet);
+            let obj = JSON.parse(centerLet);
+            for (let key of Object.keys(obj)) {
+                let val = obj[key];
+                if (val === null) obj[key] = '';
+            }
+            this.editUserInfo = obj;
         },
         methods: {
             ...mapMutations('ucenter', ['changeCurrentLoginUserInfo']),

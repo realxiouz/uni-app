@@ -1,6 +1,6 @@
 <template>
 	<view class="cu-list menu">
-		<navigator class="cu-item" :url="`/pages/message/chat/index?id=${id}&type=App\\User`">
+		<navigator class="cu-item" :url="`/pages/message/chat/index?id=${id}&type=App\\User&send-name=${bean.name}`">
 			<view class="content padding-tb-sm flex align-center">
 				<view class="flex flex-direction flex-sub" style="align-items: flex-start;">
 					<view class="text-gray text-sm">姓名</view>
@@ -30,7 +30,7 @@
 			<view class="content padding-tb-sm flex align-center">
 				<view class="flex flex-direction flex-sub" style="align-items: flex-start;">
 					<view class="text-gray text-sm">角色</view>
-					<view class="text-black text-bold">{{bean.role_name}}</view>
+					<view class="text-black text-bold">{{bean.role_name || ''}}</view>
 				</view>
 			</view>
 		</view>
