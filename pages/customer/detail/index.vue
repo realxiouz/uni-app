@@ -63,10 +63,13 @@
 			this.type = opt.type
 			this.rData = {
 				customer_id: this.id
-			}
+			};
 			this.$nextTick(_ => {
 				this.$refs.list0.init()
 			})
+            if (this.type === '分销') {
+                this.tabs.splice(3, 1, {text: '带看记录'})
+            }
 		},
 		onShow() {
 			if(this.$refs[`list${this.selTab}`] && this.selTab != 0) {
@@ -151,7 +154,7 @@
 						break
 					case 3:
 						uni.navigateTo({
-							url: `/pages/common/daofang/index?customerId=${this.id}`
+							url: `/pages/common/daofang/index?customerId=${this.id}&type=${this.type}`
 						})
 						break
 					case 4:
