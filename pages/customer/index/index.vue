@@ -28,13 +28,13 @@
 			}
 			this.$nextTick(_ => {
 				this.$refs.list.getData()
-			})
+			});
 			
-			this.type = opt.type
+			this.type = opt.type;
 			
 			this.data = {
 				type: this.type,
-			}
+			};
 			if(opt.is_share) {
 				this.data.is_share = opt.is_share
 			}
@@ -42,14 +42,14 @@
 				this.data.private = opt.private
 			}
 			
-			let title = ''
+			let title = '';
 			if (!opt.is_share && !opt.private) {
-				title = '客户列表'
+				title = '客户列表';
 				this.needSetDefault = true
 			} else if (opt.is_share) {
-				title = '共享客户'
+				title = '共享客户';
 			} else if (opt.private) {
-				title = '客户公池'
+				title = '客户公池';
 			}
 			uni.setNavigationBarTitle({
 				title

@@ -39,7 +39,7 @@
 						phone: this.bean.phone,
 						id: this.bean.id
 					}
-				])
+				]);
 				uni.navigateTo({
 					url: `/pages/customer/detail/index?id=${this.bean.id}&type=${this.bean.type}`
 				})

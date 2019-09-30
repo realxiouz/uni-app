@@ -30,11 +30,13 @@
 					</view>
 					<view class="margin-bottom-sm">
 						<text class="text-gray baobei-label">报备时间:</text>
-						<text>{{bean.created_at|moment('from')}}</text>
+                        <!--|moment('from')}-->
+						<text>{{bean.created_at}}</text>
 					</view>
 					<view class="margin-bottom-sm">
 						<text class="text-gray baobei-label">带看时间:</text>
-						<text>{{bean.ordered_time|moment('from')}}</text>
+                        <!--|moment('from')-->
+						<text>{{bean.ordered_time}}</text>
 					</view>
 
 					<view v-if="type==='in'">
@@ -67,7 +69,8 @@
 				</view>
 				<view>
 					<text class="text-gray baobei-label">时间:</text>
-					<text>{{i.created_at|moment('from')}}</text>
+                    <!--|moment('from')-->
+					<text>{{i.created_at}}</text>
 				</view>
 			</view>
 		</data-list>
