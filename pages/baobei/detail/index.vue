@@ -41,19 +41,42 @@
 
 					<view v-if="type==='in'">
 						<button v-if="canDaikanQueren(bean)" class="cu-btn bg-cyan small shadow margin-right-xs" @click="handleConfirm">带看确认</button>
-						<button class="cu-btn bg-cyan small shadow margin-right-xs" v-if="!canDaikanQueren(bean)&&showDaikanList(bean.status)"
+						<button class="cu-btn bg-cyan small shadow margin-right-xs"
+							v-if="!canDaikanQueren(bean)&&showDaikanList(bean.status)"
 						 @click="navDaikan">带看记录</button>
-						<template v-if="isShowDoneNot(bean)">
+						<template v-if="show">
 							<picker class="cu-btn bg-cyan small shadow margin-right-xs" range-key="name" :range="employees" @change="handlePass"
 							 v-if="canApprove(bean)">
 								<view>报备通过</view>
 							</picker>
-							<button class="cu-btn bg-red small shadow margin-right-xs" v-if="bean.status==2||bean.status==3||bean.status==5||bean.status==9"
+							<button class="cu-btn bg-red small shadow margin-right-xs"
+							v-if="bean.status!=2&&bean.status!=3&&bean.status!=5&&bean.status!=9"
 							 @click="navReject(bean.id)">驳回</button>
 						</template>
 					</view>
 					<view v-else-if="type==='up'">
 						<button class="cu-btn bg-cyan small shadow margin-right-xs" v-if="bean.status ==1 ||bean.status ==3 ||bean.status ==4 ||bean.status ==6 ||bean.status ==7" @click="navDaikan">带看单</button>
+						<modal
+							v-if="canApprove(bean)"
+							ref="modal"
+							:comfirmCallback="passForUp"
+						>
+							<button class="cu-btn bg-cyan small shadow margin-right-xs">报备通过</button>
+							<view slot="content">
+								<view class="cu-form-group">
+									<view class="title">姓名</view>
+									<input placeholder="输入接待人姓名" v-model="form.recept_name"></input>
+								</view>
+								<view class="cu-form-group">
+									<view class="title">电话</view>
+									<input placeholder="输入接待人电话" v-model="form.recept_phone"></input>
+								</view>
+								<view class="cu-form-group">
+									<view class="title">不指定接待人</view>
+									<switch :class="form.noHandle?'checked':''" :checked="form.noHandle" @change="handleRChange"></switch>
+								</view>
+							</view>
+						</modal>
 					</view>
 				</view>
 			</view>
@@ -79,6 +102,8 @@
 
 <script>
 	import DataList from '@/components/data-list'
+	import Modal from '@/components/modal'
+	
 	import {
 		mapState
 	} from 'vuex'
@@ -110,7 +135,15 @@
 				type: '',
 				employees: [],
 
-				isBaoBeiShenHeRen: false
+				isBaoBeiShenHeRen: false,
+				
+				form: {
+					recept_name: '',
+					recept_phone: '',
+					noHandle: false
+				},
+				
+				show: false
 			}
 		},
 		methods: {
@@ -120,11 +153,17 @@
 			getDetail() {
 				this.$http(`baobei/${this.id}`).then(r => {
 					this.bean = r.data
+					this.show = this.isShowDoneNot(this.bean)
 					this.calcStep(this.bean.status)
+					
+					this.form.recept_name = r.data.agent_project.recept_name;
+				    this.form.recept_phone = r.data.agent_project.recept_phone;
 
 					return this.$http(`employee/receptionEmployees/${r.data.developer_project_id}`)
+					
+					
 				}).then(r => {
-					r && (this.employees = r)
+					r && (this.employees = [{name: '不选择', id: ''},...r])
 				})
 			},
 			calcStep(status) {
@@ -168,7 +207,7 @@
 			handlePass(e) {
 				let inx = e.detail.value
 				let employee_id = this.employees[inx].id
-				employee_id && this.$http(`baobei/approve/${this.id}`, {
+				this.$http(`baobei/approve/${this.id}`, {
 					employee_id
 				}, 'put').then(r => {
 					uni.showToast({
@@ -234,9 +273,9 @@
 				let userId = this.userInfo.id;
 
 				if (item.agent_id === this.userInfo.company_id) {
-					obj = item.agent_project || {};
+					obj = item.agent_project
 				} else {
-					obj = item.developer_project || {};
+					obj = item.developer_project
 				}
 				if (
 					obj.charger_id === userId ||
@@ -245,7 +284,6 @@
 				) {
 					find++;
 				}
-
 				if (obj.audit_user_id != null) {
 					for (let i = 0; i < obj.audit_user_id.length; i++) {
 						if (userId === parseInt(obj.audit_user_id[i])) {
@@ -255,7 +293,6 @@
 						}
 					}
 				}
-
 				if (find > 0) {
 					return true;
 				} else {
@@ -268,13 +305,34 @@
 				} else {
 					return false;
 				}
+			},
+			passForUp(){
+				this.$http(`baobei/approve/${this.id}`,this.form, 'put').then(r => {
+					this.$refs.modal.show = false
+					uni.showToast({
+						title: r.message,
+						icon: 'none'
+					})
+					this.getDetail()
+					
+				})
+			},
+			handleRChange(e) {
+				if (e.detail.value) {
+					this.form.recept_name = ''
+					this.form.recept_phone = ''
+				} else {
+					this.form.recept_name = this.bean.agent_project.recept_name
+					this.form.recept_phone = this.bean.agent_project.recept_phone
+				}
 			}
 		},
 		components: {
-			DataList
+			DataList,
+			Modal
 		},
 		computed: {
-			...mapState(['isH5', 'userInfo'])
+			...mapState(['isH5', 'userInfo']),
 		}
 	}
 </script>
