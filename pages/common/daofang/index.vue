@@ -15,7 +15,7 @@
             </view>
             <view class="cu-form-group">
                 <view class="title">到访时间</view>
-                <picker mode="time" :value="time" :end="endTime" @change="timeChange">
+                <picker mode="time" :value="time" @change="timeChange">
                     <view class="picker">
                         {{time?time:'选择时间'}}
                     </view>
@@ -75,14 +75,14 @@
 		},
 		data: _ => ({
 			formBean: {
-				peoples: '',
+				peoples: '1',
 				remark: ''
 			},
             date: '',
             time: '',
             endDate: moment().format('YYYY-MM-DD'),
             endTime: moment().format('HH:MM'),
-            startTime: moment().add(1, 'm').format('hh:mm'),
+            startTime: moment().format('HH:MM'),
 			customerId: '',
 			formLoading: false,
             type: '',
@@ -115,7 +115,7 @@
                         Reflect.deleteProperty(this.formBean, 'baobei_id')
                     }
                 }
-				if (this.type === '分销' && this.currentRange[this.chargeIndex] === undefined) {
+				if (this.type === '分销' && (this.typeIndex !== 0 && this.currentRange[this.chargeIndex] === undefined)) {
 				    uni.showToast({
                         title: `${this.currentTitle}未选择`,
                         duration: 2000,
@@ -154,13 +154,25 @@
 			},
             timeChange(e) {
                 let chargeTime = e.detail.value;
-			    // #ifdef APP-PLUS
-                /*let now = moment().format('HH:MM');
-                chargeTime = chargeTime.replace('-', ':');
-                console.log(now, chargeTime);
-                console.log(moment(chargeTime).from(now), '时间比较');*/
-                // #endif
-                this.time = chargeTime;
+                if (!this.date) {
+                    uni.showToast({
+                        title: '请先选择日期...',
+                        icon: 'none',
+                        duration: 2000
+                    });
+                    return false;
+                }
+                let chargeTimestamp = moment(this.date + ' ' + chargeTime);
+                if (moment() >= chargeTimestamp) {
+                    this.time = chargeTime;
+                } else {
+                    this.time = '';
+                    uni.showToast({
+                        title: '时间只可以选择过去的时间...',
+                        icon: 'none',
+                        duration: 2000
+                    });
+                }
             },
             dateChange(e) {
                 this.date = e.detail.value;

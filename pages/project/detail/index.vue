@@ -21,7 +21,7 @@
 				<text>{{bean.address || ''}}</text>
 			</view>
 			<view class="flex margin-top-xs">
-				<view class="cu-tag line-blue small margin-right-xs radius" v-for="(i, inx) in bean.c" :key="inx">{{i}}</view>
+				<view class="cu-tag line-blue small margin-right-xs radius" v-for="(i, inx) in bean.c" :key="inx" v-if="i">{{i}}</view>
 			</view>
 			<view class="flex margin-top-xs">
 				<view class="flex-sub">
@@ -48,7 +48,7 @@
 				<view class="cu-tag radius" :class="i.is_dianzi_zhence?'line-yellow':'line-gray'">垫资结佣</view>
 			</view>
 			<view class="flex justify-between">
-				<text class="text-cyan">{{i.baobei_remark}}</text>
+				<text class="text-cyan" style="flex: 1">{{i.baobei_remark || ''}}</text>
 				<button class="cu-btn radius bg-blue shadow" v-if="cooperation === 'cooperation'" @click.stop="handleBaobei(i, bean)">报备</button>
 				<button class="cu-btn radius bg-blue shadow" v-else-if="i.cooperationed" :disabled="true">已签约</button>
 				<button class="cu-btn radius bg-green shadow" v-else-if="cooperation === 'public' && i.company.id !== userInfo.company.id" @click.stop="handleCooperation(i.company_id)">合作</button>

@@ -6,37 +6,37 @@
 					<text class="num">{{inx+1}}</text> {{i}}
 				</view>
 			</view>
-			<view class="cu-card">
+			<view class="cu-card" v-if="isLoading">
 				<view class="cu-item shadow padding-sm">
 					<view class="margin-bottom-sm">
 						<text class="text-gray baobei-label">楼盘名称:</text>
-						<text v-if="bean.baobei_project">{{bean.baobei_project.project.name}}</text>
+						<text v-if="bean.baobei_project">{{bean.baobei_project.project.name  || ''}}</text>
 					</view>
 					<view class="margin-bottom-sm">
 						<text class="text-gray baobei-label">客户姓名:</text>
-						<text>{{bean.customer_name}}({{bean.customer_sex == 1 ? '男' : '女'}})</text>
+						<text>{{bean.customer_name  || ''}}({{bean.customer_sex == 1 ? '男' : '女'}})</text>
 					</view>
 					<view class="margin-bottom-sm">
 						<text class="text-gray baobei-label">客户电话:</text>
-						<text>{{bean.customer_phone_display}}</text>
+						<text>{{bean.customer_phone_display || ''}}</text>
 					</view>
 					<view class="margin-bottom-sm">
 						<text class="text-gray baobei-label">带看姓名:</text>
-						<text>{{bean.daikan_name}}</text>
+						<text>{{bean.daikan_name || ''}}</text>
 					</view>
 					<view class="margin-bottom-sm">
 						<text class="text-gray baobei-label">带看电话:</text>
-						<text>{{bean.daikan_phone}}</text>
+						<text>{{bean.daikan_phone || ''}}</text>
 					</view>
 					<view class="margin-bottom-sm">
 						<text class="text-gray baobei-label">报备时间:</text>
                         <!--|moment('from')}-->
-						<text>{{bean.created_at}}</text>
+						<text>{{bean.created_at || ''}}</text>
 					</view>
 					<view class="margin-bottom-sm">
 						<text class="text-gray baobei-label">带看时间:</text>
                         <!--|moment('from')-->
-						<text>{{bean.ordered_time}}</text>
+						<text>{{bean.ordered_time || ''}}</text>
 					</view>
 
 					<view v-if="type==='in'">
@@ -86,16 +86,16 @@
 			<view class="padding-sm bg-white solid-bottom" v-for="(i, inx) in list" :key="inx">
 				<view>
 					<text class="text-gray baobei-label">操作人:</text>
-					<text>{{i.user.name}}</text>
+					<text>{{i.user.name || ''}}</text>
 				</view>
 				<view class="margin-tb-sm">
 					<text class="text-gray baobei-label">类型:</text>
-					<text>{{i.action}}</text>
+					<text>{{i.action || ''}}</text>
 				</view>
 				<view>
 					<text class="text-gray baobei-label">时间:</text>
                     <!--|moment('from')-->
-					<text>{{i.created_at}}</text>
+					<text>{{i.created_at || ''}}</text>
 				</view>
 			</view>
 		</data-list>
@@ -133,7 +133,7 @@
 				list: [],
 				steps: ['待确认', '初步确认', '带看', '成交'],
 				stepInx: -1,
-
+                isLoading: false,
 				type: '',
 				employees: [],
 
@@ -160,12 +160,14 @@
 					
 					this.form.recept_name = r.data.agent_project.recept_name;
 				    this.form.recept_phone = r.data.agent_project.recept_phone;
-
-					return this.$http(`employee/receptionEmployees/${r.data.developer_project_id}`)
+                    this.isLoading = true;
+                    let developer_project_id = r.data.developer_project_id
+                    if (developer_project_id === null || developer_project_id === undefined) return false;
+					return this.$http(`employee/receptionEmployees/${developer_project_id}`)
 					
 					
 				}).then(r => {
-					r && (this.employees = [{name: '不选择', id: ''},...r])
+					r && (this.employees = [{name: '不选择', id: ''}, ...r])
 				})
 			},
 			calcStep(status) {

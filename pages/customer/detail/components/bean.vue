@@ -20,7 +20,7 @@
 					</button>
                     <button v-if="!/\*/.test(bean.phone) && bean.phone" class="cu-btn bg-blue small radius shadow margin-right-xs" @click.stop="callPhone" :data-number="bean.phone">呼叫</button>
                     <button
-						v-if="bean.phone&&bean.phone.indexOf('*') != -1 && !usingMiddlePhone"
+						v-if="bean.phone && bean.phone.indexOf('*') !== -1 && !usingMiddlePhone"
 						class="cu-btn bg-blue radius shadow small"
 						@click="getPhone"
 					>取电</button>
@@ -153,7 +153,9 @@
 		data() {
 			return {
 				hasLoaded: false,
-				bean: {}
+				bean: {
+                    phone: ''
+                }
 			}
 		},
 		computed: {
