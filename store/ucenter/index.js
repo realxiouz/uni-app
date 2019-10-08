@@ -53,6 +53,8 @@ export default {
         },
         clearEmpty(state) {
             state.currentLoginUserInfo = {};
+            state.houseId = [];
+            state.currentInfo = {};
             state.currentUserInfo = {};
             state.downLoadImg = {
                 img_phone: '',

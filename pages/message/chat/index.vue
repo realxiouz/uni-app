@@ -4,12 +4,12 @@
 			:style="{position: 'fixed', top: isH5?'44px':'0', left:0, right:0, bottom: bottom}">
 			<item v-for="(i, inx) in list" :key="inx" :bean="i" :id="`message-${i.message_id}`"/>
 		</scroll-view>
-		<view class="cu-bar foot input" :style="[{bottom:InputBottom+ 15+'px'}]" v-if="bothType === 'App\\User'">
+		<view class="cu-bar foot input" :style="[{bottom:20+'rpx'}]" v-if="bothType === 'App\\User'">
 			<!-- <view class="action">
 				<text class="cuIcon-sound text-grey"></text>
 			</view> -->
-			<input class="solid-bottom" :adjust-position="false" :focus="false" maxlength="300" cursor-spacing="10"
-			 @focus="InputFocus" @blur="InputBlur" v-model="content"></input>
+			<input class="solid-bottom" :adjust-position="adjustPosition" :focus="false" maxlength="300" cursor-spacing="10"
+			 @focus="InputFocus" @blur="InputBlur" v-model="content">
 			<!-- <view class="action">
 				<text class="cuIcon-emojifill text-grey"></text>
 			</view> -->
@@ -38,8 +38,8 @@
 		},
 		data() {
 			return {
-				InputBottom: 0,
-				
+				/*InputBottom: 10,*/
+                adjustPosition: false,
 				bothId: '',
 				bothType: '',
 				list: [],
@@ -62,14 +62,18 @@
 			plus.push.remove(pushMessage);
 			this.setSpliceMessageList(pushMessage.payload);
 			// #endif
+            // #ifndef APP-PLUS
+            this.adjustPosition = true;
+            // #endif
 		},
 		methods: {
 			...mapMutations('message', ['setSpliceMessageList', 'setCurrentBothId']),
 			InputFocus(e) {
-				this.InputBottom = e.detail.height
-			},
+				/*this.InputBottom = '0' || e.detail.height;
+                console.log(e.detail.height, 'e.detail.height');*/
+            },
 			InputBlur(e) {
-				this.InputBottom = 0
+				/*this.InputBottom = 10*/
 			},
 			handleMore() {
 				if (this.loaded && !this.isLoading) {
@@ -91,7 +95,6 @@
 					data.message_id_start = message_id_start
 				}
 				this.$http('message-link', data).then(r => {
-                    uni.hideLoading();
 					if (!message_id_start) {
 						this.list = r.data.reverse()
 						this.loaded = true
@@ -101,7 +104,8 @@
                     this.list = [...r.data.reverse(), ...this.list];
 					this.goTarget(message_id_start)
 				}).finally(_ => {
-					this.isLoading = false
+					this.isLoading = false;
+                    uni.hideLoading();
 				})
 			},
 			handleSend() {
@@ -169,7 +173,8 @@
                 url: '/pages/message/index/index'
             });
             return true;
-        }
+        },
+        mounted() {}
 	}
 </script>
 

@@ -102,6 +102,15 @@
 				});
 				this.$http('geren/uptemplate', {templateId: index}).then(res => {
                     uni.hideLoading();
+                    if (res.msg === '请先编辑名片') {
+                        uni.showToast({
+                            title: '修改失败, 请先编辑名片...',
+                            duration: 2000,
+                            icon: 'none',
+                            mask: true
+                        });
+                        return false;
+                    }
                     this.changeCurrentLoginUserInfo({template_id: index});
                     this.changeCurrentInfo(Object.assign({}, this.currentInfo, {template_id: index}));
 					this.changeImg({key: 'img_bg', url: ''});

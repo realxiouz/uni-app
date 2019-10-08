@@ -99,9 +99,11 @@
 					name: '',
 					phone: ''
 				}]);
+				let bracket = `(${item.company.alias})`;
+				let alias = item.company.alias? bracket: '';
 				this.setSelProject([{
 					id: item.id,
-					text: `${this.bean.name}(${item.company.alias})`
+					text: `${this.bean.name}${alias}`
 				}]);
 				uni.navigateTo({
 					url: `/pages/baobei/bean/index`

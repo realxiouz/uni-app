@@ -152,7 +152,10 @@
 		{
 			"path": "pages/message/chat/index",
 			"style": {
-				"navigationBarTitleText": "聊天"
+				"navigationBarTitleText": "聊天",
+                "app-plus": {
+                  "softinputMode": "adjustResize"
+                }
 			}
 		},
 		{

@@ -158,7 +158,7 @@
 				this.formBean.yinghao = e.detail.value
 			},
 			delProject(id) {
-				let arr = this.selProject.filter(i => i.id != id)
+				let arr = this.selProject.filter(i => i.id != id);
 				this.setSelProject(arr)
 			},
 			handleSex(e, i) {

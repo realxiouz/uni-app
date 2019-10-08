@@ -95,8 +95,7 @@
 					<view class="cu-avatar-group">
                         <view v-if="!browseUser.length" class="avatar-info" id="img_width"></view>
                         <view class="avatar-info" v-else  v-for="(item, index) of browseUser" :key="index">
-                            <!--:id="[index === 0? 'img_width': '']"-->
-							<image class="avatar-style" :src="item.avatar"></image>
+							<image class="avatar-style" :src="item.avatar || defaultAvatar"></image>
 						</view>
 						<view class="avatar-info" v-if="showBrowseEllipsis" :class="[showBrowseEllipsis? 'show-browse-ellipsis': '']">···</view>
 					</view>
@@ -271,9 +270,6 @@
                     }).catch(err => {})
                 }
                 self.setBrowseUser(browseUser);
-            },
-            modalName(data) {
-                console.log(data);
             }
 		},
 		methods: {
@@ -550,13 +546,16 @@
                 this.$http('geren/userinfo', {uidx: uidx}).then(res => {
                     let houseArr = res.house.data;
                     let r = res.data;
+                    // console.log(r.avatar, !r.avatar, '修改前');
                     if (!r.avatar) r.avatar = this.defaultAvatar;
+                    console.log(r.avatar);
                     const data = Object.assign({}, {readNumber: res.readnumber}, {BrowseUser: res.Browseuser}, {house: houseArr}, r);
                     this.relayOn = !this.relayOn;
                     self[boo? 'changeCurrentUserInfo': 'changeCurrentLoginUserInfo'](data);
                     if (!boo) this.setInterceptUId('');
-                    uni.hideLoading();
                 }).catch(err => {
+                    console.log(err);
+                }).finally(_ => {
                     uni.hideLoading();
                 });
             },
