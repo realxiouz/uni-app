@@ -13,6 +13,12 @@
 			}
 		},
 		{
+			"path": "pages/customer/index/all",
+			"style": {
+				"navigationBarTitleText": "客户列表"
+			}
+		},
+		{
 			"path": "pages/customer/employee/index",
 			"style": {}
 		},

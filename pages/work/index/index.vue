@@ -187,7 +187,7 @@
 						cuIcon: 'peoplelist',
 						color: 'green',
 						name: '客户列表',
-						path: '/pages/customer/index/index?type=新房'
+						path: '/pages/customer/index/all?type=新房'
 					},
 					{
 						cuIcon: 'share',
@@ -200,14 +200,14 @@
 						color: 'green',
 						name: '客户公池',
 						path: '/pages/customer/index/index?type=新房&private=false'
-					}
+					},
 				],
 				customer2: [
 					{
 						cuIcon: 'peoplelist',
 						color: 'green',
 						name: '客户列表',
-						path: '/pages/customer/index/index?type=分销'
+						path: '/pages/customer/index/all?type=分销'
 					},
 					{
 						cuIcon: 'share',

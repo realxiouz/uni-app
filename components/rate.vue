@@ -1,6 +1,6 @@
 <template>
 	<view class="flex">
-		<view class="text-xxl" v-for="n in max" :key="n" :style="{marginLeft:margin+'px'}" @click="onClick(n)">
+		<view :class="small?'text-xl':'text-xxl'" v-for="n in max" :key="n" :style="{marginLeft:margin+'px'}" @click="onClick(n)">
 			<text class="text-yellow" :class="n<=valueSync?'cuIcon-favorfill':'cuIcon-favor'"></text>
 		</view>
 	</view>
@@ -22,6 +22,10 @@
 				default: 0
 			},
 			disabled: {
+				type: Boolean,
+				default: false
+			},
+			small: {
 				type: Boolean,
 				default: false
 			}
