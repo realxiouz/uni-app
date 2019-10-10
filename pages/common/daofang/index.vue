@@ -31,7 +31,7 @@
             </view>
             <view class="cu-form-group" v-if="typeIndex && type === '分销'">
                 <view class="title">{{currentTitle}}</view>
-                <picker mode="selector" :value="chargeIndex" :range="currentRange" :range-key="currentKey" @change="chargeChange">
+                <picker mode="selector" :range="currentRange" :range-key="currentKey" @change="chargeChange">
                     <view class="picker">
                         {{currentContent}}
                     </view>
@@ -67,10 +67,10 @@
                 });
                 this.$http('project?route_type=memo&dataType=get').then(r => {
                     this.ProjectRange = r.data;
-                });
+                }).catch(err => {});
                 this.$http(`baobei?&dataType=get&customer_id=${this.customerId}`).then(r => {
                     this.baoBeiHistory = r.data;
-                })
+                }).catch(err => {});
             }
 		},
 		data: _ => ({
@@ -89,7 +89,7 @@
             typeIndex: 0,
             relevanceRange: ['不指定', '报备记录', '线下楼盘'],
             ProjectRange: [],
-            chargeIndex: -1,
+            chargeIndex: 0,
             baoBeiHistory: [],
             currentRange: [],
             currentTitle: '',
@@ -145,7 +145,7 @@
 					// 	uni.navigateBack()
 					// }, 1500)
 					uni.navigateBack()
-				}).finally(_ => {
+				}).catch(err => {}).finally(_ => {
 					this.formLoading = false
 				})
 			},

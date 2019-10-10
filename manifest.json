@@ -122,5 +122,8 @@
             "https" : false
         },
         "title" : "房销客"
+    },
+    "uniStatistics": {
+        "enable": false
     }
 }

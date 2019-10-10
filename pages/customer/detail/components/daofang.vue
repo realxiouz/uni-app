@@ -1,7 +1,7 @@
 <template>
 	<view class="bg-white margin-top-sm">
 			<view class="padding-tb-xs padding-lr-sm">
-				<view style="word-wrap:break-word">
+				<view style="word-wrap:break-word" v-if="bean.baobei_id !== null && bean.baobei_id !== undefined">
 					<text class="cu-tag bg-blue radius">{{bean.status_name}}</text>
 				</view>
 				<view class="flex flex-wrap">

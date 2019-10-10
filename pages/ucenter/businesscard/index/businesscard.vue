@@ -253,7 +253,7 @@
                 const self = this;
                 let browseUser = data.BrowseUser;
                 if (self.showNumber !== '') {
-                    browseUser = browseUser.slice(0, self.showNumber);
+                    browseUser = browseUser.slice(0, self.sowhNumber);
                 } else {
                     async function getSize() {
                         let widthP = await self.getElSize('browse-user');
@@ -546,9 +546,7 @@
                 this.$http('geren/userinfo', {uidx: uidx}).then(res => {
                     let houseArr = res.house.data;
                     let r = res.data;
-                    // console.log(r.avatar, !r.avatar, '修改前');
                     if (!r.avatar) r.avatar = this.defaultAvatar;
-                    console.log(r.avatar);
                     const data = Object.assign({}, {readNumber: res.readnumber}, {BrowseUser: res.Browseuser}, {house: houseArr}, r);
                     this.relayOn = !this.relayOn;
                     self[boo? 'changeCurrentUserInfo': 'changeCurrentLoginUserInfo'](data);

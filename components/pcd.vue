@@ -2,7 +2,7 @@
 	<picker mode="multiSelector" :range="range" @columnchange="handleColumnChange" range-key="name" @change="handleChange"
 	 :value='vAsync'>
 		<view class="picker">
-			{{title}}
+			{{(clearContent) || (last? title.split(',')[level-1] || title: title)}}
 		</view>
 	</picker>
 </template>
@@ -174,7 +174,15 @@
 			level: {
 				type: Number,
 				default: 4
-			}
+			},
+            last: {
+			    type: Boolean,
+                default: false
+            },
+            clearContent: {
+			    type: String,
+                default: ''
+            }
 		},
 		data() {
 			return {

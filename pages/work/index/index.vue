@@ -29,7 +29,7 @@
                 </view>
             </view>
             <view class="cu-list grid col-4 no-border">
-                <view class="cu-item" v-for="(item,index) in projectList" :key="index" v-if="hasFeature(item.hasFeatures) || (item.name === '云端楼盘' && userInfo.company_id === null)">
+                <view class="cu-item" v-for="(item,index) in projectList" :key="index" v-if="hasFeature(item.hasFeatures)">
                     <view :class="['cuIcon-' + item.cuIcon,'text-' + item.color]" @click="handleNav(item.path)">
                         <view class="cu-tag badge" v-if="item.badge">
                             <block v-if="item.badge!=1">{{item.badge>99?'99+':item.badge}}</block>
@@ -165,7 +165,7 @@
 						badge: 0,
 						name: '云端楼盘',
 						path: '/pages/project/list/index?type=public',
-                        hasFeatures: 'baobei up'
+                        hasFeatures: ['baobei up', 'cooperation-manage']
 					}
 				],
 				customer1: [
@@ -240,8 +240,19 @@
 				}
 			},
 			hasFeature(f) {
-				return this.userInfo.company.features.findIndex(i => i == f) > -1
-			}
+			    let boolean = false;
+                if (f instanceof Array) {
+                    let index = this.userInfo.company.features.findIndex(i => i === f[0]) > -1;
+                    let seeMenu = this.seeMenu(f[1]);
+                    boolean = index && seeMenu;
+                } else {
+                    boolean = this.userInfo.company.features.findIndex(i => i === f) > -1;
+                }
+				return boolean;
+			},
+            seeMenu(permissions) {
+                return this.userInfo.allPermissions.findIndex(i => i.name === permissions) > -1;
+            }
 		},
 		computed: {
 			...mapState(['hasLogin', 'userInfo']),

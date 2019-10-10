@@ -72,7 +72,7 @@
 				let data = Object.assign({}, this.rData, {
 					page: this.page,
 					per_page: this.per_page
-				})
+				});
 				this.$http(this.rUrl, data, this.rMethod)
 					.then(r => {
 						this.hasLoaded = true;
@@ -93,7 +93,7 @@
 					})
 			},
 			handleMore() {
-				if (!this.isEnd && !this.isLoading) {
+                if (!this.isEnd && !this.isLoading) {
 					this.page++
 					this.getData()
 				}

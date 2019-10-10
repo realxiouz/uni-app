@@ -35,9 +35,11 @@ export default {
 		    let houseId = state.houseId;
 			if (data.isAdd) {
                 houseId.unshift(data.id);
+			} else if (data.allDel) {
+                houseId = [];
 			} else {
                 houseId.splice(data.index, 1);
-			}
+            }
 			state.houseId = [...new Set(houseId)];
 		},
         changeImg(state, obj) {

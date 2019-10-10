@@ -4,6 +4,7 @@
 			<view style="position:relative;width:280upx;height:210upx;" class="margin-right-sm">
 				<image :src="bean.img" mode="" style="width: 100%;height: 100%;"></image>
 				<view class="cu-tag bg-blue radius" style="position:absolute;right:0;top:0;" v-if="bean.status_name">{{bean.status_name}}</view>
+				<view v-if="bean.type === 'normal'" class="cu-tag bg-blue radius" style="position:absolute;left:0;top:0;background: #FF0000;margin-left: 0;">备</view>
 			</view>
 			<view class="flex flex-direction justify-between flex-sub">
 				<view>
@@ -37,8 +38,8 @@
 			<view class="w23 text-center radius padding-tb-xs padding-lr-xs text-white" :class="bean.baobei_project.filter(i => i.sell_prize).length ? 'bg-cyan': 'bg-grey'">成交奖</view>
 			<view class="w23 text-center radius padding-tb-xs padding-lr-xs text-white" :class="bean.baobei_project.filter(i => i.kan_prize).length ? 'bg-cyan': 'bg-grey'">
 				带看奖金</view>
-			<view v-if="type === 'public'"class="w23 text-center bg-yellow radius padding-tb-xs padding-lr-xs text-white" @tap="nowChannel">马上报备</view>
-			<view v-else class="w23 text-center bg-yellow radius padding-tb-xs padding-lr-xs text-white" @tap.stop="nowChannel">马上报备</view>
+			<view v-if="type === 'public'" class="w23 text-center bg-yellow radius padding-tb-xs padding-lr-xs text-white" @tap="nowChannel">{{'申请合作'}}</view>
+			<view v-else class="w23 text-center bg-yellow radius padding-tb-xs padding-lr-xs text-white" @tap.stop="nowChannel">{{bean.type === 'normal'? '马上报备': '查看详情'}}</view>
 		</view>
 	</view>
 </template>

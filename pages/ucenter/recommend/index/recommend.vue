@@ -47,6 +47,7 @@
         onUnload() {
             let arr = JSON.parse(JSON.stringify(this.selectedHouse));
             this.changeCurrentLoginUserInfo({house: arr});
+            this.changeHouseId({allDel: true});
         },
         methods: {
             ...mapMutations('ucenter', ['changeCurrentLoginUserInfo', 'changeHouseId']),

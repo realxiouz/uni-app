@@ -51,7 +51,7 @@
 				<text class="text-cyan" style="flex: 1">{{i.baobei_remark || ''}}</text>
 				<button class="cu-btn radius bg-blue shadow" v-if="cooperation === 'cooperation'" @click.stop="handleBaobei(i, bean)">报备</button>
 				<button class="cu-btn radius bg-blue shadow" v-else-if="i.cooperationed" :disabled="true">已签约</button>
-				<button class="cu-btn radius bg-green shadow" v-else-if="cooperation === 'public' && i.company.id !== userInfo.company.id" @click.stop="handleCooperation(i.company_id)">合作</button>
+				<button class="cu-btn radius bg-green shadow" v-else-if="cooperation === 'public' && i.company.id !== userInfo.company.id" @click.stop="handleCooperation(i.company_id)">申请合作</button>
 			</view>
 		</navigator>
 

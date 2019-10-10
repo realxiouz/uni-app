@@ -109,7 +109,7 @@
 				<view class="title">{{showStar('remark')}}备注</view>
 				<input placeholder="输入备注" v-model="formBean.remark"></input>
 			</view>
-			<save @save="handleSave" :loading="formLoading"/>
+            <save @save="handleSave" :loading="formLoading"/>
 		</form>
 	</view>
 </template>
