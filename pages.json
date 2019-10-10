@@ -13,6 +13,12 @@
 			}
 		},
 		{
+			"path": "pages/customer/index/all",
+			"style": {
+				"navigationBarTitleText": "客户列表"
+			}
+		},
+		{
 			"path": "pages/customer/employee/index",
 			"style": {}
 		},
@@ -389,7 +395,19 @@
         ,{
             "path" : "pages/ucenter/get-phone/get-phone",
             "style" : {}
-        }
+        },
+		{
+			"path": "pages/channel/list/index",
+			"style": {
+				"navigationBarTitleText": "渠道列表"
+			}
+		},
+		{
+			"path": "pages/channel/bean/index",
+			"style": {
+				"navigationBarTitleText": "录入渠道"
+			}
+		}
     ],
 	"tabBar": {
 		"color": "#000000",

@@ -83,6 +83,20 @@
                 </view>
             </view>
         </template>
+		<template v-if="hasFeature('channel')">
+		    <view class="cu-bar bg-white solid-bottom margin-top">
+		        <view class="action">
+		            <text class="cuIcon-title text-orange "></text>渠道管理
+		        </view>
+		    </view>
+		    <view class="cu-list grid col-4 no-border">
+		        <view class="cu-item" v-for="(i, inx) in channel" :key="inx" @click="handleNav(i.path)">
+		            <view :class="['cuIcon-' + i.cuIcon,'text-' + i.color]">
+		            </view>
+		            <text>{{i.name}}</text>
+		        </view>
+		    </view>
+		</template>
 		<!-- <template v-if="">
 			<view class="cu-bar bg-white solid-bottom margin-top">
 				<view class="action">
@@ -173,7 +187,7 @@
 						cuIcon: 'peoplelist',
 						color: 'green',
 						name: '客户列表',
-						path: '/pages/customer/index/index?type=新房'
+						path: '/pages/customer/index/all?type=新房'
 					},
 					{
 						cuIcon: 'share',
@@ -186,14 +200,14 @@
 						color: 'green',
 						name: '客户公池',
 						path: '/pages/customer/index/index?type=新房&private=false'
-					}
+					},
 				],
 				customer2: [
 					{
 						cuIcon: 'peoplelist',
 						color: 'green',
 						name: '客户列表',
-						path: '/pages/customer/index/index?type=分销'
+						path: '/pages/customer/index/all?type=分销'
 					},
 					{
 						cuIcon: 'share',
@@ -222,7 +236,15 @@
                         path: ''
                     }
 
-                ]
+                ],
+				channel: [
+					{
+						cuIcon: 'goods',
+						color: 'green',
+						name: '渠道列表',
+						path: `/pages/channel/list/index`
+					}
+				]
 			};
 		},
 		onShow() {},

@@ -9,7 +9,8 @@
 						{{bean.name}}{{bean.belongsto_id ? `[${bean.belongsto_type}]`: ''}}
 					</view>
 					<view>上次跟进：{{bean.last_genjin_time?bean.last_genjin_time:''}}</view>
-					<view class="flex align-center">客户星级：<rate :value="bean.star" :disabled="true" small/></view>
+					<!-- <view>{{bean.desireRatio}}</view> -->
+					<view>客户星级：{{bean.star?bean.star:''}}</view>
 					<view>录入时间：{{bean.created_at}}</view>
 				</view>
 			</view>
@@ -18,9 +19,7 @@
 
 <script>
 	import { mapState, mapMutations } from 'vuex'
-	import Ava from '@/components/avatar'
-	import Rate from '@/components/rate'
-	
+	import Ava from '@/components/avatar.vue'
 	export default {
 		props: {
 			bean: {
@@ -29,22 +28,12 @@
 		},
 		data: _ => ({}),
 		components: {
-			Ava,
-			Rate
+			Ava
 		},
 		methods: {
 			...mapMutations('baobei', ['setSelCustomer']),
 			handleGo(bean) {
-				this.setSelCustomer([
-					{
-						name: this.bean.name,
-						phone: this.bean.phone,
-						id: this.bean.id
-					}
-				]);
-				uni.navigateTo({
-					url: `/pages/customer/detail/index?id=${this.bean.id}&type=${this.bean.type}`
-				})
+				
 			}
 		}
 	}
