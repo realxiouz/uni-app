@@ -193,7 +193,7 @@
 						cuIcon: 'share',
 						color: 'green',
 						name: '共享客户',
-						path: '/pages/customer/index/index?type=新房&is_share=true'
+						path: '/pages/customer/index/share?type=新房'
 					},
 					{
 						cuIcon: 'profile',
@@ -213,7 +213,7 @@
 						cuIcon: 'share',
 						color: 'green',
 						name: '共享客户',
-						path: '/pages/customer/index/index?type=分销&is_share=true'
+						path: '/pages/customer/index/share?type=分销'
 					},
 					{
 						cuIcon: 'profile',
