@@ -19,6 +19,12 @@
 			}
 		},
 		{
+			"path": "pages/customer/index/share",
+			"style": {
+				"navigationBarTitleText": "共享客户"
+			}
+		},
+		{
 			"path": "pages/customer/employee/index",
 			"style": {}
 		},

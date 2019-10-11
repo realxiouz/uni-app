@@ -11,20 +11,6 @@
 				<input v-model="keywords" :adjust-position="false" type="text" placeholder="姓名 电话搜索" confirm-type="search" @confirm="handleSearch"></input>
 			</view>
 		</view>
-		<view class="flex justify-around bg-white padding-tb-sm">
-			<view @click="handleSort('star')">
-				客户星级
-				<text v-if="sortType=='star'" :class="descending == 'asc' ? 'cuIcon-triangleupfill' : 'cuIcon-triangledownfill'"></text>
-			</view>
-			<view @click="handleSort('owned_at')">
-				添加时间
-				<text v-if="sortType=='owned_at'" :class="descending == 'asc' ? 'cuIcon-triangleupfill' : 'cuIcon-triangledownfill'"></text>
-			</view>
-			<view @click="handleSort('last_genjin_time')">
-				跟进时间
-				<text v-if="sortType=='last_genjin_time'" :class="descending == 'asc' ? 'cuIcon-triangleupfill' : 'cuIcon-triangledownfill'"></text>
-			</view>
-		</view>
 		<swiper style="flex: 1;height: 0;" @change="tabChange" :current="selTab">
 			<swiper-item v-for="(i, inx) in tabs" :key="inx">
 				<data-list :ref="'list'+inx" @data="handleList(inx, $event)" :r-url="i.url" :r-data="i.data">
@@ -64,54 +50,35 @@
 						list: [],
 						data: {
 							type: '新房',
+							private: true,
+							is_share: 'all',
 							demands: JSON.stringify({type: '全部'})
 						}
 					},
 					{
-						text: '有意向',
+						text: '我共享的',
 						url: 'customer',
 						list: [],
 						data: {
 							type: '新房',
-							customer_type: '有意向',
+							private: true,
+							is_share: 'send',
 							demands: JSON.stringify({type: '全部'})
 						}
 					},
 					{
-						text: '已看房',
+						text: '共享给我的',
 						url: 'customer',
 						list: [],
 						data: {
 							type: '新房',
-							customer_type: '已看房',
+							private: true,
+							is_share: 'receive',
 							demands: JSON.stringify({type: '全部'})
 						}
-					},
-					{
-						text: '已成交',
-						url: 'customer',
-						list: [],
-						data: {
-							type: '新房',
-							customer_type: '已成交',
-							demands: JSON.stringify({type: '全部'})
-						}
-					},
-					{
-						text: '已锁定',
-						url: 'customer',
-						list: [],
-						data: {
-							type: '分销',
-							can_release: false,
-							demands: JSON.stringify({type: '全部'})
-						}
-					},
+					}
 				],
-				selTab: 0,
-				
-				sortType: '',
-				descending: 'asc'
+				selTab: 0
 			}
 		},
 		methods: {
@@ -128,30 +95,14 @@
 				this.tabs[this.selTab].data = {...this.tabs[this.selTab].data, keywords: this.keywords}
 			},
 			handleNavChange(inx) {
-				this.reset()
 				this.keywords = ''
-				this.sortType = ''
 				this.selTab = inx
 			},
 			tabChange(e) {
-				this.reset()
 				this.keywords = ''
-				this.sortType = ''
 				this.selTab = e.detail.current
 				this.$refs[`list${this.selTab}`][0].init()
 			},
-			reset() {
-				this.tabs[this.selTab].data = {...this.tabs[this.selTab].data, keywords: ''}
-			},
-			handleSort(sortBy) {
-				if (this.sortType != sortBy) {
-					this.sortType = sortBy
-					this.descending = 'asc'
-				} else {
-					this.descending = this.descending == 'asc' ? 'desc' : 'asc'
-				}
-				this.tabs[this.selTab].data = {...this.tabs[this.selTab].data, sortBy, descending: this.descending}
-			}
 		},
 		components: {
 			Item, DataList, FloatButton
@@ -163,7 +114,7 @@
 			keywords(val) {
 				if (!val) {
 					if (this.tabs[this.selTab].data.keywords) {
-						this.reset()
+						this.tabs[this.selTab].data = {...this.tabs[this.selTab].data, keywords: ''}
 					}
 				}
 			}
