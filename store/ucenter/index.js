@@ -56,6 +56,7 @@ export default {
         clearEmpty(state) {
             state.currentLoginUserInfo = {};
             state.houseId = [];
+            state.browseUser = [];
             state.currentInfo = {};
             state.currentUserInfo = {};
             state.downLoadImg = {

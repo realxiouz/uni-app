@@ -1,8 +1,9 @@
 <template>
 	<view class="bg-white padding solid-bottom" @tap="toDetail(bean.id)">
 		<view class="flex">
-			<view style="position:relative;width:280upx;height:210upx;" class="margin-right-sm">
-				<image :src="bean.img" mode="" style="width: 100%;height: 100%;"></image>
+			<view style="display:flex;position:relative;justify-content:center; align-items:center;width:280upx;height:210upx;" class="margin-right-sm">
+				<image :src="bean.img" v-if="bean.img" mode="" style="width: 100%;height: 100%;"></image>
+				<image :src="projectDefaultImg" v-else mode="" style="width: 50%;height: 50%;"></image>
 				<view class="cu-tag bg-blue radius" style="position:absolute;right:0;top:0;" v-if="bean.status_name">{{bean.status_name}}</view>
 				<view v-if="bean.type === 'normal'" class="cu-tag bg-blue radius" style="position:absolute;left:0;top:0;background: #FF0000;margin-left: 0;">备</view>
 			</view>
@@ -38,8 +39,8 @@
 			<view class="w23 text-center radius padding-tb-xs padding-lr-xs text-white" :class="bean.baobei_project.filter(i => i.sell_prize).length ? 'bg-cyan': 'bg-grey'">成交奖</view>
 			<view class="w23 text-center radius padding-tb-xs padding-lr-xs text-white" :class="bean.baobei_project.filter(i => i.kan_prize).length ? 'bg-cyan': 'bg-grey'">
 				带看奖金</view>
-			<view v-if="type === 'public'" class="w23 text-center bg-yellow radius padding-tb-xs padding-lr-xs text-white" @tap="nowChannel">{{'申请合作'}}</view>
-			<view v-else class="w23 text-center bg-yellow radius padding-tb-xs padding-lr-xs text-white" @tap.stop="nowChannel">{{bean.type === 'normal'? '马上报备': '查看详情'}}</view>
+			<view class="w23 text-center bg-yellow radius padding-tb-xs padding-lr-xs text-white" @tap.stop="nowChannel">{{btnContent()}}</view>
+			<!--<view v-else class="w23 text-center bg-yellow radius padding-tb-xs padding-lr-xs text-white" @tap.stop="nowChannel">{{bean.type === 'normal'? '马上报备': '查看详情'}}</view>-->
 		</view>
 	</view>
 </template>
@@ -69,11 +70,28 @@
 			},
 			nowChannel(e) {
 				if (this.type === 'public'){
+                    if (this.bean.type === 'template') {
+				        this.$http(`project/copy/${this.bean.id}`).then(res => {
+                            uni.showToast({
+                                title: '该楼盘已添加至公司线下楼盘...',
+                                icon: 'none',
+                                duration: 2500
+                            })
+                        })
+                    }
+                    this.toDetail(this.bean.id);
 					return false;
 				}
+				if (this.bean.type === 'template') {
+                    this.toDetail(this.bean.id);
+                    return false;
+                }
 				let baobei_project = this.bean.baobei_project;
-				const self = this;
-				if (!baobei_project.length) return false;
+                const self = this;
+				if (!baobei_project.length) {
+				    this.toDetail(this.bean.id);
+				    return false;
+                }
 				if (baobei_project.length === 1) {
 					self.handleJump(0);
 					return false;
@@ -109,10 +127,18 @@
 				uni.navigateTo({
 					url: `/pages/baobei/bean/index`
 				})
-			}
+			},
+            btnContent() {
+			    let content = '';
+			    let type = this.bean.type;
+			    content = this.type !== 'public'?
+                    (type === 'normal'? '马上报备': '查看详情'):
+                    (type === 'template'? '加载楼盘': '申请合作');
+			    return content;
+            }
 		},
 		computed: {
-			...mapState(['userInfo']),
+			...mapState(['userInfo', 'projectDefaultImg']),
             ...mapState('work', ['shopId']),
 			label() {
 				let c = new Set();

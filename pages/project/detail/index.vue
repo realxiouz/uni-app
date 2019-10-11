@@ -176,7 +176,7 @@
 			}
 		},
 		computed: {
-			...mapState(['userInfo'])
+			...mapState(['userInfo', 'projectDefaultImg'])
 		},
 		mounted() {}
 	}

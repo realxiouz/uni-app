@@ -273,6 +273,7 @@
 				return boolean;
 			},
             seeMenu(permissions) {
+			    if (!this.userInfo.allPermissions) return false;
                 return this.userInfo.allPermissions.findIndex(i => i.name === permissions) > -1;
             }
 		},
