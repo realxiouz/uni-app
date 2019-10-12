@@ -1,7 +1,12 @@
 <template>
 	<view>
 		<swiper class="" style="height: 400rpx;">
-			<swiper-item v-for="(i, inx) in bean.banners" :key="inx">
+            <swiper-item v-if="!bean.banners.length">
+                <view style="display: flex;justify-content: center;align-items: center; width: 100vw;height: 400rpx;">
+                    <image :src="projectDefaultImg" mode="" style="width: 50%;height: 70%;"></image>
+                </view>
+            </swiper-item>
+			<swiper-item v-else v-for="(i, inx) in bean.banners" :key="inx">
 				<image :src="i" mode="" style="width: 100%;height: 100%;"></image>
 			</swiper-item>
 		</swiper>
@@ -140,10 +145,12 @@
 							hx.push(item.img);
 						}
 						let albums = [];
+						let img = _data.img;
+						if (img) albums.push(img);
 						for (let i of _data.albums) {
 							albums = [...albums, ...i.photos.map(i => i.uri)];
 						}
-						this.bean.banners = [...new Set([...albums, _data.img, ...hx])];
+						this.bean.banners = [...new Set([...albums, ...hx])];
 						// 户型详情列表, 有可能会出现多一两个的情况, 不让其使用space-between时候, 中间为空
 						let houseTypes = _data.house_types;
 						let len = houseTypes.length;
@@ -161,7 +168,9 @@
 				data() {
 					return {
 						id: '',
-						bean: {},
+						bean: {
+                            banners: []
+                        },
 						houseTypesLast: [],
 						houseTypes: []
 					}
@@ -196,7 +205,7 @@
 					}
 				},
 				computed: {
-					...mapState(['userInfo']),
+					...mapState(['userInfo', 'projectDefaultImg']),
 					...mapState('project', ['listType']),
 					huose() {
 						return item => {

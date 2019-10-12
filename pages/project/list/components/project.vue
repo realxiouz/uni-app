@@ -73,7 +73,7 @@
                     if (this.bean.type === 'template') {
 				        this.$http(`project/copy/${this.bean.id}`).then(res => {
                             uni.showToast({
-                                title: '该楼盘已添加至公司线下楼盘...',
+                                title: res.message,
                                 icon: 'none',
                                 duration: 2500
                             })
