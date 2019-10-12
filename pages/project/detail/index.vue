@@ -1,7 +1,12 @@
 <template>
 	<view>
 		<swiper class="" style="height: 400rpx;">
-			<swiper-item v-for="(i, inx) in bean.banners" :key="inx">
+            <swiper-item v-if="!bean.banners.length">
+                <view style="display: flex;justify-content: center;align-items: center; width: 100vw;height: 400rpx;">
+                    <image :src="projectDefaultImg" mode="" style="width: 50%;height: 70%;"></image>
+                </view>
+            </swiper-item>
+			<swiper-item v-for="(i, inx) in bean.banners" :key="inx" v-else>
 				<image :src="i" mode="" style="width: 100%;height: 100%;"></image>
 			</swiper-item>
 		</swiper>
@@ -95,6 +100,7 @@
 					break;
 			}
 		},
+        watch: {},
 		onLoad(opt) {
 			this.id = opt.id;
 			this.cooperation = opt.type;
@@ -120,13 +126,15 @@
 				for (let item of r.data.house_types) {
 					hx.push(item.img);
 				}
-				let albums = []
+				let albums = [];
+				let img = r.data.img;
+				if (img) albums.push(img);
 				for (let i of r.data.albums) {
 					albums = [...albums,  ...i.photos.map(i => i.uri)];
 				}
-				banners = [...banners, r.data.img, ...albums, ...hx];
+				banners = [...banners, ...albums, ...hx];
 				this.bean.banners = banners;
-				let c = new Set()
+				let c = new Set();
 				for (let i of this.bean.house_types) {
 					c.add(i.house_using_type.title)
 				}
@@ -136,7 +144,9 @@
 		data() {
 			return {
 				id: '',
-				bean: {},
+				bean: {
+				    banners: []
+                },
 				recommend: 0,
 				cooperation: ''
 			}
@@ -176,7 +186,7 @@
 			}
 		},
 		computed: {
-			...mapState(['userInfo'])
+			...mapState(['userInfo', 'projectDefaultImg'])
 		},
 		mounted() {}
 	}

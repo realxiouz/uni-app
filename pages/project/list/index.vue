@@ -9,12 +9,12 @@
                     <input type="text" placeholder="输入地址/楼盘名称" v-model="keywords" placeholder-class="placeholder">
                     <text class="cuIcon-close" @tap="clearData"></text>
                 </view>
-                <view>
+                <view class="btn">
                     <view class="w23 text-center radius padding-tb-xs padding-lr-xs text-white" @tap="searchData" style="background: #2F85FC;">查询</view>
                 </view>
             </view>
         </view>
-		<view :style="[{position: 'fixed', left: 0, right: 0, bottom:'0', top: top}]">
+		<view :style="[{position: 'fixed', left: 0, right: 0, bottom: '0', top: top, height: isH5? '88vh': '93vh'}]">
             <data-list ref="list" @data="handleList" r-url="project" :r-data="rData">
                 <project v-for="(i, inx) in list" :key="inx" :bean="i" :type="rData.route_type"/>
             </data-list>
@@ -86,7 +86,7 @@
                     this.searchBeforeList = JSON.parse(JSON.stringify(this.list));
                     this.currentPage = this.$refs.list.page;
                     this.isEnd = this.$refs.list.isEnd;
-                    this.$refs.list.getData(true);
+                    // this.$refs.list.getData(true);
                 } else {
                     uni.showToast({
                         title: '搜索关键词不可为空...',
@@ -155,7 +155,7 @@
                 content: '';
                 position: absolute;
                 right: 12rpx;
-                top: 40%;
+                top: 47%;
                 width: 0;
                 height: 0;
                 border: 12rpx solid;
@@ -180,6 +180,11 @@
                     background: #eee;
                     border-radius: 50%;
                     margin-right: 5rpx;
+                }
+            }
+            .btn {
+                view {
+                    height: 58rpx;
                 }
             }
         }

@@ -60,15 +60,13 @@
             relayOn() {
                 if (this.isPreview) {
                     this.changeCurrentInfo(this.currentLoginUserInfo);
-                    this.changeImg({key: 'img_bg', url: ''});
-                    this.changeImg({key: 'img_avatar', url: ''});
                 } else {
-                    let data = this.currentUserInfo.name? this.currentUserInfo: this.currentLoginUserInfo;
+                    let data = Reflect.has(this.currentUserInfo, 'id')? this.currentUserInfo: this.currentLoginUserInfo;
                     if (this.personal === 1) data = this.currentLoginUserInfo;
                     this.changeCurrentInfo(data);
-                    this.changeImg({key: 'img_avatar', url: ''});
-                    this.changeImg({key: 'img_bg', url: ''});
                 }
+                this.changeImg({key: 'img_avatar', url: ''});
+                this.changeImg({key: 'img_bg', url: ''});
             }
         },
 		beforeMount() {

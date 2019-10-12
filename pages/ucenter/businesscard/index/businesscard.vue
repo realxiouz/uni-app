@@ -457,7 +457,7 @@
 			    let uidx = this.uidx;
                 if (this.personal === 1) {
                     this.getUserMsg();
-                } else if (this.currentLoginUserInfo.name !== undefined) {// 在已经获取了就不要再去请求了
+                } else if (Reflect.has(this.currentLoginUserInfo, 'id')) {// 在已经获取了就不要再去请求了
                     this.changeCurrentInfo(this.currentLoginUserInfo);
                 } else {
                     this.getUserMsg();
@@ -548,8 +548,8 @@
                     let r = res.data;
                     if (!r.avatar) r.avatar = this.defaultAvatar;
                     const data = Object.assign({}, {readNumber: res.readnumber}, {BrowseUser: res.Browseuser}, {house: houseArr}, r);
-                    this.relayOn = !this.relayOn;
                     self[boo? 'changeCurrentUserInfo': 'changeCurrentLoginUserInfo'](data);
+                    this.relayOn = !this.relayOn;
                     if (!boo) this.setInterceptUId('');
                 }).catch(err => {
                     console.log(err);
