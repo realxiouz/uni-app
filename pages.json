@@ -277,6 +277,10 @@
 			"style": {}
 		},
 		{
+			"path": "pages/common/followup/channel",
+			"style": {}
+		},
+		{
 			"path": "pages/common/daofang/index",
 			"style": {}
 		},
@@ -412,6 +416,12 @@
 			"path": "pages/channel/bean/index",
 			"style": {
 				"navigationBarTitleText": "录入渠道"
+			}
+		},
+		{
+			"path": "pages/channel/detail/index",
+			"style": {
+				"navigationBarTitleText": "渠道详情"
 			}
 		}
     ],
