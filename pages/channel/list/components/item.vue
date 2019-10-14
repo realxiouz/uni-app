@@ -32,8 +32,10 @@
 		},
 		methods: {
 			...mapMutations('baobei', ['setSelCustomer']),
-			handleGo(bean) {
-				
+			handleGo() {
+				uni.navigateTo({
+					url: `/pages/channel/detail/index?cId=${this.bean.id}`
+				})
 			}
 		}
 	}
