@@ -25,7 +25,7 @@
 		<template>
             <view class="cu-bar bg-white solid-bottom margin-top">
                 <view class="action">
-                    <text class="cuIcon-title text-orange "></text> 楼盘
+                    <text class="cuIcon-title text-orange "></text> 分销楼盘
                 </view>
             </view>
             <view class="cu-list grid col-4 no-border">
@@ -83,14 +83,14 @@
                 </view>
             </view>
         </template>
-		<template v-if="hasFeature('channel')">
+		<template>
 		    <view class="cu-bar bg-white solid-bottom margin-top">
 		        <view class="action">
 		            <text class="cuIcon-title text-orange "></text>渠道管理
 		        </view>
 		    </view>
 		    <view class="cu-list grid col-4 no-border">
-		        <view class="cu-item" v-for="(i, inx) in channel" :key="inx" @click="handleNav(i.path)">
+		        <view class="cu-item" v-for="(i, inx) in channel" :key="inx" @click="handleNav(i.path)" v-if="hasFeature(i.hasFeatures)">
 		            <view :class="['cuIcon-' + i.cuIcon,'text-' + i.color]">
 		            </view>
 		            <text>{{i.name}}</text>
@@ -157,14 +157,7 @@
 						path: '/pages/project/list/index?type=cooperation',
 						hasFeatures: 'baobei up'
 					},
-					{
-						cuIcon: 'list',
-						color: 'green',
-						badge: 0,
-						name: '报备列表',
-						path: `/pages/baobei/list/index?type=up`,
-						hasFeatures: 'baobei up'
-					},
+					
 					{
 						cuIcon: 'list',
 						color: 'green',
@@ -242,8 +235,16 @@
 						cuIcon: 'goods',
 						color: 'green',
 						name: '渠道列表',
-						path: `/pages/channel/list/index`
-					}
+						path: `/pages/channel/list/index`,
+						hasFeatures: 'channel'
+					},
+					{
+						cuIcon: 'list',
+						color: 'green',
+						name: '报备列表',
+						path: `/pages/baobei/list/index?type=up`,
+						hasFeatures: 'baobei up'
+					},
 				]
 			};
 		},
