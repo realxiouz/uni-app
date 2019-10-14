@@ -80,7 +80,7 @@
 							this.list = [];
 							this.isEnd = false
 						}
-						this.list = this.list.concat(r.data);
+						this.list = r.push ? this.list.concat(r) : this.list.concat(r.data);
 						this.$emit('data', this.list);
 						
 						if (r.data.length < this.per_page) {

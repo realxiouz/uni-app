@@ -1,12 +1,15 @@
 <template>
 	<view class="bg-white margin-top-sm">
 			<view class="padding-tb-xs padding-lr-sm">
-				<view style="word-wrap:break-word" v-if="bean.baobei_id !== null && bean.baobei_id !== undefined">
+				<view class="margin-bottom-xs" style="word-wrap:break-word" v-if="bean.baobei_id !== null && bean.baobei_id !== undefined">
 					<text class="cu-tag bg-blue radius">{{bean.status_name}}</text>
 				</view>
-				<view class="flex flex-wrap">
+				<view class="flex flex-wrap margin-bottom-xs">
 					<text class="basis-df"><text class="text-gray">看房时间:&nbsp;</text>{{bean.created_at|moment('from')}}</text>
 					<text class="basis-df"><text class="text-gray">实看人数:&nbsp;</text>{{bean.peoples}}</text>
+				</view>
+				<view class="margin-bottom-xs">
+					<text class="basis-df"><text class="text-gray">备注:&nbsp;</text>{{bean.remark}}</text>
 				</view>
 				<view class="grid col-4 grid-square flex-sub">
 					<view class="bg-img" v-for="(i,inx) in bean.img" :key="inx" @tap="viewImage(bean.img, inx)">

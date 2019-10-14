@@ -423,6 +423,12 @@
 			"style": {
 				"navigationBarTitleText": "渠道详情"
 			}
+		},
+		{
+			"path": "pages/channel/link/index",
+			"style": {
+				"navigationBarTitleText": "联系人"
+			}
 		}
     ],
 	"tabBar": {

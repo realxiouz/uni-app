@@ -11,7 +11,7 @@
 			</swiper-item>
 			<swiper-item>
 				<data-list ref="list1" @data="handleList1" r-url="linkmen" :r-data="rData1">
-					<need v-for="(i, inx) in list1" :key="inx" :bean="i" />
+					<person v-for="(i, inx) in list1" :key="inx" :bean="i" @default="$refs.list1.getData(true)" />
 				</data-list>
 			</swiper-item>
 			<swiper-item>
@@ -27,6 +27,7 @@
 <script>
 	import Bean from './components/bean'
 	import Genjin from './components/genjin'
+	import Person from './components/person'
 	import DataList from '@/components/data-list'
 	import FloatButton from '@/components/float-button'
 	import { mapState, mapMutations } from 'vuex'
@@ -103,6 +104,11 @@
 			},
 			handleGo() {
 				switch (this.selTab) {
+					case 1:
+						uni.navigateTo({
+							url: `/pages/channel/link/index?cId=${this.cId}`
+						})
+						break
 					case 2:
 						uni.navigateTo({
 							url: `/pages/common/followup/channel?cId=${this.cId}`
@@ -120,11 +126,9 @@
 				this.selTab = e.detail.current
 				this.$refs[`list${this.selTab}`].init()
 			},
-			
-			
 		},
 		components: {
-			DataList, FloatButton, Bean, Genjin
+			DataList, FloatButton, Bean, Genjin, Person
 		},
 		computed: {
 			...mapState(['isH5', 'userInfo'])
