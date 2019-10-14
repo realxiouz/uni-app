@@ -17,7 +17,7 @@
 					<text class="cu-tag bg-cyan radius sm">{{bean.status_name || ''}}</text>
 				</view>
 				<view class="text-red">
-					<text class="text-bold text-xl margin-right-xs">{{bean.avg_price || ''}}</text>
+					<text class="text-bold text-xl margin-right-xs">{{bean.avg_price || '0'}}</text>
 					<text>元/㎡</text>
 				</view>
 			</view>
@@ -43,8 +43,8 @@
 			<view class="flex justify-between margin-bottom-sm">
 				<text class="text-lg">{{i.company.name}}</text>
 				<text class="text-red">
-					<text>{{i.fee.fee}}{{i.fee.fee_type_name}}</text>
-					<text v-if="i.sell_prize">&nbsp;+&nbsp;{{i.sell_prize}}元</text>
+					<text>{{(i.fee.fee + i.fee.fee_type_name) || '0'}}</text>
+					<text v-if="i.sell_prize">&nbsp;+{{i.sell_prize}}元</text>
 				</text>
 			</view>
 			<view class="margin-bottom-sm">

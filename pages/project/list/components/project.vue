@@ -69,6 +69,7 @@
 				})
 			},
 			nowChannel(e) {
+                // memo => template
 				if (this.type === 'public'){
                     if (this.bean.type === 'template') {
 				        this.$http(`project/copy/${this.bean.id}`).then(res => {
@@ -77,12 +78,12 @@
                                 icon: 'none',
                                 duration: 2500
                             })
-                        })
+                        }).catch(err => {})
                     }
                     this.toDetail(this.bean.id);
 					return false;
 				}
-				if (this.bean.type === 'template') {
+				if (this.bean.type !== 'normal') {
                     this.toDetail(this.bean.id);
                     return false;
                 }

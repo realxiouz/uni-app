@@ -6,7 +6,7 @@
 		@touchend="tEnd"
 	>
 		<scroll-view scroll-y
-			@scrolltolower="handleMore" style="height:100%;" :lower-threshold="50"
+			@scrolltolower="handleMore" style="height:100%;" :lower-threshold="50" :scroll-top="scrollTop"
 		>	
 			<!-- <view class="refresh-wrap" :style="{top: delta-50+'px'}">
 				<view v-if="rStatus===1">下拉刷新</view>
@@ -46,7 +46,7 @@
 			page: 1,
 			per_page: 10,
 			list: [],
-			
+			scrollTop: 0,
 			start: 0,
 			delta: 0,
 			rStatus: 0, // 0->未下拉;1->下拉刷新;2->松开刷新;3->刷新中;4->刷新完毕 

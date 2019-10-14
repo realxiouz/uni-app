@@ -1,9 +1,12 @@
 <template>
 	<picker mode="multiSelector" :range="range" @columnchange="handleColumnChange" range-key="name" @change="handleChange"
 	 :value='vAsync'>
-		<view class="picker">
-			{{(clearContent) || (last? title.split(',')[level-1] || title: title)}}
+		<view class="picker" v-if="last">
+			{{clearContent || pcdContent()}}
 		</view>
+        <view class="picker" v-else>
+            {{title}}
+        </view>
 	</picker>
 </template>
 
@@ -145,9 +148,13 @@
 			id: 35
 		},
 	]
+    let unlimited = {
+	    name: '不限',
+        id: -10
+    };
 	export default {
 		mounted() {
-			if (this.level === 3) {
+            if (this.level === 3) {
 				this.range.splice(3, 1)
 			}
 			if (this.level === 2) {
@@ -155,17 +162,21 @@
 			}
 			this.$http(`cities/${ps[0].id}`)
 				.then(r => {
+				    let id = r[0].id;
+				    if (this.unlimited) r.unshift(unlimited);
 					this.range.splice(1, 1, r)
 					if (this.level >= 3) {
-						return this.$http(`districts/${r[0].id}`)
+						return this.$http(`districts/${id}`)
 					}
 
 				})
 				.then(r => {
 					if (r) {
-						this.range.splice(2, 1, r)
+                        let id = r[0].id;
+                        if (this.unlimited) r.unshift(unlimited);
+						this.range.splice(2, 1, r);
 						if (this.level === 4) {
-							return this.$http(`areas/${r[0].id}`)
+							return this.$http(`areas/${id}`)
 						}
 					}
 				})
@@ -177,7 +188,10 @@
 		},
 		props: {
 			value: {
-				type: Array
+				type: Array,
+                default: function() {
+                    return []
+                }
 			},
 			level: {
 				type: Number,
@@ -190,6 +204,10 @@
             clearContent: {
 			    type: String,
                 default: ''
+            },
+            unlimited: {
+			    type: Boolean,
+                default: false
             }
 		},
 		data() {
@@ -240,21 +258,25 @@
 					] :
 					this.level === 3 ? [this.range[0][value[0]].id, this.range[1][value[1]].id, this.range[2][value[2]].id] : [this.range[
 						0][value[0]].id, this.range[1][value[1]].id]
-				this.$emit('input', data)
+                this.$emit('input', data)
 			},
 			pChange(pId) {
 				this.$http(`cities/${pId}`)
 					.then(r => {
+					    let id = r[0].id;
+					    if (this.unlimited) r.unshift(unlimited);
 						this.range.splice(1, 1, r)
 						if (this.level >= 3) {
-							return this.$http(`districts/${r[0].id}`)
+							return this.$http(`districts/${id}`)
 						}
 					})
 					.then(r => {
 						if (r) {
+                            let id = r[0].id;
+                            if (this.unlimited) r.unshift(unlimited);
 							this.range.splice(2, 1, r)
 							if (this.level === 4) {
-								return this.$http(`areas/${r[0].id}`)
+								return this.$http(`areas/${id}`)
 							}
 						}
 
@@ -269,9 +291,11 @@
 				if (this.level >= 3) {
 					this.$http(`districts/${cId}`)
 						.then(r => {
+                            let id = r[0].id;
+                            if (this.unlimited) r.unshift(unlimited);
 							this.range.splice(2, 1, r)
 							if (this.level === 4) {
-								return this.$http(`areas/${r[0].id}`)
+								return this.$http(`areas/${id}`)
 							}
 						})
 						.then(r => {
@@ -288,35 +312,51 @@
 							this.range.splice(3, 1, r)
 						})
 				}
-			}
+			},
+            pcdContent() {
+			    let content = '';
+			    let title = this.title;
+                let regArr = title.match(/不限/g);
+                let stringArr = title.split(',');
+                let index = regArr === null? this.level - 1: this.level - regArr.length -1;
+                content = stringArr[index];
+                return content;
+            }
 		},
 		watch: {
 			value: {
 				handler(v) {
-					if (v.length >= 3) {
+                    if (v.length >= 3) {
 						let v0, v1, v2, v3
 						v0 = this.range[0].findIndex(i => i.id == v[0])
 						this.$http(`cities/${v[0]}`)
 							.then(r => {
-								this.range.splice(1, 1, r)
-								v1 = this.range[1].findIndex(i => i.id == v[1])
-								return this.$http(`districts/${v[1]}`)
+							    let id = r[0].id;
+							    if (this.unlimited) r.unshift(unlimited);
+								this.range.splice(1, 1, r);
+                                v1 = this.range[1].findIndex(i => i.id === v[1]);
+                                let _v = v[1] === -10? v1: id;
+								return this.$http(`districts/${_v}`)
 							})
 							.then(r => {
+                                let id = r[0].id;
+                                if (this.unlimited) r.unshift(unlimited);
 								this.range.splice(2, 1, r)
-								v2 = this.range[2].findIndex(i => i.id == v[2])
+								v2 = this.range[2].findIndex(i => i.id === v[2])
+                                let _v = v[2] === -10? v1: id;
 								if (this.level === 4) {
-									return this.$http(`areas/${v[2]}`)
-								} else if (this.level == 3) {
-									this.vAsync = [v0, v1, v2]
-									this.title =
+									return this.$http(`areas/${_v}`)
+								} else if (this.level === 3) {
+									this.vAsync = [v0, v1, v2];
+                                    this.title =
 										`${this.range[0][this.vAsync[0]].name},${this.range[1][this.vAsync[1]].name},${this.range[2][this.vAsync[2]].name}`
 								}
 							})
 							.then(r => {
 								if (r) {
+                                    if (this.unlimited) r.unshift(unlimited);
 									this.range.splice(3, 1, r)
-									v3 = this.range[3].findIndex(i => i.id == v[3])
+									v3 = this.range[3].findIndex(i => i.id === v[3])
 									this.vAsync = [v0, v1, v2, v3]
 									this.title =
 										`${this.range[0][this.vAsync[0]].name},${this.range[1][this.vAsync[1]].name},${this.range[2][this.vAsync[2]].name},${this.range[3][this.vAsync[3]].name}`
