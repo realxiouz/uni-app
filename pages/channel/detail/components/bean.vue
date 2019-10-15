@@ -3,27 +3,30 @@
 			<view class="padding-tb-xs padding-lr-sm">
 				<view class="flex flex-wrap margin-bottom-xs">
 					<text><text class="text-gray">
-						渠道名称:&nbsp;</text>{{bean.name}}
+						渠道名称:&nbsp;</text>{{bean.name||''}}
 					</text>
 				</view>
 				<view class="flex flex-wrap margin-bottom-xs">
 					<text><text class="text-gray">
-						法人代表:&nbsp;</text>{{bean.user_id&&bean.user.name}}
+						法人代表:&nbsp;</text>{{bean.company_b&&bean.company_b.legal_person_name}}
 					</text>
 				</view>
 				<view class="flex flex-wrap margin-bottom-xs">
 					<text><text class="text-gray">
-						信用代码:&nbsp;</text>{{bean.code}}
+						信用代码:&nbsp;</text>{{bean.code||''}}
+					</text>
+				</view>
+				<view class="flex flex-wrap margin-bottom-xs">
+					<text>
+						<text class="text-gray">
+							公司地址:&nbsp;
+						</text>
+						{{bean.city&&bean.city.province ? `${bean.city.name}-${bean.city.province.name}-${bean.address}` : `${bean.address}`}}
 					</text>
 				</view>
 				<view class="flex flex-wrap margin-bottom-xs">
 					<text><text class="text-gray">
-						公司地址:&nbsp;</text>{{bean.address}}
-					</text>
-				</view>
-				<view class="flex flex-wrap margin-bottom-xs">
-					<text><text class="text-gray">
-						联系人:&nbsp;</text>{{bean.linkmen&&bean.linkmen.name}}
+						联系人:&nbsp;</text>{{bean.linkman&&bean.linkman.name}}
 					</text>
 				</view>
 				<view class="flex flex-wrap margin-bottom-xs">

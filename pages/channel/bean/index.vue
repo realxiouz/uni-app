@@ -68,6 +68,7 @@
 					type: r.data.type.key || '',
 					address: r.data.address || '',
 				}
+				this.pcd = [r.data.city.province_id, r.data.city.id]
 			})
 		},
 		data: _ => ({

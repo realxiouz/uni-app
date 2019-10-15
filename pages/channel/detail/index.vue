@@ -49,7 +49,7 @@
 			}
 		},
 		onShow() {
-			this.$refs[`list${this.selTab}`] && this.$refs[`list${this.selTab}`].getData(true)
+			// this.$refs[`list${this.selTab}`] && this.$refs[`list${this.selTab}`].getData(true)
 		},
 		data() {
 			return {
@@ -93,6 +93,9 @@
 				
 				list1: [],
 				list2: [],
+				cId: '',
+				rData1: null,
+				rData2: null
 				
 			}
 		},

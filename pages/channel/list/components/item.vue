@@ -10,7 +10,7 @@
 					</view>
 					<view>上次跟进：{{bean.last_genjin_time?bean.last_genjin_time:''}}</view>
 					<!-- <view>{{bean.desireRatio}}</view> -->
-					<view>客户星级：{{bean.star?bean.star:''}}</view>
+					<view>释放公池：{{bean.release_at?bean.release_at:''}}</view>
 					<view>录入时间：{{bean.created_at}}</view>
 				</view>
 			</view>
