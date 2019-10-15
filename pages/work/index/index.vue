@@ -25,7 +25,7 @@
 		<template>
             <view class="cu-bar bg-white solid-bottom margin-top">
                 <view class="action">
-                    <text class="cuIcon-title text-orange "></text> 楼盘
+                    <text class="cuIcon-title text-orange "></text> 分销楼盘
                 </view>
             </view>
             <view class="cu-list grid col-4 no-border">
@@ -166,14 +166,6 @@
 						hasFeatures: 'baobei up'
 					},
 					{
-						cuIcon: 'list',
-						color: 'green',
-						badge: 0,
-						name: '报备列表',
-						path: `/pages/baobei/list/index?type=in`,
-						hasFeatures: 'baobei in'
-					},
-					{
 						cuIcon: 'circlefill',
 						color: 'green',
 						badge: 0,
@@ -193,7 +185,7 @@
 						cuIcon: 'share',
 						color: 'green',
 						name: '共享客户',
-						path: '/pages/customer/index/share?type=新房'
+						path: '/pages/customer/index/share?type=新房&share=true'
 					},
 					{
 						cuIcon: 'profile',
@@ -213,7 +205,7 @@
 						cuIcon: 'share',
 						color: 'green',
 						name: '共享客户',
-						path: '/pages/customer/index/share?type=分销'
+						path: '/pages/customer/index/share?type=分销&share=true'
 					},
 					{
 						cuIcon: 'profile',
@@ -243,7 +235,15 @@
 						color: 'green',
 						name: '渠道列表',
 						path: `/pages/channel/list/index`
-					}
+					},
+                    {
+                        cuIcon: 'list',
+                        color: 'green',
+                        badge: 0,
+                        name: '报备列表',
+                        path: `/pages/baobei/list/index?type=in`,
+                        hasFeatures: 'baobei in'
+                    }
 				]
 			};
 		},

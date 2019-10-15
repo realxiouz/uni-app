@@ -2,6 +2,11 @@ import {
 	BASE_URL
 } from '@/utils/const.js'
 
+function getCurPage() {
+    let pages = getCurrentPages();
+    return pages[pages.length -1];
+}
+
 export const http = (url, data, method = 'GET') => {
 	let token = uni.getStorageSync('apiToken') || ''
 	return new Promise((resolve, reject) => {
@@ -23,9 +28,12 @@ export const http = (url, data, method = 'GET') => {
 			switch (status) {
 				case 401:
 					reject(new Error('auth失败'))
-					uni.reLaunch({
-						url: '/pages/public/login/index'
-					})
+                    let route = getCurPage().route;
+                    if (!/pages\/public\/(login|bind)\/index/.test(route)) {
+                        uni.reLaunch({
+                            url: '/pages/public/login/index'
+                        })
+                    }
 					break
 				case 403:
 					uni.showToast({

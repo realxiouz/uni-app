@@ -40,6 +40,9 @@ export default {
         // 这里调用注意this指向, 需要call或apply亦或是bind
         // 分享触发
         return new Promise ((response, reject) => {
+            if (/(boolean|number|object|function)/.test(typeof url) || !url) {
+                return reject('The address is invalid');
+            }
             uni.downloadFile({
                 url: url,// 网络路径
                 success(res) {

@@ -17,9 +17,9 @@
 			
 			<view style="width: 100%;" class="margin-top-xs">
 				<!-- <text class="text-gray text-sm margin-right-xs">相关人员:</text> -->
-				<navigator class="cu-tag bg-cyan radius small margin-bottom" v-for="(i, inx) in bean.message.data.contacts" :key="inx" :url="`/pages/contact/detail/index?id=${i.id}`">@ {{i.name}}</navigator>
+				<navigator class="cu-tag bg-cyan radius small margin" v-for="(i, inx) in bean.message.data.contacts" :key="inx" :url="`/pages/contact/detail/index?id=${i.id}`">@ {{i.name}}</navigator>
 				<navigator
-					class="cu-tag bg-cyan radius small margin-bottom"
+					class="cu-tag bg-cyan radius small margin"
 					v-for="(i, inx) in bean.message.data.meta"
 					:key="inx"
 					:url="calcUrl(i)">
@@ -67,7 +67,7 @@
 </script>
 
 <style scoped>
-    .margin-bottom {
-        margin-bottom: 5rpx;
+    .margin {
+        margin: 0 10rpx 5rpx 0;
     }
 </style>

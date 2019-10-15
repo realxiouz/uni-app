@@ -130,6 +130,17 @@
 
 	export default {
 		async onLoad(opt) {
+		    if (!Boolean(opt.pools) && !Reflect.has(this.selEmployee, 'id')) {
+                let userInfo = this.userInfo;
+                this.setSelEmployee({
+                    id: userInfo.id,
+                    name: userInfo.name,
+                    avatar: userInfo.avatar.replace(this.defaultAvatar, ''),
+                    defaultSelected: true
+                })
+            } else {
+                this.selEmployee.defaultSelected && this.setSelEmployee({});
+            }
 			this.customerId = opt.id
 			if (this.customerId) {
 				uni.setNavigationBarTitle({
@@ -368,7 +379,7 @@
 		},
 		computed: {
 			...mapState('customer', ['selEmployee']),
-			...mapState(['userInfo'])
+			...mapState(['userInfo', 'defaultAvatar'])
 		},
 		watch: {
 			pcd: {
@@ -390,6 +401,9 @@
 					}
 				}
 			}
-		}
+		},
+        mounted() {
+
+        }
 	}
 </script>

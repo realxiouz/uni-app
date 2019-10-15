@@ -33,10 +33,6 @@
                 <input name="position" v-model="editUserInfo.position"></input>
             </view>
             <view class="cu-form-group">
-                <view class="title">微信绑定手机号</view>
-                <input name="mobile" v-model="editUserInfo.mobile"></input>
-            </view>
-            <view class="cu-form-group">
                 <view class="title">邮箱</view>
                 <input name="email" v-model="editUserInfo.email"></input>
             </view>
@@ -66,7 +62,6 @@
                     companyname: '',
                     phone: '',
                     position: '',
-                    mobile: '',
                     email: '',
                     weixin: '',
                     signature: ''
@@ -129,10 +124,21 @@
 				});
 				this.$http('geren/addcard', this.editUserInfo).then(res => {
                     uni.hideLoading();
+                    if (res.msg !== '更新成功') {
+                        uni.showToast({
+                            title: res.message,
+                            icon: 'none',
+                            duration: 2000,
+                            mask: true
+                        });
+                        return false;
+                    }
 					// 保存成功
-					self.changeCurrentLoginUserInfo(res.data);
+                    let r = res.data;
+                    if (!r.avatar) r.avatar = this.defaultAvatar;
+					self.changeCurrentLoginUserInfo(r);
 					uni.showToast({
-                        title: '修改成功...',
+                        title: res.msg,
                         duration: 1000,
                         mask: true
                     });
@@ -143,6 +149,12 @@
                     }, 1200);
 				}).catch(err => {
 					uni.hideLoading();
+                    uni.showToast({
+                        title: '修改失败, 请重试...',
+                        duration: 2000,
+                        mask: true,
+                        icon: 'none'
+                    });
 				})
             },
             getPhone(res) {
@@ -153,7 +165,8 @@
             getPhone
         },
         computed: {
-			...mapState('ucenter', ['currentLoginUserInfo'])
+			...mapState('ucenter', ['currentLoginUserInfo']),
+            ...mapState(['defaultAvatar'])
         }
     }
 </script>
