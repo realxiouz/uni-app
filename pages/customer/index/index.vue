@@ -50,6 +50,7 @@
 				title = '共享客户';
 			} else if (opt.private) {
 				title = '客户公池';
+				this.pools = true;
 			}
 			uni.setNavigationBarTitle({
 				title
@@ -62,7 +63,7 @@
 				keywords: '',
 				data: null,
 				type: '',
-				
+                pools: false,
 				needSetDefault: false
 				
 			}
@@ -80,8 +81,9 @@
 						avatar: this.userInfo.avatar
 					})
 				}
+                let until = this.pools? '&pools=true': '';
 				uni.navigateTo({
-					url: `/pages/customer/bean/index?type=${this.type}`
+					url: `/pages/customer/bean/index?type=${this.type}${until}`
 				})
 			},
 			handleSearch() {

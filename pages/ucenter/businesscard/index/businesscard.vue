@@ -18,7 +18,6 @@
 				<view class="card-details">
 					<text>公司名称：{{currentInfo.companyname || ''}}</text>
 					<text>电话：{{currentInfo.phone || ''}}</text>
-					<text>微信手机号：{{currentInfo.mobile || ''}}</text>
 					<text>微信号：{{currentInfo.weixin || ''}}</text>
 					<text>邮箱：{{currentInfo.email || ''}}</text>
 				</view>
@@ -150,25 +149,26 @@
 		<!-- 底部 end -->
 
 		<!--制作名片按钮 start-->
-		<make-btn :on-event="onMyEvent" v-if="!showMakeBtn"></make-btn>
+		<make-btn :on-event="onMyEvent" v-if="!showMakeBtn && hasCurrentId"></make-btn>
 		<!--制作名片按钮 end-->
         <!--授权-->
+        <!-- #ifdef MP-WEIXIN -->
         <view v-if="isShowAuth" :class="['cu-modal', modalName === 1? 'show': '']">
             <view class="cu-dialog">
                 <view class="cu-bar bg-white justify-end">
-                    <view class="content">你还未认证请认证通过</view>
+                    <view class="content">使用微信登录</view>
                     <view class="action" @tap="modalName = null">
                         <text class="cuIcon-close text-red"></text>
                     </view>
                 </view>
                 <view class="padding-xl">
-                    <button class="cu-btn bg-red margin-tb-sm lg button-hover"
-                            open-type="getUserInfo" @getuserinfo="getUserInfo">
+                    <button class="cu-btn bg-red margin-tb-sm lg button-hover" open-type="getUserInfo" @getuserinfo="getUserInfo" @tap="showLoading">
                         获取授权
                     </button>
                 </view>
             </view>
         </view>
+        <!-- #endif -->
 	</view>
 </template>
 
@@ -211,7 +211,8 @@
                 showNumber: '',// 浏览记录显示的个数, 保存使用, 而且只获取一次
                 personal: 0,
                 isShowAuth: false,
-                uidx: ''
+                uidx: '',
+                hasCurrentId: false
 			}
 		},
 		components: {
@@ -270,13 +271,16 @@
                     }).catch(err => {})
                 }
                 self.setBrowseUser(browseUser);
+            },
+            currentLoginUserInfo(data) {
+                this.hasCurrentId = Reflect.has(data, 'id');
             }
 		},
 		methods: {
 			...mapMutations(['login']),
 			...mapMutations('ucenter', ['changeCurrentLoginUserInfo', 'changeImg', 'changeCurrentUserInfo', 'changeCurrentInfo', 'setUId', 'setBrowseUser', 'setInterceptUId']),
 			toDetail(id) {
-				// recommend为1表示是从名片推荐楼盘这里跳转过去的, 因为在详情页里有些不显示户型图片, 地图, 详情
+			    if (id === null || id === undefined) return false;
 				uni.navigateTo({
 				  url: `/pages/project/project-dev/index?id=${id}`
 				})
@@ -300,16 +304,18 @@
 			},
 			/* 名片分享到朋友圈*/
             async generateCard(e) {
+                if (!Reflect.has(this.currentInfo, 'id')) return false;
                 uni.showLoading({
                     title: '生成中...',
                     mask: true
                 });
                 let avatar = this.currentInfo.avatar;
                 avatar = avatar.replace('http://', 'https://');
+                // avatar || this.defaultAvatar
                 let imgDownload = [
                     {
                         key: 'img_avatar',
-                        src: avatar
+                        src: avatar || this.defaultAvatar
                     },
                     {
                         key: 'img_phone',
@@ -337,6 +343,7 @@
                     }*/
                 ];
                 this.isRepeatDraw = false;
+                let trouble = false;
                 for (let item of Object.values(imgDownload)) {
                     let _key = item.key;
                     if (!this.downLoadImg[_key]) {
@@ -345,7 +352,18 @@
                             this.changeImg({key: _key, url: res.tempFilePath});
                         }).catch(err => {})
                     }
+                    if (_key === 'img_bg' && !this.downLoadImg['img_bg']) {
+                        trouble = true;
+                        uni.hideLoading();
+                        uni.showToast({
+                            title: '网络连接失败, 请检查网络后重试...',
+                            duration: 2500,
+                            icon: 'none',
+                            mask: true
+                        })
+                    }
                 }
+                if (trouble) return false;
                 // 为画布设置宽高, 在点击取消的时候会清除
                 this.canvasWidth = this.canvasWd;
                 if (!this.isRepeatDraw) {
@@ -377,20 +395,22 @@
 			},
 			/*拨打电话*/
 			tel() {
+			    if (!this.currentInfo.phone) return false;
 				uni.makePhoneCall({
 					phoneNumber: this.currentInfo.phone
 				})
 			},
             getUserInfo(e) {
+                this.modalName = null;
+                uni.hideLoading();
                 if (e.detail.errMsg === 'getUserInfo:fail auth deny') {
                     uni.showToast({
-                        title: '登录失败, 您拒绝了授权...',
+                        title: '登录失败, 您拒绝了了微信登录...',
                         icon: 'none',
                         duration: 2000,
                         mask: true
                     });
                 } else {
-                    this.modalName = null;
                     const self = this;
                     uni.login({
                         provider: 'weixin',
@@ -423,6 +443,7 @@
             },
 			/* 新建联系人 */
 			addPhoneNumber() {
+			    if (!this.currentInfo.phone) return false;
 				uni.addPhoneContact(
 				    {
 					    firstName: this.currentInfo.name,
@@ -519,6 +540,7 @@
 			},
 			// #endif
 			messageInformation() {
+			    if (!Reflect.has(this.currentInfo, 'uid')) return false;
 				// 留言咨询
 				uni.navigateTo({
 					url: `/pages/message/chat/index?id=${this.currentInfo.uid}&type=App\\User&send-name=${this.currentInfo.name}`
@@ -542,7 +564,10 @@
                 });
                 let boo = !!uidx;
                 uidx = uidx || this.userInfo.id;
-                if (!uidx) return false;
+                if (!uidx) {
+                    uni.hideLoading();
+                    return false;
+                }
                 this.$http('geren/userinfo', {uidx: uidx}).then(res => {
                     let houseArr = res.house.data;
                     let r = res.data;
@@ -557,6 +582,12 @@
                     uni.hideLoading();
                 });
             },
+            showLoading() {
+                uni.showLoading({
+                    title: '授权中...',
+                    mask: true
+                })
+            }
 		},
 		onShareAppMessage() {
             return {

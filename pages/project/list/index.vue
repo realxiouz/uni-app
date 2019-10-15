@@ -1,5 +1,5 @@
 <template>
-	<view style="height:100vh;background: #fff;">
+	<view style="position: relative;height:100vh;background: #fff;">
         <view class="search" :style="{top: isH5?'44px':'0px'}">
             <view>
                 <view class="area">
@@ -61,7 +61,7 @@
                 isEnd: false,
                 top: 0,
                 pcd: [],
-                clearContent: '现居城市',
+                clearContent: '选择地区',
                 isFirstSearch: true
             }
 		},

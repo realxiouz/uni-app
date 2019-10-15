@@ -167,7 +167,7 @@
 					
 					
 				}).then(r => {
-					r && (this.employees = [{name: '不选择', id: ''}, ...r])
+					r && (this.employees = [{name: '不指定接待人', id: ''}, ...r])
 				})
 			},
 			calcStep(status) {

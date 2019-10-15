@@ -159,14 +159,6 @@
 					},
 					
 					{
-						cuIcon: 'list',
-						color: 'green',
-						badge: 0,
-						name: '报备列表',
-						path: `/pages/baobei/list/index?type=in`,
-						hasFeatures: 'baobei in'
-					},
-					{
 						cuIcon: 'circlefill',
 						color: 'green',
 						badge: 0,
@@ -186,7 +178,7 @@
 						cuIcon: 'share',
 						color: 'green',
 						name: '共享客户',
-						path: '/pages/customer/index/share?type=新房'
+						path: '/pages/customer/index/share?type=新房&share=true'
 					},
 					{
 						cuIcon: 'profile',
@@ -206,7 +198,7 @@
 						cuIcon: 'share',
 						color: 'green',
 						name: '共享客户',
-						path: '/pages/customer/index/share?type=分销'
+						path: '/pages/customer/index/share?type=分销&share=true'
 					},
 					{
 						cuIcon: 'profile',
@@ -250,7 +242,13 @@
 		},
 		onShow() {},
         onLoad() {
-
+		    // #ifdef MP-WEIXIN
+            if (!this.hasLogin) {
+                uni.reLaunch({
+                    url: '/pages/public/login/index',
+                })
+            }
+		    // #endif
         },
 		methods: {
 			handleNav(url) {

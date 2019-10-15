@@ -143,16 +143,16 @@
 		methods: {
 		    ...mapMutations('ucenter', ['changeImg']),
             async generateCard(e) {
+                if (!Reflect.has(this.currentInfo, 'id')) return false;
                 uni.showLoading({
-                    title: '生成中...',
-                    mask: true
+                    title: '生成中...'
                 });
                 let avatar = this.currentInfo.avatar;
                 avatar = avatar.replace('http://', 'https://');
                 let imgDownload = [
                     {
                         key: 'img_avatar',
-                        src: avatar
+                        src: avatar || this.defaultAvatar
                     },
                     {
                         key: 'img_phone',
@@ -179,6 +179,7 @@
                         src: this.imgSrcGetters('card-mask.png')
                     }*/
                 ];
+                let trouble = false;
                 for (let item of Object.values(imgDownload)) {
                     let _key = item.key;
                     if (!this.downLoadImg[_key]) {
@@ -187,8 +188,18 @@
                             this.changeImg({key: _key, url: res.tempFilePath});
                         }).catch(err => {});
                     }
+                    if (_key === 'img_bg' && !this.downLoadImg['img_bg']) {
+                        trouble = true;
+                        uni.hideLoading();
+                        uni.showToast({
+                            title: '网络连接失败, 请检查网络后重试...',
+                            duration: 2500,
+                            icon: 'none',
+                            mask: true
+                        })
+                    }
                 }
-                uni.hideLoading();
+                if (trouble) return false;
                 // 为画布设置宽高, 在点击取消的时候会清除
                 this.canvasWidth = this.canvasWd;
                 this.modalName = e.currentTarget.dataset.target;
@@ -203,6 +214,7 @@
                 const cardSm = uni.createCanvasContext('share-sm');
                 this.currentBgNum = this.currentInfo.template_id;
                 share.canvas.call(this, e, ctx, cardSm);
+                uni.hideLoading();
             },
 			appShareFriend() {
 				// #ifdef APP-PLUS
@@ -258,7 +270,7 @@
 		},
 		computed: {
 			...mapState('ucenter', ['currentLoginUserInfo', "downLoadImg", 'currentInfo']),
-			...mapState(['userInfo']),
+			...mapState(['userInfo', 'defaultAvatar']),
 			...mapGetters('ucenter', ['imgSrcGetters'])
 		},
 		onShareAppMessage(res) {

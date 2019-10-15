@@ -18,10 +18,26 @@
 		
 		<!-- #ifndef H5 -->
 		<view class="text-xsl text-green text-center q-fixed" style="bottom: 160upx;top: auto">
-			<button open-type="getUserInfo" @getuserinfo="getuserinfo" class="cuIcon cuIcon-weixin border" style="background:#F1F1F1; border: 1px solid rgba(0, 0, 0, 0);color: #39B54A;"></button>
-
+			<button open-type="getUserInfo" @getuserinfo="getUserInfo" class="cuIcon cuIcon-weixin border" style="background:#F1F1F1; border: 1px solid rgba(0, 0, 0, 0);color: #39B54A;" @tap="showLoading"></button>
 		</view>
 		<!-- #endif -->
+        <!-- #ifdef MP-WEIXIN-->
+        <view :class="['cu-modal', modalName === 1? 'show': '']">
+            <view class="cu-dialog">
+                <view class="cu-bar bg-white justify-end">
+                    <view class="content">使用微信登录</view>
+                    <view class="action" @tap="modalName = null">
+                        <text class="cuIcon-close text-red"></text>
+                    </view>
+                </view>
+                <view class="padding-xl">
+                    <button class="cu-btn bg-red margin-tb-sm lg button-hover" open-type="getUserInfo" @getuserinfo="getUserInfo"  @tap="showLoading">
+                        获取授权
+                    </button>
+                </view>
+            </view>
+        </view>
+        <!--#endif-->
 	</view>
 </template>
 
@@ -36,7 +52,8 @@
 			formBean: {
 				mobile: '',
 				password: '',
-			}
+			},
+            modalName: 1
 		}),
 		methods: {
 			...mapMutations(['login', 'changeToken']),
@@ -70,45 +87,25 @@
                         })
                     }
 				}).catch(e => {
-					// console.log(e);
+                    console.log(e);
+                    // console.log(e);
 					uni.showToast({
 						title: '用户名或者密码错误',
 						icon: 'none'
 					})
 				})
 			},
-			wechatlogin(data) {
-				uni.login({
-				  provider: 'weixin',
-				  success: (loginRes) => {
-				    console.log(loginRes);
-					this.code = loginRes.code;
-					console.log(this.code);
-					// this.$http('wxapp/login', {code: loginRes.code}, 'post').then(r => {
-					//
-					// })
-				    // 获取用户信息
-				    uni.getUserInfo({
-				      provider: 'weixin',
-				      success: function (infoRes) {
-				        console.log(infoRes.userInfo);
-				      }
-				    });
-				  },
-				  fail: (err) => {
-				  	console.log(err);
-				  }
-				})
-			},
-			getuserinfo(e) {
+            getUserInfo(e) {
+                this.modalName = null;
 				/*let data = {
 					// encryptedData: e.detail.encryptedData,
 					// iv: e.detail.iv,
 					code: this.code
 				}*/
                 if (e.detail.errMsg === 'getUserInfo:fail auth deny') {
+                    uni.hideLoading();
                     uni.showToast({
-                        title: '您拒绝了微信登录...',
+                        title: '登录失败, 您拒绝了微信登录...',
                         icon: 'none',
                         duration: 2000,
                         mask: true
@@ -125,6 +122,7 @@
                         uni.getUserInfo({
                             provider: 'weixin',
                             success(infoRes) {
+                                uni.hideLoading();
                                 let data = {
                                     encryptedData: infoRes.encryptedData,
                                     iv: infoRes.iv,
@@ -156,11 +154,37 @@
                                         })
                                     }
                                 })
+                            },
+                            fail() {
+                                uni.hideLoading();
+                                uni.showToast({
+                                    title: '获取信息失败, 请重试...',
+                                    icon: 'none',
+                                    duration: 2000
+                                })
                             }
                         });
-					}
+					},
+                    fail() {
+                        uni.hideLoading();
+                        uni.showToast({
+                            title: '登录失败, 您拒绝了微信登录...',
+                            icon: 'none',
+                            duration: 2000,
+                            mask: true
+                        })
+                    }
 				})
-			}
+			},
+            showLoading() {
+			    uni.showLoading({
+                    title: '授权中...',
+                    mask: true
+                });
+                // #ifndef MP-WEIXIN
+                this.wxLogin();
+                // #endif
+            }
 		},
 		computed: {
 			...mapState('ucenter', ['interceptUId']),

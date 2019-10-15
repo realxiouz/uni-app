@@ -6,7 +6,7 @@
         </view>
         <view class="cardcontent">
             <view class="cardcontent-top">
-                <text class="bigtitle">
+                <text class="bigtitle" style="font-size: 16px;font-weight: bold;">
                     {{currentUserInfo.name || ''}}
                 </text>
                 <text class="smallfont">
