@@ -20,7 +20,7 @@
 				</data-list>
 			</swiper-item>
 		</swiper>
-		<float-button @go="handleGo" b="25px"/>
+		<float-button @go="handleGo" b="25px" v-if="selTab != 0"/>
 	</view>
 </template>
 
@@ -47,6 +47,9 @@
 				cooperation_id: this.cId,
 				type: 1
 			}
+		},
+		onShow() {
+			this.$refs[`list${this.selTab}`] && this.$refs[`list${this.selTab}`].getData(true)
 		},
 		data() {
 			return {

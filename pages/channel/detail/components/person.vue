@@ -23,6 +23,7 @@
 				<view class="">
 					<button class="cu-btn bg-blue radius small margin-right-xs" @click="handleEdit(bean.id)">编辑</button>
 					<button class="cu-btn bg-cyan radius small margin-right-xs" v-if="!bean.main" @click="handleDefault(bean.id)">设为默认</button>
+					<button class="cu-btn bg-red radius small margin-right-xs" @click="handleDel(bean.id)">删除</button>
 				</view>
 			</view>
 	</view>
@@ -48,6 +49,15 @@
 			},
 			handleDefault (id) {
 				this.$http(`linkmen/${id}`, {main: true}, 'put').then(r => {
+					uni.showToast({
+						icon: 'none',
+						title: r.message
+					})
+					this.$emit('default')
+				})
+			},
+			handleDel(id) {
+				this.$http(`linkmen/${id}`, null, 'delete').then(r => {
 					uni.showToast({
 						icon: 'none',
 						title: r.message

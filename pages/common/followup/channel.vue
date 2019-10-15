@@ -12,14 +12,14 @@
 			<view class="cu-form-group">
 				<textarea :maxlength="200" @input="textareaAInput" placeholder="跟进详情,最少10个字符,最多200个字符"></textarea>
 			</view>
-			<view class="cu-form-group">
+			<!-- <view class="cu-form-group">
 				<view class="title">意愿度</view>
 				<picker @change="desireChange" :value="desireInx" :range="desires" range-key="text">
 					<view class="picker">
 						{{desireInx>-1?desires[desireInx].text:'选择意愿度'}}
 					</view>
 				</picker>
-			</view>
+			</view> -->
 			<view class="cu-form-group">
 				<view class="title">下次跟进日期</view>
 				<picker mode="date" :value="date" start="2015-09-01" end="2020-09-01" @change="dateChange">
@@ -57,7 +57,7 @@
 		data: _ => ({
 			formBean: {
 				result: '',
-				desire: 3,
+				// desire: 3,
 				cooperation_type: 'channel'
 			},
 			formLoading: false,

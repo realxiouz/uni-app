@@ -24,14 +24,16 @@
 				<view class="title">公司地址</view>
 				<input placeholder="输入公司地址" v-model="formBean.address"></input>
 			</view>
-			<view class="cu-form-group">
-				<view class="title">联系人</view>
-				<input placeholder="输入联系人名称" v-model="formBean.linkman.name" :maxlength="11"></input>
-			</view>
-			<view class="cu-form-group">
-				<view class="title">联系人电话</view>
-				<input placeholder="输入联系人电话" v-model="formBean.linkman.phone" :maxlength="11"></input>
-			</view>
+			<template v-if="formBean.linkman">
+				<view class="cu-form-group">
+					<view class="title">联系人</view>
+					<input placeholder="输入联系人名称" v-model="formBean.linkman.name" :maxlength="11"></input>
+				</view>
+				<view class="cu-form-group">
+					<view class="title">联系人电话</view>
+					<input placeholder="输入联系人电话" v-model="formBean.linkman.phone" :maxlength="11"></input>
+				</view>
+			</template>
 			<save @save="handleSave" :loading="formLoading"/>
 		</form>
 	</view>
@@ -53,29 +55,23 @@
 	} from '@/utils/const'
 
 	export default {
-		async onLoad(opt) {
-			this.customerId = opt.id
-			if (this.customerId) {
-				uni.setNavigationBarTitle({
-					title: '编辑客户'
-				})
-				let {
-					data
-				} = await this.getCustomerDetail()
-				this.originData = data
-				this.formatData()
-			}
-			this.customerType = opt.type
-			
+		onLoad(opt) {
 			this.$http('company/canCreateCompanyTypes').then(r => {
 				this.types = r
+			})
+			
+			opt.id && this.$http(`channel/${opt.id}`).then(r => {
+				this.formBean = {
+					id: opt.id,
+					name: r.data.name || '',
+					code: r.data.code || '',
+					type: r.data.type.key || '',
+					address: r.data.address || '',
+				}
 			})
 		},
 		data: _ => ({
 			formLoading: false,
-			originData: {},
-			customerType: '',
-			customerId: null,
 			formBean: {
 				name: '',
 				code: '',
@@ -87,7 +83,7 @@
 				linkman: {
 					name: '',
 					phone: ''
-				}
+				},
 			},
 			types: [],
 			pcd: [],
@@ -96,45 +92,15 @@
 			...mapMutations('customer', ['setSelEmployee']),
 			handleSave() {
 				this.formBean.invitation_id = this.userInfo.id
-
-				// let data = Object.assign({}, this.formBean, {
-				// 	type: this.customerType
-				// })
+				this.formLoading = true
 				
-				if (!this.customerId) {
-					this.formLoading = true
-					this.$http('channel', this.formBean, 'post').then(r => {
-						
-						uni.navigateBack()
-					}).finally(_ => {
-						this.formLoading = false
-					})
-				} else {
-					// this.formLoading = true
-					// this.$http(`channel/${this.customerId}`, data, 'put').then(r => {
-					// 	uni.redirectTo({
-					// 		url: `/pages/customer/detail/index?id=${r.data.id}&type=${r.data.type}`
-					// 	});
-					// }).finally(_ => {
-					// 	this.formLoading = false
-					// })
-				}
-				
-			},
-			async getCustomerDetail() {
-				return this.$http(`customer/${this.customerId}`)
-			},
-			formatData() {
-				this.formBean = this.originData
-				let employee = this.originData.belongsto_id ? this.originData.belongs_employee : {}
-				this.setSelEmployee(employee)
-				
-				this.pcd = [
-					this.originData.current_province_id,
-					this.originData.current_city_id,
-					this.originData.current_district_id,
-					this.originData.current_area_id
-				]
+				let url = this.formBean.id ? `channel/${this.formBean.id}` : 'channel'
+				let method = this.formBean.id ? `put` : 'post'
+				this.$http(url, this.formBean, method).then(r => {
+					uni.navigateBack()
+				}).finally(_ => {
+					this.formLoading = false
+				})
 			},
 		},
 		components: {

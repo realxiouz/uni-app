@@ -30,6 +30,9 @@
 				this.$refs.list.getData()
 			});
 		},
+		onShow() {
+			this.$refs.list&&this.$refs.list.getData(true)
+		},
 		data() {
 			return {
 				list: [],
