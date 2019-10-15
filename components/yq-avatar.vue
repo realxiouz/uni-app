@@ -1,6 +1,5 @@
 <template name="yq-avatar">
 	<view style="display: flex">
-		<image v-if="imgSrc.imgSrc" :src="imgSrc.imgSrc" @click="fSelect" :style="[ imgStyle ]" class="my-avatar"></image>
 		<canvas canvas-id="avatar-canvas" id="avatar-canvas" class="my-canvas" :style="{top: styleTop, height: cvsStyleHeight}" disable-scroll="false"></canvas>
         <!--#ifndef MP-WEIXIN-->
         <canvas canvas-id="oper-canvas" id="oper-canvas" class="oper-canvas" :style="{top: styleTop, height: cvsStyleHeight}" disable-scroll="false" @touchstart="fStart" @touchmove="fMove" @touchend="fEnd"></canvas>
@@ -12,17 +11,12 @@
 		<canvas canvas-id="prv-canvas" id="prv-canvas" class="prv-canvas" disable-scroll="false" @touchstart="fHideImg"	:style="{ height: cvsStyleHeight, top: prvTop }"></canvas>
 		<view class="oper-wrapper" :style="{display: styleDisplay}">
 			<view class="oper">
-				<view class="btn-wrapper" v-if="showOper">
+				<view class="btn-wrapper">
 					<view @click="fSelect"  hover-class="hover" :style="{width: btnWidth}"><text>重选</text></view>
 					<view @click="fClose"  hover-class="hover" :style="{width: btnWidth}"><text>关闭</text></view>
 					<view @click="fRotate"  hover-class="hover" :style="{width: btnWidth, display: btnDsp}"><text>旋转</text></view>
 					<view @click="fPreview" hover-class="hover" :style="{width: btnWidth}"><text>预览</text></view>
 					<view @click="fUpload"  hover-class="hover" :style="{width: btnWidth}"><text>上传</text></view>
-				</view>
-				<view class="clr-wrapper" v-else>
-					<slider class="my-slider" @change="fColorChange"
-					block-size="25" value="0" min="-100" max="100" activeColor="red" backgroundColor="green" block-color="grey" show-value></slider>
-					<view @click="fPrvUpload"  hover-class="hover" :style="{width: btnWidth}"><text>上传</text></view>
 				</view>
 			</view>
 		</view>
@@ -307,100 +301,6 @@
 					fail: (res)=>{
 						uni.showToast({
 							title: "error1",
-							duration: 2000,
-						})
-					},
-					complete: () => {
-						uni.hideLoading();
-						this.noBar || uni.showTabBar();
-					}
-				}, this);
-			},
-			fPrvUpload() {
-				if(this.fPrvUploading)	return;
-				this.fPrvUploading = true;
-				setTimeout(()=>{ this.fPrvUploading = false; }, 1000)
-				
-				let style = this.selStyle,
-					destWidth = parseInt(style.width),
-					destHeight = parseInt(style.height),
-					prvX = this.prvX,
-					prvY = this.prvY,
-					prvWidth = this.prvWidth,
-					prvHeight = this.prvHeight,
-					expWidth = this.exportWidth || prvWidth,
-					expHeight = this.exportHeight || prvHeight;
-					
-				// #ifdef H5
-				prvX *= this.pixelRatio;
-				prvY *= this.pixelRatio;
-				expWidth = prvWidth;
-				expHeight = prvHeight;
-				// #endif
-					
-				uni.showLoading({ mask: true });
-				
-				this.styleDisplay = 'none';
-				this.styleTop = '-10000px';
-				this.hasSel = false;
-				this.fHideImg();
-				uni.canvasToTempFilePath({
-					x: prvX,
-					y: prvY,
-					width: prvWidth,
-					height: prvHeight,
-					destWidth: expWidth,
-					destHeight: expHeight,
-					canvasId: 'prv-canvas',
-					fileType: 'png',
-					quality: this.qlty,
-					success: (r)=>{
-						r = r.tempFilePath;
-						// #ifdef H5
-						this.btop(r).then((r)=> {
-							if(this.exportWidth && this.exportHeight) {
-								let ctxCanvas = this.ctxCanvas;
-								expWidth = this.exportWidth,
-								expHeight = this.exportHeight;
-									
-								ctxCanvas.drawImage(r, 0, 0, expWidth, expHeight);
-								ctxCanvas.draw(false, ()=>{
-									uni.canvasToTempFilePath({
-										x: 0,
-										y: 0,
-										width: expWidth,
-										height: expHeight,
-										destWidth: expWidth,
-										destHeight: expHeight,
-										canvasId: 'avatar-canvas',
-										fileType: 'png',
-										quality: this.qlty,
-										success: (r)=>{
-											r = r.tempFilePath;
-											this.btop(r).then((r)=> {
-												this.$emit("upload", {avatar: this.imgSrc, path: r, index: this.indx, data: this.rtn});
-											});
-										},
-										fail: ()=>{
-											uni.showToast({
-												title: "error0",
-												duration: 2000,
-											})
-										}
-									});
-								});
-							} else {
-								this.$emit("upload", {avatar: this.imgSrc, path: r, index: this.indx, data: this.rtn});
-							}
-						})
-						// #endif
-						// #ifndef H5
-						this.$emit("upload", {avatar: this.imgSrc, path: r, index: this.indx, data: this.rtn});
-						// #endif
-					},
-					fail: ()=>{
-						uni.showToast({
-							title: "error_prv",
 							duration: 2000,
 						})
 					},
@@ -818,170 +718,6 @@
 					this.touch1 = null;
 				}
 			},
-			fGetImgData() {
-				return new Promise((resolve, reject)=>{
-					let prvX = this.prvX,
-						prvY = this.prvY,
-						prvWidth = this.prvWidth,
-						prvHeight = this.prvHeight;
-					// #ifdef APP-PLUS||H5
-					prvX *= this.pixelRatio;
-					prvY *= this.pixelRatio;
-					prvWidth *= this.pixelRatio;
-					prvHeight *= this.pixelRatio;
-					// #endif
-					uni.canvasGetImageData({
-						canvasId: 'prv-canvas',
-						x: prvX,
-						y: prvY,
-						width: prvWidth,
-						height: prvHeight,
-						success(res) {
-							resolve(res.data);
-						},
-						fail(err) {
-							reject(err);
-						}
-					}, this);
-				});
-			},
-			async fColorChange(e) {
-				let tm_now = Date.now();
-				if(tm_now - this.prvTm < 100) return;
-				this.prvTm = tm_now;
-				
-				uni.showLoading({ mask: true });
-				
-				if( !this.prvImgData ) {
-					if( !(this.prvImgData = await this.fGetImgData().catch((res)=>{
-						uni.showToast({
-							title: "error_read",
-							duration: 2000,
-						})
-					}))) return;
-					this.target = new Uint8ClampedArray(this.prvImgData.length);
-				}
-				
-				let data = this.prvImgData,
-					target = this.target,
-					i = e.detail.value,
-					r,g,b,a,h,s,l,d,p,q,t,min,max,hK,tR,tG,tB;
-					
-				if( i === 0 ) {
-					target = data;
-				} else {
-					i = (i+100)/200;
-					if( i < 0.005 ) i = 0;
-					if( i > 0.995 ) i = 1;
-					for( let n = data.length-1; n >= 0; n-=4 ) {
-						r = data[n-3] / 255;
-						g = data[n-2] / 255;
-						b = data[n-1] / 255;
-						max = Math.max(r,g,b);
-						min = Math.min(r,g,b);
-						d = max-min;
-						if ( max === min ){
-							h = 0 ;
-						}else if( max === r && g>=b ){
-							h = 60*( (g-b)/d ) ;
-						}else if( max === r && g<b ){
-							h = 60*( (g-b)/d ) + 360 ;
-						}else if( max === g ){
-							h = 60*( (b-r)/d ) + 120 ;
-						}else if( max === b ){
-							h = 60*( (r-g)/d ) + 240 ;
-						}
-						l = (max+min)/2 ;
-						if ( l===0 || max===min ){
-							s = 0 ;
-						}else if( 0<l && l<=0.5 ){
-							s = d/(2*l) ;
-						}else if( l>0.5 ){
-							s = d/(2-2*l) ;
-						}
-						data[n] && (a = data[n]);
-						
-						if ( i < 0.5 ){
-							s = s*i/0.5 ;
-						}else if ( i > 0.5 ){
-							s = 2*s + 2*i - (s*i/0.5) - 1 ;
-						}
-						
-						if ( s === 0 ){
-							r = g = b = Math.round( l*255 ) ;
-						}else{
-							if ( l<0.5 ){
-								q = l * ( 1 + s ) ;
-							}else if( l>=0.5 ){
-								q = l + s - ( l * s ) ;
-							}      
-							p = 2*l-q ;
-							hK = h/360 ;
-							tR = hK + 1/3 ;
-							tG = hK ;
-							tB = hK - 1/3 ;
-							let correctRGB = (t)=>{
-								if( t<0 ){
-									return t + 1.0 ;
-								}
-								if( t>1 ){
-									return t - 1.0 ;
-								}
-								return t ;
-							} ;
-							let createRGB = (t)=>{
-								if ( t<(1/6) ){
-									return p+((q-p)*6*t) ;
-								}else if( t>=(1/6) && t<(1/2) ){
-									return q ;
-								}else if( t>=(1/2) && t<(2/3) ){
-									return p+((q-p)*6*((2/3)-t)) ;
-								}
-								return p ;
-							} ;
-							r = tR = Math.round( createRGB( correctRGB( tR ) )*255 ) ;
-							g = tG = Math.round( createRGB( correctRGB( tG ) )*255 ) ;
-							b = tB = Math.round( createRGB( correctRGB( tB ) )*255 ) ;
-						}
-						a && ( target[n] = a ) ;  
-						target[n-3] = r;
-						target[n-2] = g;
-						target[n-1] = b;
-					}
-				}
-				let prvX = this.prvX,
-					prvY = this.prvY,
-					prvWidth = this.prvWidth,
-					prvHeight = this.prvHeight;
-					
-				this.ctxCanvasPrv.setFillStyle('black');
-				this.ctxCanvasPrv.fillRect(prvX, prvY, prvWidth, prvHeight);
-				this.ctxCanvasPrv.draw(true);
-				
-				// #ifdef APP-PLUS||H5
-				prvX *= this.pixelRatio;
-				prvY *= this.pixelRatio;
-				prvWidth *= this.pixelRatio;
-				prvHeight *= this.pixelRatio;
-				// #endif
-				uni.canvasPutImageData({
-					canvasId: 'prv-canvas',
-					x: prvX,
-					y: prvY,
-					width: prvWidth,
-					height: prvHeight,
-					data: target,
-					fail() {
-						uni.showToast({
-							title: 'error_put',
-							duration: 2000
-						})
-					},
-					complete() {
-						uni.hideLoading();
-					}
-				}, this);
-			},
 			btop(base64) {
 				return new Promise(function(resolve, reject) {
 					var arr = base64.split(','),
@@ -1071,10 +807,6 @@
 		font-size: 16px;
 		color: #333;
 		border: 1px solid #f1f1f1;
-		border-radius: 6%;
-	}
-	.hover {
-		background: #f1f1f1;
 		border-radius: 6%;
 	}
 	.clr-wrapper {

@@ -18,7 +18,7 @@
 				</data-list>
 			</swiper-item>
 		</swiper>
-		<!--<float-button @go="handleGo" b="25px"/>-->
+		<!-- <float-button @go="handleGo" b="25px"/> -->
 	</view>
 </template>
 

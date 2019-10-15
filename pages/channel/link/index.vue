@@ -42,7 +42,17 @@
 			this.formBean.cooperation_id = opt.cId
 			if (opt.id) {
 				this.$http(`linkmen/${opt.id}`).then(r => {
-					
+					this.formBean = {
+						id: opt.id,
+						name: r.data.name || '',
+						phone: r.data.phone || '',
+						qq: r.data.qq || '',
+						weixin: r.data.weixin || '',
+						title: r.data.title || '',
+						email: r.data.email || '',
+						remark: r.data.remark || '',
+						cooperation_id: r.data.cooperation_id,
+					}
 				})
 			}
 		},
@@ -67,7 +77,9 @@
 			},
 			handleSave() {
 				this.formLoading = true
-				this.$http('linkmen', this.formBean, 'post').then(r => {
+				let url = this.formBean.id ? `linkmen/${this.formBean.id}` : 'linkmen'
+				let method = this.formBean.id ? `put` : 'post'
+				this.$http(url, this.formBean, method).then(r => {
 					uni.navigateBack({
 						delta: 1
 					})
