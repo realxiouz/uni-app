@@ -61,7 +61,7 @@
                 isEnd: false,
                 top: 0,
                 pcd: [],
-                clearContent: '现居城市',
+                clearContent: '选择地区',
                 isFirstSearch: true
             }
 		},

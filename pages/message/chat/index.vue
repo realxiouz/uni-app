@@ -103,9 +103,10 @@
 					}
                     this.list = [...r.data.reverse(), ...this.list];
 					this.goTarget(message_id_start)
-				}).finally(_ => {
-					this.isLoading = false;
+				}).catch(err => {
                     uni.hideLoading();
+                }).finally(_ => {
+					this.isLoading = false;
 				})
 			},
 			handleSend() {
@@ -163,7 +164,15 @@
 						this.goTarget()
 					}
 				}
-			}
+			},
+            list: {
+			    handler(data) {
+			        this.$nextTick(_ => {
+                        uni.hideLoading();
+                    })
+                },
+                deep: true
+            }
 		},
 		components: {
 			Item

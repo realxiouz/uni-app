@@ -242,7 +242,13 @@
 		},
 		onShow() {},
         onLoad() {
-
+		    // #ifdef MP-WEIXIN
+            if (!this.hasLogin) {
+                uni.reLaunch({
+                    url: '/pages/public/login/index',
+                })
+            }
+		    // #endif
         },
 		methods: {
 			handleNav(url) {
