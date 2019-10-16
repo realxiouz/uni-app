@@ -41,9 +41,19 @@
 				</view>
 				<view class="">
 					<button class="cu-btn bg-blue radius small margin-right-xs" @click="handleEdit(bean.id)">编辑</button>
-					<!-- <button class="cu-btn bg-cyan radius small margin-right-xs" v-if="!bean.main" @click="handleDefault(bean.id)">签约</button>
-					<button class="cu-btn bg-red radius small margin-right-xs" @click="handleDel(bean.id)">删除</button>
-					<button class="cu-btn bg-red radius small margin-right-xs" @click="handlePool(bean.id)">放入公池</button> -->
+					<button class="cu-btn bg-blue radius small margin-right-xs" v-if="!bean.user_id" @click="changeUser(bean.id)">认领</button>
+					<template v-if="bean.status.key == '未签约'">
+						<button class="cu-btn bg-blue radius small margin-right-xs" @click="sign">签约</button>
+						<button class="cu-btn bg-red radius small margin-right-xs" @click="handleDel(bean.id)">删除</button>
+					</template>
+					<template v-if="bean.status.key == '合作中'">
+						<picker
+							class="cu-btn bg-blue radius small margin-right-xs"
+							mode="date" start="2015-09-01" @change="dateChange">
+						    <view class="picker">续约</view>
+						</picker>
+						<button class="cu-btn bg-red radius small margin-right-xs" @click="cancel(bean.company_b_id)">解约</button>
+					</template>
 				</view>
 			</view>
 	</view>
@@ -100,6 +110,47 @@
 			handleEdit(id) {
 				uni.navigateTo({
 					url: `/pages/channel/bean/index?id=${id}`
+				})
+			},
+			changeUser(id) {
+				this.$http(`channel/change-user/${id}`, {
+					user_id: this.userInfo.id
+				}, 'post').then(r => {
+					this.getData()
+					uni.showToast({
+						title: r.message,
+						icon: 'none'
+					})
+				})
+			},
+			cancel(company_id) {
+				this.$http(`cooperation_log/cooperation_cancel`, {
+					company_id,
+					cooperation_type: "channel"
+				}, 'post').then(r => {
+					this.getData()
+					uni.showToast({
+						title: r.message,
+						icon: 'none'
+					})
+				})
+			},
+			dateChange(e) {
+				this.$http(`cooperation_log/renewal`, {
+					company_id: this.bean.company_b_id,
+					cooperation_type: "channel",
+					period: e.detail.value
+				}, 'post').then(r => {
+					this.getData()
+					uni.showToast({
+						title: r.message,
+						icon: 'none'
+					})
+				})
+			},
+			sign() {
+				uni.navigateTo({
+					url: `/pages/channel/sign/index?cId=${this.cId}`
 				})
 			}
 		}

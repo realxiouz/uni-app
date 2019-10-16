@@ -231,6 +231,13 @@
 						hasFeatures: 'channel'
 					},
 					{
+						cuIcon: 'goods',
+						color: 'green',
+						name: '渠道公池',
+						path: `/pages/channel/list/pool`,
+						hasFeatures: 'channel'
+					},
+					{
 						cuIcon: 'list',
 						color: 'green',
 						name: '报备列表',

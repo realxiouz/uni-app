@@ -80,10 +80,10 @@
 							this.list = [];
 							this.isEnd = false
 						}
-						this.list = r.push ? this.list.concat(r) : this.list.concat(r.data);
+						this.list = r instanceof Array ? this.list.concat(r) : this.list.concat(r.data);
 						this.$emit('data', this.list);
 						
-						if (r.data.length < this.per_page) {
+						if (r instanceof Array || r.data.length < this.per_page) {
 							this.isEnd = true
 						}
 					})
