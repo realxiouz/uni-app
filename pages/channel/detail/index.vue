@@ -7,7 +7,7 @@
 		</view>
 		<swiper style="flex: 1;height: 0;" @change="tabChange" :current="selTab">
 			<swiper-item>
-				<bean :c-id="cId" ref="list0" />
+				<bean :c-id="cId" ref="list0"/>
 			</swiper-item>
 			<swiper-item>
 				<data-list ref="list1" @data="handleList1" r-url="linkmen" :r-data="rData1">

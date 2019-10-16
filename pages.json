@@ -413,6 +413,18 @@
 			}
 		},
 		{
+			"path": "pages/channel/list/pool",
+			"style": {
+				"navigationBarTitleText": "渠道公池"
+			}
+		},
+		{
+			"path": "pages/channel/sign/index",
+			"style": {
+				"navigationBarTitleText": "渠道签约"
+			}
+		},
+		{
 			"path": "pages/channel/bean/index",
 			"style": {
 				"navigationBarTitleText": "录入渠道"
