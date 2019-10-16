@@ -1,7 +1,7 @@
 <template>
 	<picker mode="multiSelector" :range="range" @columnchange="handleColumnChange" range-key="name" @change="handleChange"
 	 :value='vAsync'>
-		<view class="picker" v-if="last">
+		<view :class="['picker', lastStyle? 'last-style': '']" v-if="last">
 			{{clearContent || pcdContent()}}
 		</view>
         <view class="picker" v-else>
@@ -208,6 +208,10 @@
             unlimited: {
 			    type: Boolean,
                 default: false
+            },
+            lastStyle: {
+			    type: Boolean,
+                default: false
             }
 		},
 		data() {
@@ -369,5 +373,15 @@
 	}
 </script>
 
-<style>
+<style scoped>
+    .last-style {
+        position: absolute !important;
+        top: 0 !important;
+        left: 0 !important;
+        width: 100% !important;
+        height: 100% !important;
+        z-index: 1000 !important;
+        line-height: 2 !important;
+        text-indent: 6rpx !important;
+    }
 </style>

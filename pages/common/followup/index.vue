@@ -22,7 +22,7 @@
 			</view>
 			<view class="cu-form-group">
 				<view class="title">下次跟进日期</view>
-				<picker mode="date" :value="date" start="2015-09-01" end="2020-09-01" @change="dateChange">
+				<picker mode="date" :value="date" :start="currentDate" end="2020-09-01" @change="dateChange">
 					<view class="picker">
 						{{date?date:'选择日期'}}
 					</view>
@@ -30,7 +30,7 @@
 			</view>
 			<view class="cu-form-group">
 				<view class="title">下次跟进时间</view>
-				<picker mode="time" :value="time" start="09:01" end="21:01" @change="timeChange">
+				<picker mode="time" :value="time" :start="currentTime" end="21:01" @change="timeChange">
 					<view class="picker">
 						{{time?time:'选择时间'}}
 					</view>
@@ -48,7 +48,7 @@
 <script>
 	import save from "@/components/buttom-button"
 	import UploadFiles from "@/components/upload-files"
-
+    import moment from "moment";
 
 	export default {
 		onLoad(opt) {
@@ -71,7 +71,8 @@
 				{text: '其他', value: '6'},
 			],
 			typeInx: -1,
-			
+			currentDate: moment().format('YYYY-MM-DD'),
+            currentTime: moment().format('HH:mm'),
 			desires: [
 				{text: '厌恶', value: '1'},
 				{text: '不感兴趣', value: '2'},
@@ -80,7 +81,6 @@
 				{text: '非常感兴趣', value: '5'},
 			],
 			desireInx: 2,
-			
 			customerId: ''
 		}),
 		methods: {
@@ -88,7 +88,32 @@
 				this.formBean.content = e.detail.value
 			},
 			timeChange(e) {
-				this.time = e.detail.value
+			    // #ifdef APP-PLUS
+                if (!this.date) {
+                    uni.showToast({
+                        title: '请先选择日期...',
+                        icon: 'none',
+                        duration: 2500,
+                        mask: true
+                    });
+                    return false;
+                }
+                let time = e.detail.value;
+                let chargeTime = moment(this.date + ' ' + time);
+                if (chargeTime >= moment()) {
+                    this.time = time;
+                } else {
+                    uni.showToast({
+                        title: '只能选择未来的时间...',
+                        icon: 'none',
+                        duration: 2500,
+                        mask: true
+                    })
+                }
+			    // #endif
+				// #ifndef APP-PLUS
+                this.time = e.detail.value
+                // #endif
 			},
 			dateChange(e) {
 				this.date = e.detail.value
