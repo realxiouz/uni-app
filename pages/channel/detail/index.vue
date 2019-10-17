@@ -35,9 +35,6 @@
 	export default {
 		onLoad(opt) {
 			this.cId = opt.cId
-			this.$nextTick(_ => {
-				this.$refs.list0.getData()
-			})
 			this.rData1 = {
 				cooperation_type: 'channel',
 				cooperation_id: this.cId
@@ -49,6 +46,9 @@
 			}
 		},
 		onShow() {
+			this.$nextTick(_ => {
+				this.$refs[`list${this.selTab}`].getData(true)
+			})
 			// this.$refs[`list${this.selTab}`] && this.$refs[`list${this.selTab}`].getData(true)
 		},
 		data() {
