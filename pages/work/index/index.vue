@@ -6,13 +6,10 @@
 				<view class="action">
 					<text class="cuIcon-title text-orange "></text> 智能考勤
 				</view>
-				<!-- <view class="action">
-					<button class="cu-btn bg-green shadow" @tap="showModal" data-target="gridModal">设置</button>
-				</view> -->
 			</view>
 			<view class="cu-list grid col-4 no-border">
-				<view class="cu-item" v-for="(item,index) in attendanceList" :key="index">
-					<view :class="['cuIcon-' + item.cuIcon,'text-' + item.color]" @click="handleNav(item.path)">
+				<view class="cu-item" v-for="(item,index) in attendanceList" :key="index" @click="handleNav(item.path)">
+					<view :class="['cuIcon-' + item.cuIcon,'text-' + item.color]">
 						<view class="cu-tag badge" v-if="item.badge">
 							<block v-if="item.badge!=1">{{item.badge>99?'99+':item.badge}}</block>
 						</view>
@@ -29,8 +26,8 @@
                 </view>
             </view>
             <view class="cu-list grid col-4 no-border">
-                <view class="cu-item" v-for="(item,index) in projectList" :key="index" v-if="hasFeature(item.hasFeatures)">
-                    <view :class="['cuIcon-' + item.cuIcon,'text-' + item.color]" @click="handleNav(item.path)">
+                <view class="cu-item" v-for="(item,index) in projectList" :key="index" v-if="hasFeature(item.hasFeatures)" @click="handleNav(item.path)">
+                    <view :class="['cuIcon-' + item.cuIcon,'text-' + item.color]">
                         <view class="cu-tag badge" v-if="item.badge">
                             <block v-if="item.badge!=1">{{item.badge>99?'99+':item.badge}}</block>
                         </view>
