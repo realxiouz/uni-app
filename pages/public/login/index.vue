@@ -22,7 +22,7 @@
 		</view>
 		<!-- #endif -->
         <!-- #ifdef MP-WEIXIN-->
-        <view :class="['cu-modal', modalName === 1? 'show': '']">
+        <view v-if="!isLogOut && showDialog" :class="['cu-modal', modalName === 1? 'show': '']">
             <view class="cu-dialog">
                 <view class="cu-bar bg-white justify-end">
                     <view class="content">使用微信登录</view>
@@ -53,7 +53,8 @@
 				mobile: '',
 				password: '',
 			},
-            modalName: 1
+            modalName: 1,
+            showDialog: true
 		}),
 		methods: {
 			...mapMutations(['login', 'changeToken']),
@@ -64,6 +65,7 @@
 				this.$http('auth/login', this.formBean, 'post').then(r => {
 					// console.log(r);
 					let res = r.user;
+					this.showDialog = false;
 					// console.log(userInfo);
 					// uni.setStorageSync('userInfo', r.user);
 					// 表示已经登录成功
@@ -188,7 +190,7 @@
 		},
 		computed: {
 			...mapState('ucenter', ['interceptUId']),
-            ...mapState(['defaultAvatar'])
+            ...mapState(['defaultAvatar', 'isLogOut'])
 		}
 	}
 </script>

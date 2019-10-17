@@ -19,7 +19,7 @@
 			</view>
 		</template>
 		<!-- #endif -->
-		<template>
+		<template v-if="hasFeature('baobei up')">
             <view class="cu-bar bg-white solid-bottom margin-top">
                 <view class="action">
                     <text class="cuIcon-title text-orange "></text> 分销楼盘
@@ -80,7 +80,7 @@
                 </view>
             </view>
         </template>
-		<template>
+		<template v-if="hasFeatureSome(['baobei in', 'channel'])">
 		    <view class="cu-bar bg-white solid-bottom margin-top">
 		        <view class="action">
 		            <text class="cuIcon-title text-orange "></text>渠道管理
@@ -154,7 +154,13 @@
 						path: '/pages/project/list/index?type=cooperation',
 						hasFeatures: 'baobei up'
 					},
-					
+                    {
+                        cuIcon: 'list',
+                        color: 'green',
+                        name: '报备列表',
+                        path: `/pages/baobei/list/index?type=up`,
+                        hasFeatures: 'baobei up'
+                    },
 					{
 						cuIcon: 'circlefill',
 						color: 'green',
@@ -238,9 +244,9 @@
 						cuIcon: 'list',
 						color: 'green',
 						name: '报备列表',
-						path: `/pages/baobei/list/index?type=up`,
-						hasFeatures: 'baobei up'
-					},
+						path: `/pages/baobei/list/index?type=in`,
+						hasFeatures: 'baobei in'
+					}
 				]
 			};
 		},
@@ -278,6 +284,18 @@
             seeMenu(permissions) {
 			    if (!this.userInfo.allPermissions) return false;
                 return this.userInfo.allPermissions.findIndex(i => i.name === permissions) > -1;
+            },
+            hasFeatureSome(f) {
+			    let boolean = false;
+			    if (f instanceof Array) {
+			        let boo = false;
+			        for (let item of f) {
+			            boo = this.userInfo.company.features.some(i => item === i);
+			            if (boo) break;
+                    }
+			        boolean = boo;
+                }
+			    return boolean;
             }
 		},
 		computed: {
