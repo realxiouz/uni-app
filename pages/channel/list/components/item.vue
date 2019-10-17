@@ -8,7 +8,7 @@
 					<view>
 						{{bean.name}}{{bean.belongsto_id ? `[${bean.belongsto_type}]`: ''}}
 					</view>
-					<view>上次跟进：{{bean.last_genjin_time?bean.last_genjin_time:''}}</view>
+					<view>上次跟进：{{bean.followups_at?bean.followups_at:''}}</view>
 					<!-- <view>{{bean.desireRatio}}</view> -->
 					<view>释放公池：{{bean.release_at?bean.release_at:''}}</view>
 					<view>录入时间：{{bean.created_at}}</view>

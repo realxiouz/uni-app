@@ -8,7 +8,7 @@
 				</view>
 				<view class="flex flex-wrap margin-bottom-xs">
 					<text><text class="text-gray">
-						法人代表:&nbsp;</text>{{bean.company_b&&bean.company_b.legal_person_name}}
+						法人代表:&nbsp;</text>{{(bean.company_b&&bean.company_b.legal_person_name)||''}}
 					</text>
 				</view>
 				<view class="flex flex-wrap margin-bottom-xs">
@@ -21,22 +21,22 @@
 						<text class="text-gray">
 							公司地址:&nbsp;
 						</text>
-						{{bean.city&&bean.city.province ? `${bean.city.name}-${bean.city.province.name}-${bean.address}` : `${bean.address}`}}
+						{{bean.city&&bean.city.province ? `${bean.city.name}-${bean.city.province.name}-${bean.address||''}` : `${bean.address||''}`}}
 					</text>
 				</view>
 				<view class="flex flex-wrap margin-bottom-xs">
 					<text><text class="text-gray">
-						联系人:&nbsp;</text>{{bean.linkman&&bean.linkman.name}}
+						联系人:&nbsp;</text>{{(bean.linkman&&bean.linkman.name)||''}}
 					</text>
 				</view>
 				<view class="flex flex-wrap margin-bottom-xs">
 					<text><text class="text-gray">
-						渠道负责人:&nbsp;</text>{{bean.user && bean.user.name}}
+						渠道负责人:&nbsp;</text>{{(bean.user && bean.user.name)||''}}
 					</text>
 				</view>
 				<view class="flex flex-wrap margin-bottom-xs">
 					<text><text class="text-gray">
-						公池释放时间:&nbsp;</text>{{bean.release_at}}
+						公池释放时间:&nbsp;</text>{{bean.release_at||''}}
 					</text>
 				</view>
 				<view class="">
