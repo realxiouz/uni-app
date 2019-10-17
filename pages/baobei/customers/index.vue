@@ -6,7 +6,7 @@
 				<input :adjust-position="false" type="text" placeholder="搜索姓名或者电话" confirm-type="search" v-model="searchVal" @confirm="searchInput"></input>
 			</view>
 		</view>
-		<checkbox-group @change="handleChange" :style="{'display': 'block', 'height': '100vh'}">
+		<checkbox-group @change="handleChange" :style="{'display': 'block', 'height': height}">
 			<data-list :r-url="rUrl" :r-data="rData" ref="list" @data="handleList">
 				<view class="bg-white padding-sm solid-bottom" v-for="(i, inx) in list" :key="inx">
 					<label class="flex">
@@ -53,6 +53,13 @@
                 }
             }
 			this.$nextTick(_ => {
+			    let self = this;
+                uni.getSystemInfo({
+                    success: e => {
+                        self.height = e.windowHeight - 100 + 'px';
+                    }
+                });
+			    this.$refs.list.per_page = 30;
 				this.$refs.list.init()
 			})
 		},
@@ -77,10 +84,23 @@
                 searchValBefore: '',
                 isLoadMore: false,
                 page: '',
-                isEnd: false
+                isEnd: false,
+                height: '100vh'
 			}
 		},
-        watch: {},
+        watch: {
+            searchVal(val) {
+                if (!val) {
+                    let list = JSON.parse(this.searchValBefore);
+                    Reflect.deleteProperty(this.rData, 'keywords');
+                    this.$refs.list.list = list;
+                    this.$refs.list.isEnd = this.isEnd;
+                    this.$refs.list.page = this.page;
+                    this.$refs.list.scrollTop = 0;
+                    this.handleList(list);
+                }
+            }
+        },
 		methods: {
 			...mapMutations('baobei', ['setSelCustomer']),
 			handleList(list) {

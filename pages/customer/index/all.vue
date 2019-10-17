@@ -64,7 +64,9 @@
 						list: [],
 						data: {
 							type: '新房',
-							demands: JSON.stringify({type: '全部'})
+							demands: JSON.stringify({type: '全部'}),
+                            descending: 'asc',
+                            private: true
 						}
 					},
 					{
@@ -74,7 +76,9 @@
 						data: {
 							type: '新房',
 							customer_type: '有意向',
-							demands: JSON.stringify({type: '全部'})
+							demands: JSON.stringify({type: '全部'}),
+                            descending: 'asc',
+                            private: true
 						}
 					},
 					{
@@ -84,7 +88,9 @@
 						data: {
 							type: '新房',
 							customer_type: '已看房',
-							demands: JSON.stringify({type: '全部'})
+							demands: JSON.stringify({type: '全部'}),
+                            descending: 'asc',
+                            private: true
 						}
 					},
 					{
@@ -94,7 +100,9 @@
 						data: {
 							type: '新房',
 							customer_type: '已成交',
-							demands: JSON.stringify({type: '全部'})
+							demands: JSON.stringify({type: '全部'}),
+                            descending: 'asc',
+                            private: true
 						}
 					},
 					{
@@ -104,7 +112,9 @@
 						data: {
 							type: '分销',
 							can_release: false,
-							demands: JSON.stringify({type: '全部'})
+							demands: JSON.stringify({type: '全部'}),
+                            descending: 'asc',
+                            private: true
 						}
 					},
 				],
