@@ -1,7 +1,7 @@
 <template>
 	<picker @change="handleChange" :value="valueAsync" :range="range" :range-key="rangeKey">
 		<view class="picker">
-			{{title}}
+			{{customerTitle?customerTitle:title}}
 		</view>
 	</picker>
 </template>
@@ -27,6 +27,9 @@
 			placeholder: {
 				type: String,
 				default: '还未选择'
+			},
+			customerTitle: {
+				type: String,
 			}
 		},
 		methods: {
