@@ -25,7 +25,7 @@
 			</view>
 			<view class="cu-form-group">
 				<view class="title">预计看房日期</view>
-				<picker mode="date" :value="date" start="2015-09-01" end="2020-09-01" @change="dateChange">
+				<picker mode="date" :value="date" :start="date" end="2020-09-01" @change="dateChange">
 					<view class="picker">
 						{{date}}
 					</view>
@@ -33,7 +33,7 @@
 			</view>
 			<view class="cu-form-group">
 				<view class="title">预计看房时间</view>
-				<picker mode="time" :value="time" start="09:01" end="21:01" @change="timeChange">
+				<picker mode="time" :value="time" :start="StatTime" end="21:01" @change="timeChange">
 					<view class="picker">
 						{{time}}
 					</view>
@@ -97,7 +97,8 @@
 			},
 			customerId: '',
 			date: moment().format('YYYY-MM-DD'),
-			time: moment().format('HH:mm')
+			StatTime: moment().format('HH:mm'),
+            time: moment(moment()+1.8e6).format('HH:mm')
 		}),
 		methods: {
 			...mapMutations('baobei', ['setSelProject', 'setSelCustomer']),

@@ -5,11 +5,11 @@
 					<text class="cu-tag bg-blue radius">{{bean.status_name}}</text>
 				</view>
 				<view class="flex flex-wrap margin-bottom-xs">
-					<text class="basis-df"><text class="text-gray">看房时间:&nbsp;</text>{{bean.created_at|moment('MM-DD HH:mm')}}</text>
+					<text class="basis-df"><text class="text-gray">看房时间:&nbsp;</text>{{(bean.kan_time|moment('MM-DD HH:mm')) || ''}}</text>
 					<text class="basis-df"><text class="text-gray">实看人数:&nbsp;</text>{{bean.peoples}}</text>
 				</view>
 				<view class="margin-bottom-xs">
-					<text class="basis-df"><text class="text-gray">备注:&nbsp;</text>{{bean.remark}}</text>
+					<text class="basis-df"><text class="text-gray">备注:&nbsp;</text>{{bean.remark || ''}}</text>
 				</view>
 				<view class="margin-bottom-xs" v-if="bean.baobei_project_id">
 					<text class="basis-df"><text class="text-gray">楼盘名称:&nbsp;</text>{{bean.baobei_project.name}}</text>
