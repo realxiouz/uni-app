@@ -135,15 +135,25 @@
 					<button class="cu-btn bg-blue radius flex-sub" @click="rl(bean.id)">认领</button>
 				</view>
 			</view>
+			<view class="cu-item" v-if="bean&&bean.belongsto_id">
+				<view class="content padding-tb-sm flex align-center">
+					<single-picker class="cu-btn bg-blue radius flex-sub" :range="types" range-key="name" v-model="eId" customer-title="转移客户" />
+				</view>
+			</view>
 		</view>
 	</scroll-view>
 </template>
 
 <script>
 	import {mapState, mapActions, mapGetters} from 'vuex'
+	import SinglePicker from '@/components/single-picker'
+	
 	export default {
 		mounted() {
 			this.getCompany()
+			this.$http('contacts').then(r => {
+				this.types = [{name: '转移至公池', id: -1}, ...r]
+			})
 		},
 		props: {
 			cId: {
@@ -155,12 +165,34 @@
 				hasLoaded: false,
 				bean: {
                     phone: ''
-                }
+                },
+				types: [],
+				eId: ''
 			}
 		},
 		computed: {
 			...mapState(['userInfo']),
 			...mapGetters("company", ["usingMiddlePhone"]),
+		},
+		components: {
+			SinglePicker
+		},
+		watch: {
+			eId(val) {
+				this.$http('customer-belongsto-log', {
+					customer_ids: [this.bean.id],
+					belongsto_id: val
+				}, 'post').then(r => {
+					this.eId = ''
+					uni.showToast({
+						title: r.message,
+						icon: 'none'
+					})
+					setTimeout(_ => {
+						this.getData()
+					}, 1000)
+				})
+			}
 		},
 		methods: {
 			...mapActions('company', ['getCompany']),
