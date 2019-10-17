@@ -122,14 +122,6 @@
                     this.$refs.list.scrollTop = 1;
                     let data = JSON.stringify(Object.assign(this.rData, {keywords: val}));
                     this.rData = JSON.parse(data);
-                } else {
-                    let list = JSON.parse(this.searchValBefore);
-                    Reflect.deleteProperty(this.rData, 'keywords');
-                    this.$refs.list.list = list;
-                    this.$refs.list.isEnd = this.isEnd;
-                    this.$refs.list.page = this.page;
-                    this.$refs.list.scrollTop = 0;
-                    this.handleList(list);
                 }
             },
 			handleChange(e) {

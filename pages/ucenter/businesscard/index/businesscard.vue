@@ -271,9 +271,6 @@
                     }).catch(err => {})
                 }
                 self.setBrowseUser(browseUser);
-            },
-            currentLoginUserInfo(data) {
-                this.hasCurrentId = Reflect.has(data, 'id');
             }
 		},
 		methods: {
@@ -574,6 +571,7 @@
                     if (!r.avatar) r.avatar = this.defaultAvatar;
                     const data = Object.assign({}, {readNumber: res.readnumber}, {BrowseUser: res.Browseuser}, {house: houseArr}, r);
                     self[boo? 'changeCurrentUserInfo': 'changeCurrentLoginUserInfo'](data);
+                    if (!boo) self.hasCurrentId = Reflect.has(data, 'id');
                     this.relayOn = !this.relayOn;
                     if (!boo) this.setInterceptUId('');
                 }).catch(err => {
