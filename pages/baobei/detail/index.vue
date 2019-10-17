@@ -131,7 +131,7 @@
 				rData: null,
 				rUrl: 'baobei-status-log',
 				list: [],
-				steps: ['待确认', '初步确认', '带看', '成交'],
+				steps: ['待确认', '初审通过', '带看', '成交'],
 				stepInx: -1,
                 isLoading: false,
 				type: '',
