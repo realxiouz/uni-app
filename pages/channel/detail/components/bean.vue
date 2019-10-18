@@ -95,9 +95,18 @@
 				})
 			},
 			handleDel(id) {
-				this.$http(`channel/${id}`, null, 'delete').then(r => {
-					uni.navigateBack()
-				})
+				uni.showModal({
+				    title: '请注意',
+				    content: '确定删除此渠道么?',
+				    success: res => {
+				        if (res.confirm) {
+				            this.$http(`channel/${id}`, null, 'delete').then(r => {
+				            	uni.navigateBack()
+				            })
+				        }
+				    }
+				});
+				
 			},
 			handlePool(id) {
 				this.$http(`channel/${id}`, null, 'put').then(r => {
@@ -124,15 +133,23 @@
 				})
 			},
 			cancel(company_id) {
-				this.$http(`cooperation_log/cooperation_cancel`, {
-					company_id,
-					cooperation_type: "channel"
-				}, 'post').then(r => {
-					this.getData()
-					uni.showToast({
-						title: r.message,
-						icon: 'none'
-					})
+				uni.showModal({
+				    title: '请注意',
+				    content: '确定于此渠道解约么?',
+				    success: res => {
+				        if (res.confirm) {
+				            this.$http(`cooperation_log/cooperation_cancel`, {
+				            	company_id,
+				            	cooperation_type: "channel"
+				            }, 'post').then(r => {
+				            	this.getData()
+				            	uni.showToast({
+				            		title: r.message,
+				            		icon: 'none'
+				            	})
+				            })
+				        }
+				    }
 				})
 			},
 			dateChange(e) {
