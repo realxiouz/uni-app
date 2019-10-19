@@ -35,6 +35,11 @@
 					<log v-for="(i, inx) in list5" :key="inx" :bean="i" />
 				</data-list>
 			</swiper-item>
+			<swiper-item>
+				<data-list ref="list6" @data="handleList6" r-url="customer-share" :r-data="rData">
+					<share v-for="(i, inx) in list6" :key="inx" :bean="i" @refresh="$refs.list6.getData(true)" />
+				</data-list>
+			</swiper-item>
 		</swiper>
 		<float-button @go="handleGo" :icon="selTab == 0 ? 'edit':'add'" v-if="selTab != 5"/>
 	</view>
@@ -48,6 +53,7 @@
 	import Need from './components/need'
 	import Log from './components/log'
 	import Bean from './components/bean'
+	import Share from './components/share'
 	import FloatButton from '@/components/float-button'
 	import {
 		mapMutations,
@@ -102,6 +108,9 @@
 					},
 					{
 						text: '操作记录'
+					},
+					{
+						text: '共享日志'
 					}
 				],
 				list0: [],
@@ -110,6 +119,8 @@
 				list3: [],
 				list5: [],
 				rData: null,
+				
+				list6: [],
 			}
 		},
 		methods: {
@@ -128,6 +139,9 @@
 			},
 			handleList5(l) {
 				this.list5 = l
+			},
+			handleList6(l) {
+				this.list6 = l
 			},
 			tabChange(e) {
 				let temp = e.detail.current - 2 < 0 ? 0 : e.detail.current - 2
@@ -214,7 +228,16 @@
 
 							}
 						})
-						break
+						break;
+					case 6:
+						uni.showActionSheet({
+							itemList: ['内部共享', '外部共享'],
+							success: r => {
+								uni.navigateTo({
+									url: `/pages/customer/share/index?type=${r.tapIndex}&cId=${this.id}`
+								})
+							}
+						})
 					default:
 						break;
 				}
@@ -228,7 +251,8 @@
 			Baobei,
 			Bean,
 			Need,
-			Log
+			Log,
+			Share
 		},
 		computed: {
 			...mapState(['userInfo', 'isH5']),
