@@ -233,9 +233,16 @@
 						uni.showActionSheet({
 							itemList: ['内部共享', '外部共享'],
 							success: r => {
-								uni.navigateTo({
-									url: `/pages/customer/share/index?type=${r.tapIndex}&cId=${this.id}`
-								})
+								let url
+								switch(r.tapIndex) {
+									case 0:
+										url = `/pages/customer/share/inner?cId=${this.id}`
+										break
+									case 1:
+										url = `/pages/customer/share/index?type=${r.tapIndex}&cId=${this.id}`
+										break
+								}
+								uni.navigateTo({url})
 							}
 						})
 					default:
