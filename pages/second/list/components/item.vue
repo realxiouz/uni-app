@@ -109,7 +109,7 @@
 		},
 		computed: {
 			...mapState(['userInfo']),
-            ...mapState('work', ['shopId']),
+            ...mapState('project', ['shopId']),
 			label() {
 				let c = new Set();
 				for (let i of this.bean.house_types) {

@@ -15,7 +15,7 @@
             </view>
         </view>
 		<view :style="[{position: 'fixed', left: 0, right: 0, bottom: '0', top: top, height: isH5? '88vh': '93vh'}]">
-            <data-list ref="list" @data="handleList" r-url="project" :r-data="rData">
+            <data-list ref="list" @data="handleList" :r-url="shopId? 'project/shop': 'project'" :r-data="rData">
                 <project v-for="(i, inx) in list" :key="inx" :bean="i" :type="rData.route_type"/>
             </data-list>
         </view>
@@ -36,10 +36,15 @@
                 shop: '报备楼盘'
 			};
 			uni.setNavigationBarTitle({
-			    title: titleObj[opt.type]
+			    title: this.shopId? '所有楼盘': titleObj[opt.type]
 			});
 			this.setListType(opt.type);
-			if (this.shopId) this.rData.shop_id = this.shopId;
+			if (this.shopId) {
+			    this.rData = {
+			        shop_id: this.shopId,
+                    recommend: 0,
+                };
+            }
 			this.rData.route_type = opt.type;
             this.$nextTick(_ => {
 				this.$refs.list.init()
@@ -109,7 +114,7 @@
             }
 		},
         computed: {
-		    ...mapState('work', ['shopId']),
+		    ...mapState('project', ['shopId']),
             ...mapState(['isH5'])
         },
 		components: {

@@ -92,6 +92,7 @@
             searchVal(val) {
                 if (!val) {
                     let list = JSON.parse(this.searchValBefore);
+                    this.$refs.list.hasLoaded = false;
                     Reflect.deleteProperty(this.rData, 'keywords');
                     this.$refs.list.list = list;
                     this.$refs.list.isEnd = this.isEnd;
@@ -120,6 +121,7 @@
                 let list = [];
                 if (val) {
                     this.$refs.list.scrollTop = 1;
+                    this.$refs.list.hasLoaded = true;
                     let data = JSON.stringify(Object.assign(this.rData, {keywords: val}));
                     this.rData = JSON.parse(data);
                 }

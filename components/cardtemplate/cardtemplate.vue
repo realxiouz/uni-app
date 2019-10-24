@@ -1,7 +1,6 @@
 <template>
 	<view>
 		<view class="cardtemplate" v-if="!isShowList">
-			<!-- :user="currentUserInfo" -->
 			<child-com style="width: 700rpx" :current-user-info="currentInfo" :num="currentInfo.template_id || 0"></child-com>
 		</view>
 
@@ -21,7 +20,7 @@
 </template>
 
 <script>
-	import childCom from './child-com.vue';
+	import childCom from '@/components/cardtemplate/child-com.vue';
 	import {mapState, mapMutations} from 'vuex';
 	export default {
 		props: {

@@ -15,8 +15,20 @@
 	export default {
 		onLoad(opt) {
 			this.rData.user_id = this.userInfo.id;
+			if (!this.hasLogin) {
+                uni.navigateTo({
+                    url: '/pages/public/login/index'
+                })
+            }
 		},
 		onShow() {
+		    if (!this.hasLogin) {
+                uni.showToast({
+                    title: '您还未登录, 请登录...',
+                    icon: 'none',
+                    duration: 2500
+                });
+            }
 			this.$nextTick(_ => {
 				this.$refs.list.getData(true)
 			})
@@ -37,7 +49,7 @@
 			}
 		},
 		computed: {
-			...mapState(['userInfo', 'isH5']),
+			...mapState(['userInfo', 'isH5', 'hasLogin']),
 			...mapState('message', ['new'])
 		},
 		methods: {

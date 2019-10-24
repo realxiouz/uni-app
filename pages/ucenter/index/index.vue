@@ -46,7 +46,7 @@
                 <view class="cu-item arrow icon"></view>
             </view>
             <view class="btn" @tap="btnSignOut">
-                <view class="content">退出登录</view>
+                <view class="content">{{hasLogin? '退出登录': '登陆'}}</view>
             </view>
 		</view>
 	</view>
@@ -65,6 +65,12 @@
 		},
         watch: {},
 		onLoad() {
+            if (!this.hasLogin) {
+                uni.navigateTo({
+                    url: '/pages/public/login/index'
+                });
+                return false;
+            }
 			//#ifdef MP-WEIXIN
 			/*uni.startWifi({
 				success(res) {
@@ -94,7 +100,13 @@
             })
 		},
 		onShow() {
-			
+            if (!this.hasLogin) {
+                uni.showToast({
+                    title: '您还未登录, 请登录...',
+                    icon: 'none',
+                    duration: 2500
+                });
+            }
 		},
 		methods: {
 			...mapMutations(['logout', 'login']),
@@ -105,10 +117,16 @@
 				})
 			},
 			btnSignOut() {
+			    if (!this.hasLogin) {
+                    uni.navigateTo({
+                        url: '/pages/public/login/index'
+                    });
+                    return false;
+                }
 				let self = this;
                 uni.showModal({
-					title: '确定退出登录? ',
-                    content: ' ',
+					title: '退出登录',
+                    content: '确定退出当前账号?',
 					cancelColor: "#085820",
 					confirmColor: "#ff0000",
                     cancelText: "取消",
@@ -144,26 +162,7 @@
 		computed: {
 			...mapState(['hasLogin', 'userInfo'])
 		},
-		mounted() {
-            /*this.info = [
-                {
-                    subInfo: userInfo.phone,
-                    supInfo: '所属公司: ' + (userInfo.department? userInfo.department.name: ''),
-                    icon: 'phone',
-                },
-                {
-                    subInfo: userInfo.company.name,
-                    supInfo: '公司ID:' + userInfo.company.id,
-                    icon: 'radioboxfill',
-                },
-                {
-                    subInfo: userInfo.invitation_code,
-                    supInfo: userInfo.company_id + '-' + userInfo.invitation_code,
-                    icon: 'deliver_fill',
-                }
-
-            ];*/
-        },
+		mounted() {},
         components: {
             getPhone
         }

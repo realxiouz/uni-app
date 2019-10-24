@@ -72,13 +72,11 @@ form {
 .mainpage {
 
 }
-.choosehouse {
-    padding-bottom: rpx(90);
-    margin-top: 80rpx;
-}
 
-.chooselist {
-    > view {
+.choosehouse {
+    padding-top: 95rpx;
+    margin-top: 80rpx;
+    .item {
         padding: 0 $space_1;
         height: rpx($liht);
 
@@ -133,23 +131,5 @@ form {
                 color: $gray;
             }
         }
-
-        /* &.on {
-            .selectbox {
-                text {
-                    &.noselect {
-                        display: none;
-                    }
-                }
-            }
-
-            .selectbox {
-                > text {
-                    &.selected {
-                        display: block;
-                    }
-                }
-            }
-        } */
     }
 }

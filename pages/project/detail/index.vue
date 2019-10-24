@@ -124,7 +124,7 @@
 				let banners = [];
 				let hx = [];
 				for (let item of r.data.house_types) {
-					hx.push(item.img);
+					if (item.img) hx.push(item.img);
 				}
 				let albums = [];
 				let img = r.data.img;
@@ -133,7 +133,7 @@
 					albums = [...albums,  ...i.photos.map(i => i.uri)];
 				}
 				banners = [...banners, ...albums, ...hx];
-				this.bean.banners = banners;
+                this.bean.banners = banners;
 				let c = new Set();
 				for (let i of this.bean.house_types) {
 					c.add(i.house_using_type.title)

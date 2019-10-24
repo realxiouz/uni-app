@@ -22,7 +22,7 @@
 		},
 		methods: {
 			topMakeCard(e) {
-				const {isRedirect, url} = this.onEvent;
+                const {isRedirect, url} = this.onEvent;
 				if (!isRedirect) {
 					uni.navigateTo({
 						url: url

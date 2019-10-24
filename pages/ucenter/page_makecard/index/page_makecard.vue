@@ -18,51 +18,51 @@
 </template>
 
 <script>
-    import cardTemplate from "../../../../components/cardtemplate/cardtemplate";
-    import makeBtn from "../../../../components/makebtn/index/makebtn";
+    import cardTemplate from "@/components/cardtemplate/cardtemplate";
+    import makeBtn from "@/components/makebtn/index/makebtn";
     import {mapState, mapMutations} from 'vuex';
     export default {
         data() {
             return {
                 onMyEvent: {
                     title: '返回首页',
-                    url: '../../businesscard/index/businesscard',
+                    url: '/pages/ucenter/businesscard/index/businesscard',
                     isRedirect: true
                 },
                 list : [
                     {
                         name: '编辑名片',
-                        path: '../../user/index/user',
+                        path: '/pages/ucenter/user/index/user',
                         isShow: true,
                         icon: 'cuIcon-edit'
                     },
                     {
                         name: '模板',
-                        path: '../../cardtemplate_list/index/cardtemplate_list',
+                        path: '/pages/ucenter/cardtemplate_list/index/cardtemplate_list',
                         isShow: true,
                         icon: 'cuIcon-list'
                     },
                     {
                         name: '预览名片',
-                        path: '../../businesscard/index/businesscard?previewB=1',
+                        path: '/pages/ucenter/businesscard/index/businesscard?previewB=1',
                         isShow: true,
                         icon: 'cuIcon-card'
                     },
                     {
                         name: '浏览记录',
-                        path: '../../browsecount/index/browsecount',
+                        path: '/pages/ucenter/browsecount/index/browsecount',
                         isShow: true,
                         icon: 'cuIcon-text'
                     },
                     {
                         name: '推荐楼盘',
-                        path: '../../recommend/index/recommend',
+                        path: '/pages/ucenter/recommend/index/recommend',
                         isShow: true,
                         icon: 'iconfont icongongsi'
                     },
                     {
                         name: '分享名片',
-                        path: '../../share/index/share',
+                        path: '/pages/ucenter/share/index/share',
                         // #ifdef MP-WEIXIN
                         isShow: true,
                         // #endif
@@ -70,13 +70,13 @@
                     },
                     {
                         name: '名片夹',
-                        path: '../../cardclamp/index/cardclamp',
+                        path: '/pages/ucenter/cardclamp/index/cardclamp',
                         isShow: true,
                         icon: 'cuIcon-file'
                     },
                     {
                         name: '操作指南',
-                        path: '../../explain/index/explain',
+                        path: '/pages/ucenter/explain/index/explain',
                         isShow: true,
                         icon: 'cuIcon-forward'
                     }

@@ -46,7 +46,7 @@
 			}
 		},
         computed: {
-		    ...mapState('work', ['shopId'])
+		    ...mapState('project', ['shopId'])
         },
 		components: {
 			DataList, Item, FloatButton

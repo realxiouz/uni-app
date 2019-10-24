@@ -6,13 +6,12 @@ import baobei from './baobei'
 import message from './message'
 import project from './project'
 import ucenter from './ucenter'
-import work from './work'
 import company from './company'
 Vue.use(Vuex)
 
 const store = new Vuex.Store({
 	modules: {
-		attendance, customer, baobei, message, project, ucenter, work, company
+		attendance, customer, baobei, message, project, ucenter, company
 	},
 	state: {
 		isH5: false,

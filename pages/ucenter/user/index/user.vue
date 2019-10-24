@@ -53,7 +53,7 @@
 
 <script>
     import {mapState, mapMutations} from 'vuex';
-    import getPhone from '../../get-phone/get-phone';
+    import getPhone from '@/pages/ucenter/get-phone/get-phone';
     export default {
         data() {
             return {
