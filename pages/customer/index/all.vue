@@ -10,9 +10,9 @@
 				<text class="cuIcon-search"></text>
 				<input v-model="keywords" :adjust-position="false" type="text" placeholder="姓名 电话搜索" confirm-type="search" @confirm="handleSearch"></input>
 			</view>
-			<view class="action">
+			<!-- <view class="action">
 				<button class="cu-btn bg-green shadow-blur round" @click="showFilter=true">高级搜索</button>
-			</view>
+			</view> -->
 		</view>
 		<view class="flex justify-around bg-white padding-tb-sm">
 			<view @click="handleSort('star')">
