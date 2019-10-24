@@ -9,7 +9,7 @@
 					<text class="cu-tag radius" :class="bean.desire<=2?'bg-red':bean.desire==2?'bg-yellow':'bg-green'">{{desireObj[bean.desire]}}</text>
 				</view>
 				<view class="flex flex-wrap margin-bottom-xs">
-					<text class="basis-df"><text class="text-gray">时间:&nbsp;</text>{{bean.created_at|moment('from')}}</text>
+					<text class="basis-df"><text class="text-gray">时间:&nbsp;</text>{{bean.created_at|moment('MM-DD HH:mm')}}</text>
 					<text class="basis-df"><text class="text-gray">跟进人:&nbsp;</text>{{bean.user.name}}</text>
 				</view>
 				<!-- <view class="margin-bottom-xs" v-if="bean.customer.next_genjin_at">

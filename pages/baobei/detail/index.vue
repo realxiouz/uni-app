@@ -3,7 +3,7 @@
 		<data-list ref="list" @data="handleList" :r-url="rUrl" :r-data="rData">
 			<view class="cu-steps bg-white padding-sm">
 				<view class="cu-item" :class="inx>stepInx?'':'text-blue'" v-for="(i, inx) in steps" :key="inx">
-					<text class="num">{{inx+1}}</text> {{i}}
+					<text class="num" :class="(bean.status_name=='作废'&&inx==stepInx)?'err':''">{{inx+1}}</text> {{i}}
 				</view>
 			</view>
 			<view class="cu-card" v-if="isLoading">
@@ -90,7 +90,7 @@
 				</view>
 				<view class="margin-tb-sm">
 					<text class="text-gray baobei-label">类型:</text>
-					<text>{{i.action || ''}}</text>
+					<text>{{i.action || ''}}&nbsp;{{i.remark||''}}</text>
 				</view>
 				<view>
 					<text class="text-gray baobei-label">时间:</text>
@@ -156,7 +156,15 @@
 				this.$http(`baobei/${this.id}`).then(r => {
 					this.bean = r.data
 					this.show = this.isShowDoneNot(this.bean)
-					this.calcStep(this.bean.status)
+					if(this.bean.status_name == '作废') {
+						this.calcStep(this.bean.status_original)
+						if (this.stepInx >= 0 && this.steps.findIndex(i => i == '作废') == -1) {
+							this.steps.splice(this.stepInx+1, 0 , '作废')
+						}
+						this.stepInx = this.stepInx + 1
+					} else {
+						this.calcStep(this.bean.status)
+					}
 					
 					this.form.recept_name = r.data.agent_project.recept_name;
 				    this.form.recept_phone = r.data.agent_project.recept_phone;

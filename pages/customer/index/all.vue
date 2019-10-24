@@ -10,6 +10,9 @@
 				<text class="cuIcon-search"></text>
 				<input v-model="keywords" :adjust-position="false" type="text" placeholder="姓名 电话搜索" confirm-type="search" @confirm="handleSearch"></input>
 			</view>
+			<!-- <view class="action">
+				<button class="cu-btn bg-green shadow-blur round" @click="showFilter=true">高级搜索</button>
+			</view> -->
 		</view>
 		<view class="flex justify-around bg-white padding-tb-sm">
 			<view @click="handleSort('star')">
@@ -32,6 +35,7 @@
 				</data-list>
 			</swiper-item>
 		</swiper>
+		<customer-filter v-model="showFilter" />
 		<float-button @go="handleGo" b="25px"/>
 	</view>
 </template>
@@ -40,6 +44,7 @@
 	import Item from './components/item'
 	import DataList from '@/components/data-list'
 	import FloatButton from '@/components/float-button'
+	import CustomerFilter from '@/components/customer-filter'
 	import { mapState, mapMutations } from 'vuex'
 	
 	export default {
@@ -48,10 +53,7 @@
 				this.$refs.list0[0].getData()
 			})
 			this.type = opt.type
-			this.tabs = this.tabs.map(i => {
-				i.data.type = this.type
-				return i
-			})
+			this.tabs = this.tabs.filter(i => i.data.type == this.type)
 		},
 		data() {
 			return {
@@ -110,18 +112,64 @@
 						url: 'customer',
 						list: [],
 						data: {
-							type: '分销',
+							type: '新房',
 							can_release: false,
 							demands: JSON.stringify({type: '全部'}),
                             descending: 'asc',
                             private: true
 						}
 					},
+					{
+						text: '全部',
+						url: 'customer',
+						list: [],
+						data: {
+							type: '分销',
+							demands: JSON.stringify({type: '全部'}),
+					        descending: 'asc',
+					        private: true
+						}
+					},
+					{
+						text: '新房',
+						url: 'customer',
+						list: [],
+						data: {
+							type: '分销',
+							demands: JSON.stringify({type: '新房'}),
+					        descending: 'asc',
+					        private: true
+						}
+					},
+					{
+						text: '二手房',
+						url: 'customer',
+						list: [],
+						data: {
+							type: '分销',
+							demands: JSON.stringify({type: '二手房'}),
+					        descending: 'asc',
+					        private: true
+						}
+					},
+					{
+						text: '租房',
+						url: 'customer',
+						list: [],
+						data: {
+							type: '分销',
+							demands: JSON.stringify({type: '租房'}),
+					        descending: 'asc',
+					        private: true
+						}
+					},
 				],
 				selTab: 0,
 				
 				sortType: '',
-				descending: 'asc'
+				descending: 'asc',
+				
+				showFilter: false
 			}
 		},
 		methods: {
@@ -164,7 +212,7 @@
 			}
 		},
 		components: {
-			Item, DataList, FloatButton
+			Item, DataList, FloatButton, CustomerFilter
 		},
 		computed: {
 			...mapState(['isH5', 'userInfo'])

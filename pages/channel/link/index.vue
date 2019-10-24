@@ -7,7 +7,7 @@
 			</view>
 			<view class="cu-form-group">
 				<view class="title">电话</view>
-				<input placeholder="输入电话" v-model="formBean.phone" />
+				<input placeholder="输入电话" v-model="formBean.phone" :maxlength="11" />
 			</view>
 			<view class="cu-form-group">
 				<view class="title">QQ</view>
@@ -76,6 +76,13 @@
 				this.formBean.remark = e.detail.value
 			},
 			handleSave() {
+				if (!/^1\d{10}$/.test(this.formBean.phone)) {
+					uni.showToast({
+						title: '输入正确的手机号码',
+						icon: 'none'
+					})
+					return 
+				}
 				this.formLoading = true
 				let url = this.formBean.id ? `linkmen/${this.formBean.id}` : 'linkmen'
 				let method = this.formBean.id ? `put` : 'post'

@@ -102,7 +102,7 @@
 				<view class="content padding-tb-sm flex align-center">
 					<view class="flex flex-direction flex-sub" style="align-items: flex-start;">
 						<view class="text-gray text-sm">录入时间</view>
-						<view class="text-black text-bold">{{bean.created_at|moment('from')}}</view>
+						<view class="text-black text-bold">{{bean.created_at}}</view>
 					</view>
 				</view>
 			</view>
@@ -110,7 +110,7 @@
 				<view class="content padding-tb-sm flex align-center">
 					<view class="flex flex-direction flex-sub" style="align-items: flex-start;">
 						<view class="text-gray text-sm">释放时间</view>
-						<view class="text-black text-bold">{{bean.release_time|moment('from')}}</view>
+						<view class="text-black text-bold">{{bean.release_time}}</view>
 					</view>
 				</view>
 			</view>
@@ -118,7 +118,7 @@
 				<view class="content padding-tb-sm flex align-center">
 					<view class="flex flex-direction flex-sub" style="align-items: flex-start;">
 						<view class="text-gray text-sm">认领时间</view>
-						<view class="text-black text-bold">{{bean.release_time|moment('from')}}</view>
+						<view class="text-black text-bold">{{bean.release_time}}</view>
 					</view>
 				</view>
 			</view>
@@ -126,7 +126,7 @@
 				<view class="content padding-tb-sm flex align-center">
 					<view class="flex flex-direction flex-sub" style="align-items: flex-start;">
 						<view class="text-gray text-sm">下次跟进</view>
-						<view class="text-black text-bold">{{bean.next_genjin_at|moment('MM-DD HH:mm')}}</view>
+						<view class="text-black text-bold">{{bean.next_genjin_at}}</view>
 					</view>
 				</view>
 			</view>

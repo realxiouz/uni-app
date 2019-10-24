@@ -62,12 +62,20 @@
 				})
 			},
 			handleDel(id) {
-				this.$http(`linkmen/${id}`, null, 'delete').then(r => {
-					uni.showToast({
-						icon: 'none',
-						title: r.message
-					})
-					this.$emit('default')
+				uni.showModal({
+				    title: '请注意',
+				    content: '确定删除此联系人?',
+				    success: res => {
+				        if (res.confirm) {
+				            this.$http(`linkmen/${id}`, null, 'delete').then(r => {
+				            	uni.showToast({
+				            		icon: 'none',
+				            		title: r.message
+				            	})
+				            	this.$emit('default')
+				            })
+				        }
+				    }
 				})
 			}
 		}

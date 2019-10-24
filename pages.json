@@ -110,6 +110,15 @@
 			}
 		},
 		{
+			"path": "pages/customer/share/index"
+		},
+		{
+			"path": "pages/customer/share/inner",
+			"style": {
+				"navigationBarTitleText": "内部共享"
+			}
+		},
+		{
 			"path": "pages/ucenter/businesscard/index/businesscard",
 			"style": {
 				"navigationBarTitleText": "我的名片"
