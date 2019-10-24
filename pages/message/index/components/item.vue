@@ -5,7 +5,7 @@
 			<view class="flex-sub flex flex-direction justify-between margin-right-sm" style="max-width: calc(100vw - 240upx);">
 				<view class="text-black text-bold">{{bean.both.name}}</view>
 				<view class="text-gray text-sm" v-if="bean.message.data">
-					<view v-if="bean.message.data.type==='text'" class="text-cut">{{bean.message.data.content}}</view>
+					<view v-if="bean.message.data.type === 'text'" class="text-cut">{{bean.message.data.content}}</view>
 				</view>
 			</view>
 			<view class="flex flex-direction justify-between">

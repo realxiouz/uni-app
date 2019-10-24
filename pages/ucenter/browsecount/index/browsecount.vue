@@ -3,83 +3,52 @@
         <!--导航栏列表 start-->
         <view class="pd-left-right pubmgtop">
             <view class="grid col-2">
-                <view class="browse-list">
+                <view class="browse-list" v-for="(item, index) of itemList" :key="index">
                     <view class="browse-box">
                         <view class="browse-count-left">
-                            今日浏览量：
+                            {{itemType[index]}}
                         </view>
                         <view class="browse-count-right">
-                            {{recordlist.todayBrowse}}
-                        </view>
-                    </view>
-                </view>
-                <view class="browse-list">
-                    <view class="browse-box">
-                        <view class="browse-count-left">
-                            今日转发量：
-                        </view>
-                        <view class="browse-count-right">
-                            {{recordlist.todazf}}
-                        </view>
-                    </view>
-                </view>
-                <view class="browse-list">
-                    <view class="browse-box">
-                        <view class="browse-count-left">
-                            历史浏览量：
-                        </view>
-                        <view class="browse-count-right">
-                            {{recordlist.historybs}}
-                        </view>
-                    </view>
-                </view>
-                <view class="browse-list">
-                    <view class="browse-box">
-                        <view class="browse-count-left">
-                            历史转发量：
-                        </view>
-                        <view class="browse-count-right">
-                            {{recordlist.historyzf}}
+                            {{item}}
                         </view>
                     </view>
                 </view>
             </view>
         </view>
         <!--导航栏列表 end-->
-        <!--        浏览和转发记录-->
+        <!--浏览和转发记录-->
         <view class="record pubmgtop">
             <view class="num-box">
-                <view :class="[num === 1? 'on': '']" data-num="1" @tap="recordClick">
+                <view :class="[num === 1? 'on': '']" @tap="recordClick">
                     浏览记录
                 </view>
-                <view :class="[num === 2? 'on': '']" data-num="2" @tap="recordClick">
+                <view :class="[num === 2? 'on': '']" @tap="recordClick">
                     转发记录
                 </view>
             </view>
             <view class="pubpdtop">
-                <!-- 这里不是互斥判断, 因为在一开始请求没有浏览器的加载速度快, 所以要先判断是否加载完成, 才可以加载该html-->
-                <child-com v-if="isLoaded && num === 1" :recording="countbs" :userArr="Browse" classType="brows-list" :num="num"></child-com>
-                <child-com v-if="isLoaded && num === 2" :recording="countzf" :userArr="zfuser" :num="num"></child-com>
+                <child-com v-if="num === 1" :recording="countBs" :userArr="browseUser" classType="brows-list" :num="num"></child-com>
+                <child-com v-else :recording="countZf" :userArr="zFUser" :num="num"></child-com>
             </view>
         </view>
     </view>
 </template>
 
 <script>
-    import {BASE_URL} from "../../../../utils/const";
-    import childCom from '../child-com/child-com.vue';
-
+    import childCom from 'pages/ucenter/browsecount/child-com';
     export default {
         data() {
             return {
-                recordlist: {
-
-				},
+                recordList: {},
                 num: 1,
-                countbs: 0,// 浏览合计
-                Browse: [],// 浏览的人
-                countzf: 0,// 转发记录
-                zfuser: []// 转发的人
+                countBs: 0,// 浏览合计
+                itemList: [],
+                browseUser: [{
+                    browseuser: ''
+                }],// 浏览的人
+                countZf: 0,// 转发记录
+                zFUser: [],// 转发的人
+                itemType: ['今日浏览量：', '今日转发量：', '历史浏览量：', '历史转发量：']
 			}
         },
         components: {
@@ -88,11 +57,13 @@
         onLoad() {
             const self = this;
 			this.$http('browse/fwbrowse').then(res => {
-				self.recordlist = res;
-				self.countbs = res.countbs; // 浏览合计
-				self.Browse = res.Browseuser;// 浏览的人
-				self.countzf = res.countzf;// 转发记录
-				self.zfuser = res.zfuser;// 转发的人
+                let data = res;
+                self.recordList = data;
+                self.itemList = [data.todayBrowse, data.todazf, data.historybs, data.historyzf];
+				self.countBs = data.countbs; // 浏览合计
+				self.browseUser = data.Browseuser;// 浏览的人
+				self.countZf = data.countzf;// 转发记录
+				self.zFUser = data.zfuser;// 转发的人
 			})
         },
         methods: {
@@ -100,11 +71,7 @@
                 this.num = this.num === 1? 2: 1;
             }
         },
-        computed: {
-            isLoaded() {
-                return this.Browse.length >= 1 || this.zfuser.length >= 1;
-            }
-        }
+        computed: {}
     }
 </script>
 

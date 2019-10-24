@@ -3,7 +3,7 @@
         <view class="recommend pd-left-right" :style="{'height': style.height + 'px'}">
             <view class="prompt">提示：长按可删除楼盘,点击加号可添加楼盘</view>
             <view class="reclist pubpdtop">
-                <view v-for="(item, index) of selectedHouse" @longpress="handleLongPress" :class="[item.istrue? 'on': '', list]" :data-touchindex="index" :key="index">
+                <view v-for="(item, index) of selectedHouse" @longpress="handleLongPress" :class="[item.isTrue? 'on': '', list]" :data-touchindex="index" :key="index">
                     <view @tap.stop="deleteItem" class="close iconshanchu iconfont" :data-deleteindex="index" :data-id="item.id"></view>
                     <view class="selectmask"></view>
                     <view :data-id="item.id" class="recoimg">
@@ -13,8 +13,7 @@
                         {{item.name}}
                     </view>
                 </view>
-                <view @tap="openToChoose" class="cuIcon-add lg text-gray list">
-                </view>
+                <view @tap="openToChoose" class="cuIcon-add lg text-gray list"></view>
             </view>
         </view>
     </view>
@@ -35,13 +34,18 @@
         },
 		onShow() {
             const self = this;
+            uni.showLoading({
+                title: '加载中...',
+            });
 			this.$http('geren/recommend').then(res => {
 			    let data = res.data;
 			    for (let item of data) {
 			        this.changeHouseId({id: item.id, isAdd: true})
                 }
 				self.selectedHouse = data;
-			})
+            }).catch(err => {
+                uni.hideLoading();
+            })
 		},
         onLoad() {},
         onUnload() {
@@ -49,16 +53,26 @@
             this.changeCurrentLoginUserInfo({house: arr});
             this.changeHouseId({allDel: true});
         },
+        watch: {
+            selectedHouse: {
+                handler() {
+                    this.$nextTick(_ => {
+                        uni.hideLoading();
+                    })
+                },
+                deep: true
+            }
+        },
         methods: {
             ...mapMutations('ucenter', ['changeCurrentLoginUserInfo', 'changeHouseId']),
             handleLongPress(e) {
                 // 长按后350ms触发
                 let touchIndex = e.currentTarget.dataset.touchindex;
 				let index = this.selectedHouse.findIndex((ele, index) => {
-					return touchIndex == index;
+					return Number(touchIndex) === index;
 				});
                 // 添加isTUR字段, true
-                this.$set(this.selectedHouse[index], 'istrue', true);
+                this.$set(this.selectedHouse[index], 'isTrue', true);
             },
             openToChoose() {
                 uni.navigateTo({

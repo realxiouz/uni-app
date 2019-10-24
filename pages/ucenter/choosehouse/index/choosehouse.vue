@@ -5,7 +5,7 @@
                 <form>
                     <view class="search">
                         <text class="cuIcon-search"></text>
-                        <input placeholder="请输入楼盘编号" v-model="keywords" @blur="inputBlur">
+                        <input type="text" placeholder="请输入楼盘编号" v-model="keywords" @blur="inputBlur" confirm-type="search" @confirm="searchKeywords">
 						<button type="primary" size="mini" v-if="!!keywords.toString()" @tap="searchKeywords">搜索</button>
                     </view>
                 </form>
@@ -16,28 +16,21 @@
                 </view>
             </view>
 			<view v-else class="showchoose" style="font-size: 18px;">请选择楼盘...</view>
-            <view class="choosehouse" style="padding-top: 95rpx">
-                <view class="chooselist">
-                    <view v-if="!houseList.length" style="display: block; width: 180rpx; margin: 100rpx auto 0;">
-                        <view class="text-xsl">
-                            <text class="cuIcon-attentionforbidfill text-gray"></text>
+            <view class="choosehouse" :style="{'height': height}">
+                <data-list :r-data="rData" r-url="guestProjects" @data="handlerList" ref="list">
+                        <view @tap="pushToTem" class="item" v-for="(item, index) of houseList" :data-item="index" :key="index" :data-imgsrc="item.img" :data-id="item.id">
+                            <view class="selectbox">
+                                <text class="noselect iconfont iconxuanze" v-if="!item.isTrue"></text>
+                                <text class="selected iconfont iconxianshi_xuanzetianchong" v-else style="color: #15a2e0"></text>
+                            </view>
+                            <view class="selecimg">
+                                <image :src="item.img" mode="aspectFit"></image>
+                            </view>
+                            <view class="selectxt">
+                                <text>{{item.name}}</text>
+                            </view>
                         </view>
-                        <text class="text-gray">暂无数据</text>
-                    </view>
-                    <view @tap="pushToTem" v-else v-for="(item, index) of houseList"
-                          :data-item="index" :key="index" :data-imgsrc="item.img" :data-id="item.id">
-                        <view class="selectbox">
-                            <text class="noselect iconfont iconxuanze" v-if="!item.isTrue"></text>
-                            <text class="selected iconfont iconxianshi_xuanzetianchong" v-else style="color: #15a2e0"></text>
-                        </view>
-                        <view class="selecimg">
-                            <image :src="item.img" mode="aspectFit"></image>
-                        </view>
-                        <view class="selectxt">
-                            <text>{{item.name}}</text>
-                        </view>
-                    </view>
-                </view>
+                    </data-list>
             </view>
             <view class="choose-affirm">
                 <button form-type="submit">
@@ -50,6 +43,7 @@
 
 <script>
     import {mapState, mapMutations} from 'vuex';
+    import dataList from '@/components/data-list';
     //操作数组
     Array.prototype.remove = function (val) {
         // this指向调用者数组;
@@ -64,31 +58,40 @@
                 recommendHt: '',
                 houseList: [],
                 temArr: [],
-				page: 1,
-				per_page: 10,
-				total: '',
-				last_page: '',
 				keywords: '',
-				isSearch: false,
                 selectedHouse: [],
-                beforeSearchList: []
+                beforeSearchList: '',
+                rData: {},
+                height: '100vh',
+                page: '',
+                isEnd: ''
             }
         },
         onLoad() {
             const self = this;
             uni.getSystemInfo({
                 success(res) {
-                    // self.statusBarHeight = res.statusBarHeight;
-                    // 获取按钮的相关位置信息
-                    /*let custom = wx.getMenuButtonBoundingClientRect();
-                    app.globalData.Custom = custom;
-                    app.globalData.CustomBar = custom.bottom + custom.top - res.statusBarHeight;*/
+                    self.height = res.windowHeight - 80 + 'px';
                 }
             });
-			this.getDate();
-			
+            this.$nextTick(_ => {
+                this.$refs.list.init();
+            })
         },
-		watch: {},
+		watch: {
+            keywords(val) {
+                if (!val) {
+                    this.$refs.list.page = this.page;
+                    this.$refs.list.isEnd = this.isEnd;
+                    this.$refs.list.scrollTop = 0;
+                    let list = JSON.parse(this.beforeSearchList);
+                    this.$refs.list.list = list;
+                    this.$refs.list.hasLoaded = false;
+                    Reflect.deleteProperty(this.rData, 'keywords');
+                    this.handlerList(list);
+                }
+            }
+        },
         computed: {
             ...mapState('ucenter', [
                 'houseArr',
@@ -96,19 +99,31 @@
                 'currentInfo'
             ])
         },
-		onReachBottom() {
-			if (this.page < this.last_page) {
-				++this.page;
-				this.getDate();
-			} else {
-				uni.showToast({
-					title: '数据已加载完毕',
-					duration: 2000
-				})
-			}
-		},
         methods: {
             ...mapMutations('ucenter', ['changeHouseId']),
+            handlerList(list) {
+                let self = this;
+                if (!self.keywords) {
+                    self.beforeSearchList = JSON.stringify(list);
+                    self.page = self.$refs.list.page;
+                    self.isEnd = self.$refs.list.isEnd;
+                }
+                let set = new Set(self.temArr);
+                list.forEach((ele, index) => {
+                    let i = self.houseId.findIndex(id => Number(id) === Number(ele.id));
+                    let boolean = i !== -1;
+                    ele.isTrue = boolean;
+                    boolean && set.add(ele.img);
+                    Object.defineProperty(ele, 'isTrue', {
+                        configurable: false,
+                        writable: true,
+                        enumerable: true,
+                        value: boolean
+                    });
+                });
+                self.houseList = list;
+                self.temArr = [...set];
+            },
             submitHouse() {
                 uni.showLoading({
                     title: '提交中...',
@@ -220,57 +235,16 @@
 				}
 				return r;
 			},
-			getDate() {
-				const self = this;
-				uni.showLoading({
-                    title: '加载中...',
-                    mask: true
-                });
-				let url =  `guestProjects?page=${this.page}&per_page=${this.per_page}`;
-				url = this.isSearch? url+ `&keywords=${this.keywords}`: url;
-				this.$http(url).then(res => {
-				    uni.hideLoading();
-					const data = res.data;
-					self.total = res.total;
-					self.last_page = res.last_page;
-					let set = new Set(self.temArr);
-                    data.forEach((ele, index) => {
-                        let i = self.houseId.findIndex(id => Number(id) === Number(ele.id));
-                        let boolean = i !== -1;
-                        ele.isTrue = boolean;
-                        boolean && set.add(ele.img);
-                        Object.defineProperty(ele, 'isTrue', {
-                            configurable: false,
-                            writable: true,
-                            enumerable: true,
-                            value: boolean
-                        });
-                    });
-                    self.temArr = [...set];
-					if (this.isSearch && this.page === 1) {
-                        self.houseList = [...data];
-					} else {
-					    let list = [...self.houseList, ...data];
-						self.houseList = list;
-						if (!self.isSearch) {
-                            self.beforeSearchList = JSON.parse(JSON.stringify(list));
-                        }
-					}
-				}).catch(e => {
-                    uni.hideLoading();
-                })
-			},
 			searchKeywords() {
-				this.isSearch = true;
-				this.page = 1;
-				this.getDate();
-			},
-            inputBlur() {
-                if (this.keywords === '') {
-                    this.isSearch = false;
-                    this.houseList = this.beforeSearchList;
-                }
-            }
+                this.$refs.list.hasLoaded = true;
+                this.rData = {
+				    keywords: this.keywords
+                };
+                this.$refs.list.scrollTop = 1;
+			}
+        },
+        components: {
+            dataList
         }
     }
 </script>

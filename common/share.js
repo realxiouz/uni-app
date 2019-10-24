@@ -88,17 +88,17 @@ export default {
             "ewm": icon.ewm// 二维码
         };
         // 规则, 限定字符长度
-        if (cardInfo.companyname && cardInfo.companyname.length > 10) {
-            cardInfo.companyname = cardInfo.companyname.substring(0, 9) + '...'; //控制显示9个字符+....；
+        if (cardInfo.companyname && cardInfo.companyname.length > 7) {
+            cardInfo.companyname = cardInfo.companyname.substring(0, 7) + '...';
         }
         if (cardInfo.name && cardInfo.name.length > 10) {
-            cardInfo.name = cardInfo.name.substring(0, 9) + '...'; //控制显示9个字符+....；
+            cardInfo.name = cardInfo.name.substring(0, 9) + '...';
         }
         if (smCardInfo.companyname && smCardInfo.companyname.length > 7) {
-            smCardInfo.companyname = cardInfo.companyname.substring(0, 6) + '...'; //控制显示6个字符+....；
+            smCardInfo.companyname = cardInfo.companyname.substring(0, 6) + '...';
         }
         if (smCardInfo.name && smCardInfo.name.length > 7) {
-            smCardInfo.name = cardInfo.name.substring(0, 6) + '...'; //控制显示6个字符+....；
+            smCardInfo.name = cardInfo.name.substring(0, 6) + '...';
         }
         this.canvasHeight = (3*this.canvasWidth) / 5;
         // cardInfo.userImg = this.qrCode;

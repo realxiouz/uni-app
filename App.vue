@@ -29,7 +29,7 @@
 			// #endif
 		},
 		onLaunch: function(e) {
-            const query = e.query;
+            let shopId = e.query.shop_id;
             // #ifdef H5
 			this.setH5();
 			// #endif
@@ -38,6 +38,12 @@
 					console.log(e)
 				}
 			});
+            if (!/(object|undefined)/.test(typeof shopId)) {
+			    this.setShopId(shopId);
+			    return false;
+            } else {
+                this.setShopId('');
+            }
 			let token = uni.getStorageSync('apiToken');
             if (token) {
 				this.$http('auth/user').then(r => {
@@ -49,9 +55,8 @@
                     this.noticeMessage();
 				})
 			} else {
-                let until = !/(object|undefined)/.test(typeof query.shop_id)? `?type=${query.type}&shop_id=${query.shop_id}`: '';
                 uni.reLaunch({
-					url: '/pages/public/login/index' + until,
+					url: '/pages/public/login/index',
 				})
 			}
 			// uni.getLocation({
@@ -67,7 +72,9 @@
 			// })
 		},
 		onShow: function() {},
-		onHide: function() {},
+		onHide: function() {
+	        this.setShopId('');
+        },
         watch: {
 		    hasLogin(data) {
                 if (this.firstTimes) return false;
@@ -84,6 +91,7 @@
 		methods: {
 			...mapMutations(['login', 'setH5']),
 			...mapMutations('message', ['setNew', 'setPushMessageList', 'setSpliceMessageList']),
+            ...mapMutations('project', ['setShopId']),
             socket() {
                 return new Echo({
                     client: client,

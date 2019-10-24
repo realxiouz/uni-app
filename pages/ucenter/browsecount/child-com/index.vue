@@ -8,18 +8,17 @@
             <view :class="classType">
                 <view class="pd-left-right" v-for="(item, index) of userArr" :key="index">
                     <view class="brows-both">
-                        <image class="cu-avatar lg round" :src="item.browseuser.avatar">
-                        </image>
+                        <image class="cu-avatar lg round" :src="item.browseuser.avatar || defaultAvatar"></image>
                     </view>
                     <view class="brows-middle">
                         <view class="brows-content">
-                            <view class="username">{{item.browseuser.name}}</view>
-                            <view class="browstime">{{item.ctime}}</view>
+                            <view class="username">{{item.browseuser.name || ''}}</view>
+                            <view class="browstime">{{item.ctime || ''}}</view>
                         </view>
                     </view>
                     <view class="brows-both">
                         <view class="brows-cunt">
-                            {{item.count}}
+                            {{item.count || '0'}}
                         </view>
                     </view>
                 </view>
@@ -28,6 +27,7 @@
     </view>
 </template>
 <script>
+    import {mapState} from 'vuex';
     export default {
         data() {
             return {
@@ -54,6 +54,9 @@
                 type: [String, Number],
                 default: 0
             }
+        },
+        computed: {
+            ...mapState(['defaultAvatar'])
         },
         mounted() {
 			

@@ -46,7 +46,6 @@
 	export default {
 		onLoad(opt) {
 			// this.wechatlogin()
-            this.setShopId(opt.shop_id);
         },
 		data: _ => ({
 			formBean: {
@@ -59,7 +58,6 @@
 		methods: {
 			...mapMutations(['login', 'changeToken']),
             ...mapMutations('ucenter', ['setInterceptUId', 'setUId']),
-            ...mapMutations('work', ['setShopId']),
             ...mapMutations('message', ['setFirstTimes']),
 			handleLogin() {
 				this.$http('auth/login', this.formBean, 'post').then(r => {

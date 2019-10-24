@@ -197,7 +197,7 @@
 				testUserInfo: {},// 分享是绘制canvas需要
 				bg_gradual_blue: 'bg-gradual-blue',
 				onMyEvent: {
-					url: '../../page_makecard/index/page_makecard',
+					url: '/pages/ucenter/page_makecard/index/page_makecard',
 					title: '制作名片'
 				},
 				showMakeBtn: false, // 这里true显示make-btn, false反之

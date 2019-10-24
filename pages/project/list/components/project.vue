@@ -63,13 +63,25 @@
 		methods: {
 			...mapMutations('baobei', ['setDaikan', 'setSelProject', 'setSelCustomer']),
 			toDetail(id) {
-			    let until = this.shopId? `&company_id=${this.shopId}`: '';
+			    if (this.type !== 'public' && this.bean.type !== 'normal') {
+                    uni.navigateTo({
+                        url: '/pages/project/project-dev/index?id=' + this.bean.id
+                    });
+                    return false;
+                }
+                let until = this.shopId? `id=${id}&company_id=${this.shopId}&type=shop`: `id=${id}&type=${this.type}`;
 				uni.navigateTo({
-					url: `/pages/project/detail/index?id=${id}&type=${this.type}` + until
+					url: `/pages/project/detail/index?${until}`
 				})
 			},
 			nowChannel(e) {
                 // memo => template
+                if (!this.hasLogin) {
+                    uni.navigateTo({
+                        url: '/pages/public/login/index',
+                    });
+                    return false;
+                }
 				if (this.type === 'public'){
                     if (this.bean.type === 'template') {
 				        this.$http(`project/copy/${this.bean.id}`).then(res => {
@@ -97,7 +109,7 @@
 					self.handleJump(0);
 					return false;
 				}
-				let itemList = [];
+				let itemList = ['请选择报备渠道'];
 				for (let item of baobei_project) {
 					itemList.push(item.company.name);
 				}
@@ -105,13 +117,14 @@
 					itemList: itemList,
 					success(res) {
 						let index = res.tapIndex;
-						self.handleJump(index);
+						if (index === 0) return false;
+						self.handleJump(index-1);
 					}
 				})
 			},
 			handleJump(index) {
 				let item = this.bean.baobei_project[index];
-				this.setDaikan({
+                this.setDaikan({
 					name: this.userInfo.name,
 					phone: this.userInfo.mobile
 				});
@@ -139,8 +152,8 @@
             }
 		},
 		computed: {
-			...mapState(['userInfo', 'projectDefaultImg']),
-            ...mapState('work', ['shopId']),
+			...mapState(['userInfo', 'projectDefaultImg', 'hasLogin']),
+            ...mapState('project', ['shopId']),
 			label() {
 				let c = new Set();
 				for (let i of this.bean.house_types) {

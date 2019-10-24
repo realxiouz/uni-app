@@ -39,10 +39,25 @@
 	import { mapState } from 'vuex'
 	export default {
 		onLoad() {
+            if (!this.hasLogin) {
+                uni.navigateTo({
+                    url: '/pages/public/login/index'
+                });
+                return false;
+            }
 			this.$http('common/contact').then(r => {
 				this.list = r.data
 			})
 		},
+        onShow() {
+            if (!this.hasLogin) {
+                uni.showToast({
+                    title: '您还未登录, 请登录...',
+                    icon: 'none',
+                    duration: 2500
+                });
+            }
+        },
 		data() {
 			return {
 				list: []
@@ -59,7 +74,7 @@
 			Ava
 		},
 		computed: {
-			...mapState(['userInfo'])
+			...mapState(['userInfo', 'hasLogin'])
 		},
         mounted() {}
 	}

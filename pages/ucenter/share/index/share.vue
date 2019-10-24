@@ -71,9 +71,9 @@
 </template>
 
 <script>
-	import share from '../../../../common/share.js';
-	import weiXinAuthorization from '../../../../utils/weixin-authorization'
-	import {
+	import share from '@/common/share.js';
+	import weiXinAuthorization from '@/utils/weixin-authorization'
+    import {
 		mapState,
 		mapGetters,
         mapMutations
@@ -86,7 +86,6 @@
 				shareImg: '',
                 saveImgSrc: '',
 				waitTime: 2000,
-				userImg: 'http://tmp/wxf4cb3f3f8140375b.o6zAJs9tFfgiDkgC14Cwqafvkpro.qrMdvH8GyKfC5d5ce01576d6a35828f6c6767a5656c2.jpeg',
 				canvasWidth: '', //canvas宽
 				canvasHeight: '', //canvas高
 				currentBgNum: 0,
@@ -95,7 +94,6 @@
 				isShowCardContent: false, //名片内容的显隐
 				isExeCuteCanvas: false, //在还没点击的时候不执行子组件里的分享
 				temUrl: '',
-				qrcode: '',
 				isDisabled: true,
 				canvasWd: 0,
 				canvasHt: 0,
@@ -114,20 +112,6 @@
             }
         },
 		onLoad() {
-			/*const self = this;*/
-			/*this.$http('geren/qrcode', {
-				fuid: self.userInfo.id
-			}).then(res => {
-				self.isDisabled = false; // 恢复按钮的功能
-				self.cNames = res.cname;
-				// #ifndef H5 
-				let array = uni.base64ToArrayBuffer(res.data);
-				let base64 = uni.arrayBufferToBase64(array);
-				if (res.statusCode == 200) {
-					self.qrcode = 'data:image/jpeg;base64,' + base64 // data 为接口返回的base64字符串
-				}
-				// #endif
-			});*/
 			// canvas
 			let screenwd = uni.getSystemInfoSync().windowWidth;
 			let screenht = uni.getSystemInfoSync().windowHeight;
@@ -274,7 +258,6 @@
 			...mapGetters('ucenter', ['imgSrcGetters'])
 		},
 		onShareAppMessage(res) {
-			// 分享
             return {
 				title: this.cNames,
 				path: '/pages/ucenter/businesscard/index/businesscard?uidx='+ this.userInfo.id,
