@@ -10,9 +10,9 @@
 				<text class="cuIcon-search"></text>
 				<input v-model="keywords" :adjust-position="false" type="text" placeholder="姓名 电话搜索" confirm-type="search" @confirm="handleSearch"></input>
 			</view>
-			<!-- <view class="action">
-				<button class="cu-btn bg-green shadow-blur round" @click="showFilter=true">高级搜索</button>
-			</view> -->
+			<view class="action">
+				<button class="cu-btn bg-green shadow-blur round" @click="showFilter=!showFilter">高级搜索</button>
+			</view>
 		</view>
 		<view class="flex justify-around bg-white padding-tb-sm">
 			<view @click="handleSort('star')">
@@ -35,7 +35,7 @@
 				</data-list>
 			</swiper-item>
 		</swiper>
-		<customer-filter v-model="showFilter" />
+		<customer-filter v-model="showFilter" @s="aSearch" />
 		<float-button @go="handleGo" b="25px"/>
 	</view>
 </template>
@@ -209,6 +209,10 @@
 					this.descending = this.descending == 'asc' ? 'desc' : 'asc'
 				}
 				this.tabs[this.selTab].data = {...this.tabs[this.selTab].data, sortBy, descending: this.descending}
+			},
+			
+			aSearch(obj) {
+				this.tabs[this.selTab].data = {...this.tabs[this.selTab].data, ...obj}
 			}
 		},
 		components: {
