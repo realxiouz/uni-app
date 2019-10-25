@@ -2,6 +2,7 @@
 	<picker @change="handleChange" :value="valueAsync" :range="range" :range-key="rangeKey">
 		<view class="picker">
 			{{customerTitle?customerTitle:title}}
+			<text v-if="showT" class="cuIcon-triangledownfill"></text>
 		</view>
 	</picker>
 </template>
@@ -30,6 +31,10 @@
 			},
 			customerTitle: {
 				type: String,
+			},
+			showT: {
+				type: Boolean,
+				default: false
 			}
 		},
 		methods: {

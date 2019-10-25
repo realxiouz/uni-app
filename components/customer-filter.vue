@@ -180,10 +180,10 @@
 	export default {
 		mounted() {
 			this.$http('attribute').then(r => {
-				if(this.$parent.type == '分销'){
+				if(this.type == '分销'){
 					this.sources = r.data['Customer sales'].source
 					this.qudaos = r.data['Customer sales'].qudao
-				} else {
+				} else if(this.type == '新房') {
 					this.sources = r.data['Customer'].source
 					this.qudaos = r.data['Customer'].qudao
 				}
@@ -216,6 +216,9 @@
 		props: {
 			value: {
 				type: Boolean
+			},
+			type: {
+				type: String
 			}
 		},
 		methods: {

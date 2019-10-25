@@ -9,7 +9,7 @@
 						{{bean.name}}{{bean.belongsto_id ? `[${bean.belongsto_type}]`: ''}}
 					</view>
 					<view>上次跟进：{{bean.last_genjin_time?bean.last_genjin_time:''}}</view>
-					<view>归属人：{{(bean.belongsto_id && bean.belongs_employee.name) || ''}}</view>
+					<view>{{isShare?'共享人':'归属人'}}：{{(bean.belongsto_id && bean.belongs_employee.name) || ''}}</view>
 					<view class="flex align-center">客户星级：<rate :value="bean.star" :disabled="true" small/></view>
 					<view>录入时间：{{bean.created_at}}</view>
 				</view>
@@ -26,6 +26,10 @@
 		props: {
 			bean: {
 				type: Object
+			},
+			isShare: {
+				type: Boolean,
+				default: false
 			}
 		},
 		data: _ => ({}),

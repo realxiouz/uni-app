@@ -14,7 +14,7 @@
 		<swiper style="flex: 1;height: 0;" @change="tabChange" :current="selTab">
 			<swiper-item v-for="(i, inx) in tabs" :key="inx">
 				<data-list :ref="'list'+inx" @data="handleList(inx, $event)" :r-url="i.url" :r-data="i.data">
-					<item v-for="(item, index) in i.list" :key="`${inx}${index}`" :bean="item" />
+					<item v-for="(item, index) in i.list" :key="`${inx}${index}`" :bean="item" is-share/>
 				</data-list>
 			</swiper-item>
 		</swiper>

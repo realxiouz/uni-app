@@ -140,6 +140,11 @@
 					<single-picker class="cu-btn bg-blue radius flex-sub" :range="types" range-key="name" v-model="eId" customer-title="转移客户" />
 				</view>
 			</view>
+			<view class="cu-item">
+				<view class="content padding-tb-sm flex align-center">
+					<button class="cu-btn bg-cyan radius flex-sub" @click="share(bean.id)">分享</button>
+				</view>
+			</view>
 		</view>
 	</scroll-view>
 </template>
@@ -245,7 +250,24 @@
                 uni.makePhoneCall({
                     phoneNumber: number
                 })
-            }
+            },
+			share() {
+				uni.showActionSheet({
+					itemList: ['内部共享', '外部共享'],
+					success: r => {
+						let url
+						switch(r.tapIndex) {
+							case 0:
+								url = `/pages/customer/share/inner?cId=${this.cId}`
+								break
+							case 1:
+								url = `/pages/customer/share/index?type=${r.tapIndex}&cId=${this.cId}`
+								break
+						}
+						uni.navigateTo({url})
+					}
+				})
+			}
 		}
 	}
 </script>

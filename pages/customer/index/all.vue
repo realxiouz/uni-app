@@ -35,7 +35,7 @@
 				</data-list>
 			</swiper-item>
 		</swiper>
-		<customer-filter v-model="showFilter" @s="aSearch" />
+		<customer-filter :type="type" v-model="showFilter" @s="aSearch" />
 		<float-button @go="handleGo" b="25px"/>
 	</view>
 </template>
