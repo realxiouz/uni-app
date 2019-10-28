@@ -188,7 +188,7 @@
 					customer_ids: [this.bean.id],
 					belongsto_id: val
 				}, 'post').then(r => {
-					this.eId = ''
+					// this.eId = ''
 					uni.showToast({
 						title: r.message,
 						icon: 'none'
