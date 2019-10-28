@@ -27,14 +27,16 @@ export const http = (url, data, method = 'GET') => {
 			let status = data.statusCode
 			switch (status) {
 				case 401:
-					reject(new Error('auth失败'))
-                    let route = getCurPage().route;
+					reject(new Error('auth失败'));
+                    let currentPage = getCurPage();
+                    let route = currentPage? currentPage.route: '';
+                    console.log(!/pages\/public\/(login|bind)\/index/.test(route), 'request.js');
                     if (!/pages\/public\/(login|bind)\/index/.test(route)) {
                         uni.reLaunch({
                             url: '/pages/public/login/index'
                         })
                     }
-					break
+					break;
 				case 403:
 					uni.showToast({
 						title: data.data.message,

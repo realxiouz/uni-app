@@ -1,7 +1,7 @@
 <template>
     <view>
         <form @submit="submitHouse">
-            <view class='chooseseach'>
+            <view class='choose-search'>
                 <form>
                     <view class="search">
                         <text class="cuIcon-search"></text>
@@ -10,23 +10,23 @@
                     </view>
                 </form>
             </view>
-            <view v-if="temArr.length" class="showchoose">
+            <view v-if="temArr.length" class="show-choose">
                 <view v-for="(item, i) of temArr" :key="i">
                     <image :src="item" mode="aspectFit"></image>
                 </view>
             </view>
-			<view v-else class="showchoose" style="font-size: 18px;">请选择楼盘...</view>
-            <view class="choosehouse" :style="{'height': height}">
+			<view v-else class="show-choose" style="font-size: 18px;">请选择楼盘...</view>
+            <view class="choose-house" :style="{'height': height}">
                 <data-list :r-data="rData" r-url="guestProjects" @data="handlerList" ref="list">
                         <view @tap="pushToTem" class="item" v-for="(item, index) of houseList" :data-item="index" :key="index" :data-imgsrc="item.img" :data-id="item.id">
-                            <view class="selectbox">
-                                <text class="noselect iconfont iconxuanze" v-if="!item.isTrue"></text>
+                            <view class="select-box">
+                                <text class="no-select iconfont iconxuanze" v-if="!item.isTrue"></text>
                                 <text class="selected iconfont iconxianshi_xuanzetianchong" v-else style="color: #15a2e0"></text>
                             </view>
-                            <view class="selecimg">
+                            <view class="select-img">
                                 <image :src="item.img" mode="aspectFit"></image>
                             </view>
-                            <view class="selectxt">
+                            <view class="select-txt">
                                 <text>{{item.name}}</text>
                             </view>
                         </view>
@@ -71,7 +71,7 @@
             const self = this;
             uni.getSystemInfo({
                 success(res) {
-                    self.height = res.windowHeight - 80 + 'px';
+                    self.height = res.windowHeight - 30 + 'px';
                 }
             });
             this.$nextTick(_ => {
@@ -251,7 +251,7 @@
 
 <style lang="scss">
     @import "choosehouse";
-	.chooseseach {
+	.choose-search {
 		// #ifndef H5
 		top: 0,
 		// #endif
@@ -259,7 +259,7 @@
 		top: 88rpx;
 		// #endif
 	}
-	.showchoose {
+	.show-choose {
 		// #ifndef H5
 		top: 90rpx;
 		// #endif

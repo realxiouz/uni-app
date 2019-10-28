@@ -1,7 +1,7 @@
 <template>
     <view>
         <!--导航栏列表 start-->
-        <view class="pd-left-right pubmgtop">
+        <view class="pd-left-right padding-top">
             <view class="grid col-2">
                 <view class="browse-list" v-for="(item, index) of itemList" :key="index">
                     <view class="browse-box">
@@ -17,7 +17,7 @@
         </view>
         <!--导航栏列表 end-->
         <!--浏览和转发记录-->
-        <view class="record pubmgtop">
+        <view class="record">
             <view class="num-box">
                 <view :class="[num === 1? 'on': '']" @tap="recordClick">
                     浏览记录
@@ -26,7 +26,7 @@
                     转发记录
                 </view>
             </view>
-            <view class="pubpdtop">
+            <view class="padding-top">
                 <child-com v-if="num === 1" :recording="countBs" :userArr="browseUser" classType="brows-list" :num="num"></child-com>
                 <child-com v-else :recording="countZf" :userArr="zFUser" :num="num"></child-com>
             </view>

@@ -15,14 +15,14 @@
 	export default {
 		onLoad(opt) {
 			this.rData.user_id = this.userInfo.id;
-			if (!this.hasLogin) {
+			if (!this.token) {
                 uni.navigateTo({
                     url: '/pages/public/login/index'
                 })
             }
 		},
 		onShow() {
-		    if (!this.hasLogin) {
+		    if (!this.token) {
                 uni.showToast({
                     title: '您还未登录, 请登录...',
                     icon: 'none',
@@ -49,7 +49,7 @@
 			}
 		},
 		computed: {
-			...mapState(['userInfo', 'isH5', 'hasLogin']),
+			...mapState(['userInfo', 'isH5', 'token']),
 			...mapState('message', ['new'])
 		},
 		methods: {

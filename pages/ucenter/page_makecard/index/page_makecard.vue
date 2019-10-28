@@ -2,7 +2,7 @@
     <view class="padding-25">
         <card-template :is-show-list="false"></card-template>
         <!--导航栏列表 start-->
-        <view class="radiusbox pubmgtop cardlist">
+        <view class="radius-box cardlist">
             <view @tap="toPages" v-for="(item, i) of list" :data-page="item.path" v-if="item.isShow" :key="i">
                 <view>
                     <text :class="item.icon"></text>

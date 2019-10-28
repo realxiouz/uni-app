@@ -30,35 +30,22 @@
 		},
 		onLaunch: function(e) {
             let shopId = e.query.shop_id;
+            let token = uni.getStorageSync('apiToken');
+            this.changeToken(token);
             // #ifdef H5
 			this.setH5();
 			// #endif
-			uni.getSystemInfo({
+			/*uni.getSystemInfo({
 				success: e => {
 					console.log(e)
 				}
-			});
+			});*/
             if (!/(object|undefined)/.test(typeof shopId)) {
 			    this.setShopId(shopId);
-			    return false;
             } else {
                 this.setShopId('');
             }
-			let token = uni.getStorageSync('apiToken');
-            if (token) {
-				this.$http('auth/user').then(r => {
-                    let res = r;
-                    if (!res.avatar) {
-                        res.avatar = this.defaultAvatar;
-                    }
-                    this.login(res);
-                    this.noticeMessage();
-				})
-			} else {
-                uni.reLaunch({
-					url: '/pages/public/login/index',
-				})
-			}
+            // this.getUserInfo(token, !shopId);
 			// uni.getLocation({
 			// 	type: 'gcj02',
 			// 	success: ({longitude, latitude, address}) => {
@@ -71,13 +58,15 @@
 			// 	}
 			// })
 		},
-		onShow: function() {},
-		onHide: function() {
-	        this.setShopId('');
+		onShow(){
+            if (this.shopId) return false;
+            this.getUserInfo(this.token, !this.shopId);
+        },
+		onHide(){
+            this.setShopId('');
         },
         watch: {
 		    hasLogin(data) {
-                if (this.firstTimes) return false;
 		        // let e = this.socket();
                 if (data) {
                     this.noticeMessage();
@@ -89,10 +78,11 @@
             }
         },
 		methods: {
-			...mapMutations(['login', 'setH5']),
+			...mapMutations(['login', 'setH5', 'changeToken']),
 			...mapMutations('message', ['setNew', 'setPushMessageList', 'setSpliceMessageList']),
             ...mapMutations('project', ['setShopId']),
             socket() {
+			    const token = this.token;
                 return new Echo({
                     client: client,
                     broadcaster: "socket.io",
@@ -100,12 +90,12 @@
                     host: BASE_URL + ":6001",
                     // #endif
                     // #ifndef H5
-                    protocol:'wss',
+                    protocol: 'wss',
                     host: `${BASE_URL.split('//')[1]}:6001`,
                     // #endif
                     auth: {
                         headers: {
-                            Authorization: "Bearer " + uni.getStorageSync('apiToken')
+                            Authorization: "Bearer " + token
                         }
                     }
                 });
@@ -144,11 +134,28 @@
                     plus.push.createMessage(content, data.both.id.toString(), opt);
                     // #endif
                 })
+            },
+            getUserInfo(token, isNeedLogin) {
+                const self = this;
+                if (token) {
+                    this.$http('auth/user').then(r => {
+                        let res = r;
+                        if (!res.avatar) {
+                            res.avatar = self.defaultAvatar;
+                        }
+                        this.login(res);
+                    })
+                } else if (isNeedLogin) {
+                    uni.reLaunch({
+                        url: '/pages/public/login/index'
+                    })
+                }
             }
 		},
 		computed: {
-			...mapState(['userInfo', 'hasLogin', 'defaultAvatar']),
-			...mapState('message', ['new', 'firstTimes', 'messageList', 'currentBothId'])
+			...mapState(['userInfo', 'hasLogin', 'defaultAvatar', 'token']),
+			...mapState('message', ['new', 'messageList', 'currentBothId']),
+            ...mapState('project', ['shopId'])
 		},
         mounted() {}
 	}

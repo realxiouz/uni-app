@@ -2,14 +2,14 @@
     <view>
         <view class="recommend pd-left-right" :style="{'height': style.height + 'px'}">
             <view class="prompt">提示：长按可删除楼盘,点击加号可添加楼盘</view>
-            <view class="reclist pubpdtop">
+            <view class="rec-list padding-top">
                 <view v-for="(item, index) of selectedHouse" @longpress="handleLongPress" :class="[item.isTrue? 'on': '', list]" :data-touchindex="index" :key="index">
-                    <view @tap.stop="deleteItem" class="close iconshanchu iconfont" :data-deleteindex="index" :data-id="item.id"></view>
-                    <view class="selectmask"></view>
-                    <view :data-id="item.id" class="recoimg">
+                    <view @tap.stop="deleteItem" class="close cuIcon-close" :data-deleteindex="index" :data-id="item.id"></view>
+                    <view class="select-mask"></view>
+                    <view :data-id="item.id" class="recommend-img">
 						<image :src="item.img" mode="widthFix" style="width: 100%; height: 100%;"></image>
 					</view>
-                    <view class="reco-txt">
+                    <view class="recommend-txt">
                         {{item.name}}
                     </view>
                 </view>

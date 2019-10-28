@@ -2,7 +2,7 @@
     <view>
         <view class="record-contentactive" :data-num="num">
             <view class="pd-left-right browse-content-title">
-                共有 <text class="cordecunt">{{recording}}</text> 条{{num === 2? '浏览': '转发'}}记录
+                共有 <text class="cordecunt">{{recording}}</text> 条{{num === 2? '转发': '浏览'}}记录
             </view>
 
             <view :class="classType">
@@ -64,7 +64,6 @@
     }
 </script>
 <style lang="scss">
-    /* css样式在../index/browsercount.scss的末尾*/
 	.browse-content-title {
 		padding: 0 31.2rpx 26rpx 31.2rpx;
 	}

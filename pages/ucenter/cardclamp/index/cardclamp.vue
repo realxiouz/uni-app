@@ -1,6 +1,6 @@
 <template>
-    <view>
-        <view class="pd-left-right pubpdtop">
+    <view class="padding-y">
+        <view class="pd-left-right padding-top">
             <form style="display: block;">
                 <view class="search">
                     <text class="cuIcon-search"></text>
@@ -10,12 +10,12 @@
             </form>
             <!--收藏模块
             <view v-if="isCollEct" class="collectcard">
-                <view class="nearest pubpdtop">
+                <view class="nearest padding-top">
                     <view class="nearest-top">
                         <text>最近收藏名片</text>
                     </view>
                 </view>
-                <view class="card-box pubpdtop">card-list
+                <view class="card-box padding-top">card-list
                     <view class="card-list" v-for="(item, index) of users" :key="index">li
                         <child-com :user="item" :num="item.template_id">
                             <button type="warn" @tap.stop="showCancel" :class="['cancel-collection', 'cancel-collection-' + item.template_id]" slot="cancel">取消收藏</button>
@@ -26,12 +26,12 @@
             收藏模块end-->
 
             <!--最近访问模块 start-->
-            <view class="nearest pubpdtop">
+            <view class="nearest padding-top">
                 <view class="nearest-top">
                     <text>最近访问名片</text>
                 </view>
             </view>
-            <view class="card-box pubpdtop"><!--card-list-->
+            <view class="card-box padding-top">
                 <view v-if="!users.length" style="width: 130rpx; margin: 100rpx auto 0;">
                     <view class="text-xsl">
                         <text class="cuIcon-attentionforbidfill text-gray"></text>
@@ -39,7 +39,7 @@
                     <text class="text-gray">暂无数据</text>
                 </view>
                 <view class="card-list" v-else v-for="(item, index) of users" :key="index">
-                    <child-com :currentUserInfo="item" :num="item.template_id">
+                    <child-com :current-user-info="item" :num="item.template_id">
                         <!--<button type="primary" @tap.stop="showCollect" :class="['cancel-collection', 'cancel-collection-' + item.template_id]" slot="cancel">收藏名片</button>-->
                     </child-com>
                 </view>
@@ -52,10 +52,9 @@
 </template>
 
 <script>
-    import makeBtn from "../../../../components/makebtn/index/makebtn";
-    import {mapState, mapGetters} from 'vuex';
-    import {BASE_URL} from '../../../../utils/const';
-    import childCom from '../../../../components/cardtemplate/child-com';
+    import makeBtn from "@/components/makebtn/index/makebtn";
+    import {mapState} from 'vuex';
+    import childCom from '@/components/cardtemplate/child-com';
     export default {
         data() {
             return {
@@ -66,8 +65,7 @@
                 search: '',
                 onMyEvent: {
                     title: '返回首页',
-                    imgSrc: '',
-                    url: '/pages/ucenter/bussinesscard/index/bussinesscard',
+                    url: '/pages/ucenter/businesscard/index/businesscard',
                     isRedirect: true
                 }
             }
@@ -77,9 +75,7 @@
             childCom
         },
         computed: {
-            ...mapState('ucenter', ['currentuserinfo']),
-			...mapGetters('ucenter', ['imgSrcGetters']),
-			...mapState(['userInfo'])
+			...mapState(['defaultAvatar'])
         },
         methods: {
             formSubmit() {
@@ -120,7 +116,14 @@
                 const url = this.search.toString()? `?search=${this.search}`: '';
                 this.$http('geren/cardlist'+ url).then(res => {
                     let data = res.data;
-                    this.users = data instanceof Array? data: [];
+                    if (data instanceof Array) {
+                        for (let item of data) {
+                            data.img = this.defaultAvatar;
+                        }
+                    } else {
+                        data = [];
+                    }
+                    this.users = data;
                     uni.hideLoading();
                 }).catch(e => {
                     uni.hideLoading();

@@ -1,6 +1,6 @@
 <template>
 	<view class="padding-25">
-		<view class="pubpdtop pd-left-right">
+		<view>
 			<card-template :is-show-list="true"></card-template>
 		</view>
 	</view>
@@ -26,6 +26,11 @@
 	}
 </script>
 
-<style>
-	
+<style scoped>
+	.padding-top {
+        padding-top: 26rpx;
+    }
+    .pd-left-right {
+        padding: 0 26rpx;
+    }
 </style>

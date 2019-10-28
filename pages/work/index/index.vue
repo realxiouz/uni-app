@@ -1,5 +1,8 @@
 <template>
-	<view v-if="!shopId">
+    <view v-if="shopId">
+        <shop />
+    </view>
+	<view v-else>
 		<!-- #ifndef H5  -->
 		<template v-if="hasFeature(attendanceList.feature, attendanceList.perm)">
 			<view class="cu-bar bg-white solid-bottom margin-top">
@@ -36,7 +39,7 @@
                 </view>
             </view>
         </template>
-		
+
 		<template v-if="hasFeature(customer1.feature, customer1.perm)">
 			<view class="cu-bar bg-white solid-bottom margin-top">
 				<view class="action">
@@ -51,7 +54,7 @@
 				</view>
 			</view>
 		</template>
-		
+
 		<template v-if="hasFeature(customer2.feature, customer2.perm)">
 			<view class="cu-bar bg-white solid-bottom margin-top">
 				<view class="action">
@@ -88,7 +91,7 @@
 		    </view>
 		    <view class="cu-list grid col-4 no-border">
                 <!--v-if="hasFeature(i.hasFeatures)"-->
-		        <view class="cu-item" v-for="(i, inx) in channel.list" :key="inx" @click="handleNav(i.path)" v-if="hasFeature(i.features)">
+		        <view class="cu-item" v-for="(i, inx) in channel.list" :key="inx" @click="handleNav(i.path)" v-if="hasFeature(i.features) && hasPerm(i.perm)">
 		            <view :class="['cuIcon-' + i.cuIcon,'text-' + i.color]">
 		            </view>
 		            <text>{{i.name}}</text>
@@ -110,17 +113,12 @@
 			</view>
 		</template> -->
 	</view>
-    <view v-else>
-        <shop />
-    </view>
 </template>
 
 <script>
 	import { mapState } from 'vuex';
-	import shop from '../shop/shop'
-	// pages/baobei/bean/index
+	import shop from '../shop/shop';
 	export default {
-
 		data() {
 			return {
 				cuIconList: [{
@@ -156,8 +154,9 @@
                     ]
                 },
 				projectList: {
-                    feature: "baobei up",
                     text: "分销楼盘",
+                    feature: "baobei up",
+                    perm: ["project sign", "create project", "view baobei list distribution"],
 				    list: [
                         {
                             cuIcon: 'read',
@@ -172,7 +171,6 @@
                             color: 'green',
                             name: '报备列表',
                             path: `/pages/baobei/list/index?type=up`,
-                            hasFeatures: 'baobei up',
                             perm: ["view baobei list distribution"]
                         },
                         {
@@ -181,15 +179,14 @@
                             badge: 0,
                             name: '云端楼盘',
                             path: '/pages/project/list/index?type=public',
-                            hasFeatures: ['baobei up', 'cooperation-manage'],
-                            perm: ["Channel view", "cooperation-manage", "create project", "create project"]
+                            perm: ["project sign", "create project"]
                         }
                     ]
                 },
 				customer1: {
                     text: '客户管理',
                     feature: "customer sales",
-                    perm: "view customer list",
+                    perm: ["view customer list", "view customer list sub", "view customer list personal"],
 				    list: [
                         {
                             cuIcon: 'peoplelist',
@@ -214,7 +211,7 @@
 				customer2: {
                     text: '客户管理',
                     feature: ["baobei up", "customer distribution"],
-                    perm: "view customer list",
+                    perm: ["view customer list", "view customer list sub", "view customer list personal"],
 				    list: [
                         {
                             cuIcon: 'peoplelist',
@@ -258,7 +255,7 @@
 				channel: {
                     text: '渠道管理',
                     feature: ["channel", "baobei in"],
-                    perm: ["Channel view", "Channel view sub", "Channel view personal", "cooperation-manage"],
+                    perm: ["Channel view", "Channel view sub", "Channel view personal", "Channel sign", "Channel sign sub", "Channel sign personal"],
 				    list: [
                         {
                             cuIcon: 'goods',
@@ -279,7 +276,8 @@
                             color: 'green',
                             name: '报备列表',
                             path: `/pages/baobei/list/index?type=in`,
-                            features: 'baobei in'
+                            features: 'baobei in',
+                            perm: ['view baobei list']
                         }
                     ]
                 }
@@ -289,23 +287,31 @@
         components: {
 		    shop
         },
-        onLoad() {
-		    // #ifdef MP-WEIXIN
-            if (!this.hasLogin) {
-                uni.reLaunch({
-                    url: '/pages/public/login/index',
-                })
+        watch: {
+		    userInfo: {
+		        handler(data) {
+                    uni.setNavigationBarTitle({
+                        title: data.company.software_name || '首页'
+                    });
+                },
+                deep: true
             }
-		    // #endif
+        },
+        onLoad() {
             uni.setNavigationBarTitle({
                 title: this.userInfo.company.software_name || '首页'
-            })
+            });
+            if (!this.token && !this.shopId) {
+                uni.reLaunch({
+                    url: '/pages/public/login/index'
+                })
+            }
         },
 		methods: {
 			handleNav(url) {
                 if (this.shopId && /type=cooperation/.test(url)) {
                     uni.navigateTo({
-                        url: `/pages/project/list/index?type=shop&shop_id=${this.shopId}`
+                        url: `/pages/project/list/index?shop_id=${this.shopId}`
                     });
                 } else if (url) {
 					uni.navigateTo({ url })
@@ -363,10 +369,9 @@
             }*/
 		},
 		computed: {
-			...mapState(['hasLogin', 'userInfo']),
+			...mapState(['userInfo', 'haveLogin', 'token']),
             ...mapState('project', ['shopId'])
-		},
-        mounted() {}
+		}
 	}
 </script>
 

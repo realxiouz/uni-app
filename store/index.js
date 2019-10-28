@@ -25,18 +25,17 @@ const store = new Vuex.Store({
 		statusBarHeight: 0, //状态栏的高度，单位px
         defaultAvatar: 'https://st.fangxiaoke.com/common/person.png',
         projectDefaultImg: 'https://st.fangxiaoke.com/common/no-photo.png',
-        isLogOut: false
+        token: ''
 	},
 	mutations: {
 		login(state, userInfo) {
 			state.hasLogin = true;
 			state.userInfo = userInfo;
-			state.isLogOut = false;
 		},
 		logout(state) {
 			state.hasLogin = false;
-			state.isLogOut = true;
 			uni.removeStorage({key: 'apiToken'});
+            state.token = '';
 			state.userInfo = {
 				department: {},
 				company: {

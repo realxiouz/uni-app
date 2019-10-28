@@ -7,7 +7,7 @@
             <view class="title">{{bean.title}}</view>
             <view class="name-time">
                 <view class="name">
-                    <text v-for="(item, index) of bean.tags" :keys="index*19" :class="classArray[index%3]">{{item.name}}</text>
+                    <text v-for="(item, index) of bean.tags" :key="index*19" :class="classArray[index%3]">{{item.name}}</text>
                 </view>
                 <view class="create-time">{{processTime(bean.created_at)}}</view>
             </view>
