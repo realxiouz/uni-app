@@ -47,8 +47,12 @@
 							v-if="!canDaikanQueren(bean)&&showDaikanList(bean.status)"
 						 @click="navDaikan">带看记录</button>
 						<template v-if="show">
+							<button class="cu-btn bg-cyan radius small shadow margin-right-xs"
+								v-if="canApprove(bean)&&(bean.developer_id||bean.developer_employee_id)"
+								@click="fxxk"
+							>报备通过</button>
 							<picker class="cu-btn bg-cyan radius small shadow margin-right-xs" range-key="name" :range="employees" @change="handlePass"
-							 v-if="canApprove(bean)">
+							 v-if="canApprove(bean)(!bean.developer_id&&!bean.developer_employee_id)">
 								<view>报备通过</view>
 							</picker>
 							<button class="cu-btn bg-red small shadow margin-right-xs"
@@ -317,6 +321,15 @@
 				} else {
 					return false;
 				}
+			},
+			fxxk() {
+				this.$http(`baobei/approve/${this.id}`,{employee_id: null}, 'put').then(r => {
+					uni.showToast({
+						title: r.message,
+						icon: 'none'
+					})
+					this.getDetail()
+				})
 			},
 			passForUp(){
 				this.$http(`baobei/approve/${this.id}`,this.form, 'put').then(r => {

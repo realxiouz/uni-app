@@ -8,7 +8,10 @@
 		<view class="cu-bar bg-cyan search">
 			<view class="search-form radius">
 				<text class="cuIcon-search"></text>
-				<input v-model="keywords" :adjust-position="false" type="text" placeholder="楼盘名称 客户名称 手机号码" confirm-type="search" @confirm="handleSearch"></input>
+				<input v-model="keywords" :adjust-position="false" type="text" placeholder="客户名称 手机号码" confirm-type="search" @confirm="handleSearch"></input>
+			</view>
+			<view class="action">
+				<single-picker show-t :range="ps" v-model="pId" range-key="project_name" placeholder="全部"/>
 			</view>
 		</view>
 		<swiper style="flex: 1;height: 0;" @change="tabChange" :current="selTab">
@@ -24,6 +27,7 @@
 <script>
 	import Item from './components/item'
 	import DataList from '@/components/data-list'
+	import SinglePicker from '@/components/single-picker'
 	import { mapState } from 'vuex'
 	
 	export default {
@@ -39,9 +43,18 @@
 			this.$nextTick(_ => {
 				this.$refs.list0[0].getData()
 			})
+			
+			this.$http('baobeiProjects', {
+				forSelect: true,
+				company_id: this.userInfo.company_id
+			}).then(r => {
+				this.ps = [...this.ps, ...r.data]
+			})
 		},
 		data() {
 			return {
+				pId: '',
+				ps: [{'project_name': '全部', id: ''}],
 				selTab: 0,
 				type: 'up',
 				top: uni.upx2px(90),
@@ -123,6 +136,7 @@
 				
 				this.reset()
 				this.keywords = ''
+				this.pId = ''
 			},
 			handleNavChange(inx) {
 				let temp = inx - 2 < 0 ? 0 : inx - 2
@@ -131,6 +145,7 @@
 				
 				this.reset()
 				this.keywords = ''
+				this.pId = ''
 			},
 			handleSearch() {
 				this.tabs[this.selTab].data = {...this.tabs[this.selTab].data, keywords: this.keywords}
@@ -140,10 +155,10 @@
 			},
 		},
 		components: {
-			Item, DataList,
+			Item, DataList, SinglePicker
 		},
 		computed: {
-			...mapState(['isH5'])
+			...mapState(['isH5', 'userInfo'])
 		},
 		watch: {
 			keywords(val) {
@@ -151,6 +166,11 @@
 					if (this.tabs[this.selTab].data.keywords) {
 						this.reset()
 					}
+				}
+			},
+			'pId': {
+				handler(val) {
+					this.tabs[this.selTab].data = {...this.tabs[this.selTab].data, baobei_project_id: val}
 				}
 			}
 		}

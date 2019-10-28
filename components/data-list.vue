@@ -64,12 +64,19 @@
 			}
 		},
 		methods: {
+			fxxk(o) {
+				let c = {...o}
+				for(const k in c){
+					!c[k] && delete c[k]
+				}
+				return c
+			},
 			getData(resetPage = false) {
 				this.isLoading = true;
 				if (resetPage) {
 					this.page = 1
 				}
-				let data = Object.assign({}, this.rData, {
+				let data = Object.assign({}, this.fxxk(this.rData), {
 					page: this.page,
 					per_page: this.per_page
 				});
