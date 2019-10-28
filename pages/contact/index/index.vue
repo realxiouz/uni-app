@@ -39,7 +39,7 @@
 	import { mapState } from 'vuex'
 	export default {
 		onLoad() {
-            if (!this.hasLogin) {
+            if (!this.token) {
                 uni.navigateTo({
                     url: '/pages/public/login/index'
                 });
@@ -50,7 +50,7 @@
 			})
 		},
         onShow() {
-            if (!this.hasLogin) {
+            if (!this.token) {
                 uni.showToast({
                     title: '您还未登录, 请登录...',
                     icon: 'none',
@@ -74,7 +74,7 @@
 			Ava
 		},
 		computed: {
-			...mapState(['userInfo', 'hasLogin'])
+			...mapState(['userInfo', 'token'])
 		},
         mounted() {}
 	}

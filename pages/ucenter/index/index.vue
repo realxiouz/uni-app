@@ -46,7 +46,7 @@
                 <view class="cu-item arrow icon"></view>
             </view>
             <view class="btn" @tap="btnSignOut">
-                <view class="content">{{hasLogin? '退出登录': '登陆'}}</view>
+                <view class="content">{{token? '退出登录': '登录'}}</view>
             </view>
 		</view>
 	</view>
@@ -65,11 +65,19 @@
 		},
         watch: {},
 		onLoad() {
-            if (!this.hasLogin) {
+		    const self = this;
+            if (this.token && !Reflect.has(this.userInfo, 'id')) {
+                this.$http('auth/user').then(r => {
+                    let res = r;
+                    if (!res.avatar) {
+                        res.avatar = self.defaultAvatar;
+                    }
+                    this.login(res);
+                })
+            } else if (!this.token){
                 uni.navigateTo({
                     url: '/pages/public/login/index'
-                });
-                return false;
+                })
             }
 			//#ifdef MP-WEIXIN
 			/*uni.startWifi({
@@ -92,15 +100,16 @@
 				console.log(r.wifiList);
 			})*/
 			//#endif
-            const self = this;
-            uni.getSystemInfo({
-                success(res) {
-                    self.height = res.windowHeight + 'px';
-                }
+            self.$nextTick(_ => {
+                uni.getSystemInfo({
+                    success(res) {
+                        self.height = res.windowHeight + 'px';
+                    }
+                })
             })
 		},
 		onShow() {
-            if (!this.hasLogin) {
+            if (!this.token) {
                 uni.showToast({
                     title: '您还未登录, 请登录...',
                     icon: 'none',
@@ -117,7 +126,7 @@
 				})
 			},
 			btnSignOut() {
-			    if (!this.hasLogin) {
+			    if (!this.token) {
                     uni.navigateTo({
                         url: '/pages/public/login/index'
                     });
@@ -160,7 +169,7 @@
             }
 		},
 		computed: {
-			...mapState(['hasLogin', 'userInfo'])
+			...mapState(['token', 'userInfo', 'defaultAvatar'])
 		},
 		mounted() {},
         components: {

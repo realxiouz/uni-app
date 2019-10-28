@@ -6,7 +6,6 @@ const state = {
 	},
 	chats: [],
 	isLoaded: false,
-	firstTimes: true,
 	messageList: [],
 	currentBothId: ''
 }
@@ -21,9 +20,6 @@ const mutations = {
 	},
 	setChats(s, a) {
 		s.chats = a
-	},
-	setFirstTimes(state, boo) {
-		state.firstTimes = boo;
 	},
 	setPushMessageList(state, data) {
 		let index = state.messageList.findIndex(item => Number(item.id) === Number(data.id));

@@ -1,4 +1,4 @@
-export const BASE_URL = 'https://dev.km999.com'
+export const BASE_URL = 'https://erp.fangxiaoke.com'
 export const QINIU = 'https://upload-z2.qiniup.com/'
 // https://erp.fangxiaoke.com
 export const QINIU_PUBLIC = 'http://st.fangxiaoke.com/';

@@ -1,5 +1,5 @@
 <template>
-	<view class="detail">
+	<view class="detail" :style="{width: width+'px', height: height+'px'}">
 		<!--<view class="title">{{bean.title}}</view>
         <view class="content">
             <view class="name">
@@ -7,8 +7,8 @@
             </view>
             <view class="time">更新: {{processTime(bean.updated_at)}}</view>
         </view>-->
-        <view class="main-body" v-html="bean.content">
-            <web-view :src="src" :style="{width: width+'px', height: height+'px'}"></web-view>
+        <view class="main-body">
+            <web-view :src="src" ></web-view>
         </view>
 	</view>
 </template>

@@ -1,7 +1,7 @@
 <template>
 	<view :style="{'height': height}">
         <data-list r-url="news" @data="handlerList" ref="list">
-            <item v-for="(i, inx) of newsList" :keys="inx" :bean="i" />
+            <item v-for="(i, inx) of newsList" :key="inx" :bean="i" />
         </data-list>
     </view>
 </template>

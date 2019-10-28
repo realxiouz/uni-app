@@ -1,28 +1,19 @@
 <template>
 	<view>
-		<view class="pubpdtop pd-left-right">
-			<form>
-				<view class="share-title">
-
-				</view>
-				<view class="share-content pubpdtop">
-					<textarea v-model='cNames' class="radiusbox share-textarea" rows="3">
-
-					</textarea>
-				</view>
-				<view class="btngrp">
-					<button @tap="cNames = ''" class="cu-btn  bg-red button-hover">一键清空</button>
-					<button @tap="generateCard" form-type="submit" class="cu-btn bg-cyan" data-target="bottomModal">
-						分享名片
-					</button>
-				</view>
-			</form>
+		<view class="padding-top padding-right-left">
+            <view class="share-content padding-top">
+                <textarea v-model='cNames' class="radius-box share-textarea" rows="3"></textarea>
+            </view>
+            <view class="btn-group">
+                <button @tap="cNames = ''" class="cu-btn  bg-red button-hover">一键清空</button>
+                <button @tap="generateCard" form-type="submit" class="cu-btn bg-cyan" data-target="bottomModal">分享名片</button>
+            </view>
 		</view>
 		<view :class="['cu-modal', 'bottom-modal', modalName === 'bottomModal'? 'show': '']">
 			<view class="cu-dialog">
 				<view class="padding-xl">
-					<view class="sharetoobj">
-						<view class="sharetoobj-list">
+					<view class="share-to-obj">
+						<view class="share-to-obj-list">
 							<!--open-type="share"-->
 							<!-- #ifdef MP-WEIXIN-->
 							<button open-type="share"></button>
@@ -36,7 +27,7 @@
 							<!--///////////////////////////////////////////////-->
 							<text>分享给好友</text>
 						</view>
-						<view class="sharetoobj-list">
+						<view class="share-to-obj-list">
 							<button @tap="showCard" data-target="bottomModal-0"></button>
 							<view>
 								<image :src="imgSrcGetters('pyq.png')"></image>
@@ -45,24 +36,24 @@
 						</view>
 					</view>
 				</view>
-				<view class="pd-top-bottom bg-white btn-center" @tap="hideModal">
+				<view class="padding-top-bottom bg-white btn-center" @tap="hideModal">
 					取消
 				</view>
 			</view>
 		</view>
 		<view :class="['cu-modal', 'bottom-modal', modalName === 'bottomModal-0'? 'show': '']">
             <view class="cu-dialog">
-                <view class="pd-left-right">
+                <view class="padding-right-left">
                     <view class="canvas-share" :style="{'width': canvasWidth + 'px'}">
                         <canvas class="shadow change-position" v-if="!showImage" canvas-id="share-card" :style="{'width': canvasWidth + 'px', 'height': canvasHeight + 'px'}"></canvas>
                         <image :src="saveImgSrc" v-else :style="{'width': canvasWidth + 'px', 'height': canvasHeight + 'px'}"></image>
                     </view>
                     <canvas v-if="!showSmallImage && isShowShare" canvas-id="share-sm" style="width: 157px;height: 140px"></canvas>
-                    <view class="pd-top-bottom">
-                        <button @tap="saveImage" class="btnwd cu-btn block bg-cyan" :data-temp="shareImg">保存到相册</button>
+                    <view class="padding-top-bottom">
+                        <button @tap="saveImage" class="btn-width cu-btn block bg-cyan" :data-temp="shareImg">保存到相册</button>
                     </view>
                 </view>
-                <view class="pd-top-bottom bg-white btn-center" @tap="hideModal">
+                <view class="padding-top-bottom bg-white btn-center" @tap="hideModal">
                     取消
                 </view>
             </view>
@@ -73,11 +64,7 @@
 <script>
 	import share from '@/common/share.js';
 	import weiXinAuthorization from '@/utils/weixin-authorization'
-    import {
-		mapState,
-		mapGetters,
-        mapMutations
-	} from 'vuex';
+    import {mapState, mapGetters, mapMutations} from 'vuex';
 
 	export default {
 		data() {
@@ -127,7 +114,7 @@
 		methods: {
 		    ...mapMutations('ucenter', ['changeImg']),
             async generateCard(e) {
-                if (!Reflect.has(this.currentInfo, 'id')) return false;
+                if (!Reflect.has(this.currentInfo, 'uid')) return false;
                 uni.showLoading({
                     title: '生成中...'
                 });

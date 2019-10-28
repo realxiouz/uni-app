@@ -1,18 +1,27 @@
-@import "../../../../common/publicscss/scss/_link.scss";
-
 .share-textarea {
     width: 100%;
-    padding: $space_1;
+    padding: 26rpx;
+    background: #fff;
+}
+.padding-top {
+    padding-top: 35rpx;
+}
+.radius-box {
+    border-radius: 10rpx;
+}
+.padding-right-left {
+    padding: 0 26rpx;
+}
+.padding-top-bottom {
+    padding: 26rpx 0;
 }
 
-.btngrp {
+.btn-group {
     text-align: center;
-    padding-top: $space_1*1.5;
-
-
+    padding-top: 39rpx;
     > button {
         &:last-child {
-            margin-left: $space_1 * 1.7;
+            margin-left: 44rpx;
         }
     }
 };
@@ -22,7 +31,7 @@
         position: absolute;
         width: 60rpx;
         height: 60rpx;
-        @include boderradius(50%);
+        border-right: 50%;
     }
     .img-position-0 {
         top: 10rpx;
@@ -41,4 +50,46 @@
         right: 10rpx;
         background: #fff;
     }
+}
+.share-to-obj {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    //width: 100%;
+    margin: 0 auto;
+
+    > .share-to-obj-list {
+        position: relative;
+        flex: 1;
+
+        > button {
+            opacity: 0;
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            z-index: 30;
+        }
+
+        image {
+            width: 80rpx;
+            height: 80rpx;
+        }
+
+        > text {
+            display: block;
+            text-align: center;
+        }
+    }
+}
+.shadow {
+    box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.2), 0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 3px 1px -2px rgba(0, 0, 0, 0.12);
+}
+.canvas-share {
+    padding-top: 60rpx;
+    margin: 0 auto;
+    overflow: hidden;
+}
+.btn-width {
+    width: 50%;
+    margin: 0 auto;
 }

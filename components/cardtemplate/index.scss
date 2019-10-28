@@ -1,63 +1,17 @@
-@import "../../common/publicscss/scss/_link.scss";
 
 radio-group {
     width: 100%;
 }
 
-.cardtemplate {
-    radio-group {
-        float: left;
-    }
-	// 这里问题在于没有高度, 所以图片默认高度为0, 所以显示不出来, 使用100%要注意父级一定要有高度
-    //@include clear;
-    @include box-x;
-    margin-bottom: $space_1;
-
-    .radiu {
-        padding-right: rpx(60);
-        position: relative;
-        .rd {
-            @include center(centerY, -50%);
-        }
+.card-template {
+    display: flex;
+    margin-bottom: 26rpx;
+    .radio {
+        padding-right: 10rpx;
     }
 	.list-box {
 		display: flex;
+        align-items: center;
 		margin-bottom: 10rpx;
 	}
-    .template {
-        height: 100%;
-        @include flex-x(1);
-        position: relative;
-		height: 370rpx;
-        @include img100;
-        @include boderradius($radius);
-
-        overflow: hidden;
-        .userimg {
-            position: absolute;
-            width: rpx(120);
-            height: rpx(120);
-            @include boderradius(50%);
-            border: solid rpx(5) rgba($gray, .1);
-            @include imgauto;
-            overflow: hidden;
-            z-index: 15;
-        }
-
-        .cardcontent {
-            z-index: 15;
-            position: absolute;
-            padding-left: rpx(45);
-
-            .cardcontent-top {
-                padding-bottom: rpx(60);
-            }
-
-            .cardcontent-bottom {
-                > .smallfont {
-                    padding-bottom: 3px;
-                }
-            }
-        }
-    }
 }

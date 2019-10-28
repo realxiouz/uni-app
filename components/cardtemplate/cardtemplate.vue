@@ -1,14 +1,14 @@
 <template>
 	<view>
-		<view class="cardtemplate" v-if="!isShowList">
+		<view class="card-template" v-if="!isShowList">
 			<child-com style="width: 700rpx" :current-user-info="currentInfo" :num="currentInfo.template_id || 0"></child-com>
 		</view>
 
 		<form v-else style="display: block;">
-			<view class="cardtemplate">
+			<view class="card-template">
 				<radio-group class="block" @change="changed">
 					<view @tap="changed" v-for="(item, index) of tem" :key="index" class="list-box" rol="radiogroup" :data-list="index">
-						<label class="radiu">
+						<label class="radio">
 							<radio class="rd" :checked="item.checked" value="index"></radio>
 						</label>
 						<child-com style="width: 650rpx;" :current-user-info="currentInfo" :num="index"></child-com>
@@ -60,7 +60,7 @@
                 if (this.isPreview) {
                     this.changeCurrentInfo(this.currentLoginUserInfo);
                 } else {
-                    let data = Reflect.has(this.currentUserInfo, 'id')? this.currentUserInfo: this.currentLoginUserInfo;
+                    let data = Reflect.has(this.currentUserInfo, 'uid')? this.currentUserInfo: this.currentLoginUserInfo;
                     if (this.personal === 1) data = this.currentLoginUserInfo;
                     this.changeCurrentInfo(data);
                 }

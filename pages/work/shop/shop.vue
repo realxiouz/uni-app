@@ -13,18 +13,18 @@
             </swiper>
             <view class="tabs">
                 <view v-for="(item, index) of tabs" :key="index" class="w24">
-                    <view class="cu-btn bg-orange radius shadow grey" style="width: 100%;" @tap="jump(item.path, item.isLogin)">{{item.text}}</view>
+                    <view class="cu-btn radius shadow grey text-white" style="width: 100%;background: #1976D2;" @tap="jump(item.path, item.isLogin)">{{item.text}}</view>
                 </view>
             </view>
             <view class="news">
                 <view class=" text-center radius text-white news-title bg-cyan">资讯:</view>
                 <view class="news-content">
                     <swiper :autoplay="true" :duration="1000" :disable-touch="true" :vertical="true" :circular="true" :style="{height: '40rpx', 'font-size': '15px'}">
-                        <swiper-item v-for="(item, index) of newsList" :keys="index" @tap="toDetail(item.id)">{{item.title}}</swiper-item>
+                        <swiper-item v-for="(item, index) of newsList" @tap="toDetail(item.id)" :key="index">{{item.title}}</swiper-item>
                     </swiper>
                 </view>
             </view>
-            <item v-for="(item, index) of list" :bean="item" ></item>
+            <item v-for="(item, index) of list" :bean="item" :key="index"></item>
         </data-list>
     </view>
 </template>
@@ -64,7 +64,7 @@
                         isLogin: true
                     }
                 ],
-                recommend: true,
+                recommend: 1,
                 newsList: [],
                 windowHeight: 0,
                 isFirst: true
@@ -91,7 +91,7 @@
                 }
             },
             jump(url, isLogin) {
-                if (!this.hasLogin && isLogin) {
+                if (!this.token && isLogin) {
                     uni.navigateTo({
                         url: '/pages/public/login/index'
                     });
@@ -109,18 +109,17 @@
         },
         computed: {
             ...mapState('project', ['shopId']),
-            ...mapState(['isH5', 'projectDefaultImg', 'hasLogin']),
+            ...mapState(['isH5', 'projectDefaultImg', 'token']),
         },
         mounted() {
             this.$http('carousels', {per_page: 4, company_id: this.shopId}).then(res => {
                 this.bannerList = res.data;
-                console.log(this.bannerList);
             });
             this.$http('news', {per_page: 10, company_id: this.shopId}).then(res => {
                 this.newsList = res.data;
             });
             this.rData = {
-                recommend: 0,
+                recommend: 1,
                 shop_id: this.shopId
             };
             this.$nextTick(_ => {

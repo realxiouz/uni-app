@@ -1,20 +1,19 @@
 <template>
 	<view class="padding-25">
 		<!-- cardtemplate 组件start -->
-		<!-- :user="currentUserInfo"  -->
 		<card-template :is-show-list="false" :is-preview="showMakeBtn" :relay-on="relayOn" :personal="personal"></card-template>
 		<!-- cardtemplate 组件end -->
 
 		<!-- 名片详情start -->
 		<view class="isShowCard">
-			<view @tap="clickShow" :class="['isshow-top', cardTop]">
-				<view class="isshow-top-box">
+			<view @tap="clickShow" :class="['is-show-top', cardTop]">
+				<view class="is-show-top-box">
 					{{isShowCard}}
 					<text class="down cuIcon-unfold" v-if="!cardTop"></text>
 					<text class="up cuIcon-fold" v-else></text>
 				</view>
 			</view>
-			<view class="isshow-content" v-if="isShowCardContent">
+			<view class="is-show-content" v-if="isShowCardContent">
 				<view class="card-details">
 					<text>公司名称：{{currentInfo.companyname || ''}}</text>
 					<text>电话：{{currentInfo.phone || ''}}</text>
@@ -27,7 +26,7 @@
 
 		<!-- 分享名片 satart -->
 		<!-- #ifdef MP-WEIXIN || APP-PLUS -->
-		<view class="cardshare">
+		<view class="card-share">
 			<button @tap="generateCard" class="cu-btn block bg-cyan" data-target="bottomModal">分享名片</button>
 			<view :class="['cu-modal', 'bottom-modal', modalName === 'bottomModal'? 'show': '']">
 				<view class="cu-dialog">
@@ -54,14 +53,14 @@
 							</view>
 						</view>
 					</view>
-					<view class="pd-top-bottom bg-white btn-center" @tap="hideModal">
+					<view class="padding-top-bottom bg-white btn-center" @tap="hideModal">
 						取消
 					</view>
 				</view>
 			</view>
 			<view :class="['cu-modal', 'bottom-modal', modalName === 'bottomModal-0'? 'show': '']">
                     <view class="cu-dialog">
-                        <view class="pd-left-right">
+                        <view class="padding-right-left">
                             <view class="canvas-share" :style="{width:canvasWidth + 'px'}">
                                 <canvas class="shadow" canvas-id="share-card" v-if="!showImage" :style="{'width': canvasWidth + 'px', 'height': canvasHeight + 'px'}"></canvas>
                                 <image :src="saveImgSrc" v-else :style="{'width': canvasWidth + 'px', 'height': canvasHeight + 'px'}"></image>
@@ -69,11 +68,11 @@
                             <!-- 分享小图 这里不需要显示, 直接通过onShare函数分享, 需要处理在显示大图也显示小图的情况 start-->
                             <canvas v-if="!showSmallImage && isShowShare" canvas-id="share-sm" style="width: 157px;height: 140px"></canvas>
                             <!-- 分享小图 end-->
-                            <view class="pd-top-bottom">
-                                <button @tap="saveImage" class="btnwd cu-btn block bg-cyan" :data-temp="shareImg">保存到相册</button>
+                            <view class="padding-top-bottom">
+                                <button @tap="saveImage" class="btn-wd cu-btn block bg-cyan" :data-temp="shareImg">保存到相册</button>
                             </view>
                         </view>
-                        <view class="pd-top-bottom bg-white btn-center" @tap="hideModal">
+                        <view class="padding-top-bottom bg-white btn-center" @tap="hideModal">
                             取消
                         </view>
                     </view>
@@ -85,9 +84,9 @@
 
 		<!-- 浏览次数 start -->
 		<view class="browse-count">
-			<view class="browse-count-letf">
-				<text class="browse-count-text">阅览次数</text>
-				<text class="browse-count-nunber">{{currentInfo.readNumber}}</text>
+			<view class="browse-count-left">
+				<view class="browse-count-text">阅览次数</view>
+				<view class="browse-count-number">{{currentInfo.readNumber}}</view>
 			</view>
 			<view class="browse-count-right" id="browse-user">
 				<view class="vertical-md">
@@ -111,22 +110,22 @@
 			<view class="Module-content">
 				{{currentInfo.signature || ''}}
 			</view>
-			<view class="Module-title pubpdtop">
+			<view class="Module-title padding-top">
 				推荐房源
 			</view>
-			<view style="margin-bottom: 72rpx;">
-                <view class="informationlist" v-for="(item, index) of currentInfo.house" :key="index">
+			<view>
+                <view class="information-list" v-for="(item, index) of currentInfo.house" :key="index">
                     <view @tap="toDetail(item.id)">
-                        <view class="topimg">
-                            <image class="imgauto radius-top" :src="item.img"></image>
+                        <view>
+                            <image class="img-auto radius-top" :src="item.img"></image>
                         </view>
-                        <view class="housesource pd-left-right pubpdtop">
-                            <view class="housesource-left">
-                                <text class="block spece-1">{{item.name}}</text>
+                        <view class="house-source padding">
+                            <view class="house-source-left">
+                                <text class="block space-1">{{item.name}}</text>
                                 <text class="block gray">{{item.address}}</text>
                             </view>
-                            <view class="housesource-right">
-                                <view class="houseprice" >{{item.avg_price}}元/㎡</view>
+                            <view class="house-source-right">
+                                <view class="house-price" >{{item.avg_price}}元/㎡</view>
                             </view>
                         </view>
                     </view>
@@ -134,16 +133,16 @@
             </view>
 		</view>
 		<!-- 模块 end -->
-
+        <view style="height: 90rpx;"></view>
 		<!-- 底部 start-->
-		<view class="objfoot">
+		<view class="obj-foot">
 			<button class="cu-btn round bg-cyan" @tap="messageInformation">
-				<i class="left iconfont iconxiaoxi"></i>
-				留言咨询
+				<view class="left cuIcon-comment"></view>
+				<view>留言咨询</view>
 			</button>
 			<button @tap="tel"  class="cu-btn round bg-red">
-				<i class="right iconfont icondianhua"></i>
-				来电咨询
+				<view class="right cuIcon-dianhua"></view>
+				<view>来电咨询</view>
 			</button>
 		</view>
 		<!-- 底部 end -->
@@ -173,11 +172,11 @@
 </template>
 
 <script>
-	import cardTemplate from '../../../../components/cardtemplate/cardtemplate.vue';
-	import makeBtn from '../../../../components/makebtn/index/makebtn.vue';
-	import share from '../../../../common/share.js';
+	import cardTemplate from '@/components/cardtemplate/cardtemplate.vue';
+	import makeBtn from '@/components/makebtn/index/makebtn.vue';
+	import share from '@/common/share.js';
 	import {mapMutations, mapState, mapGetters} from 'vuex';
-	import weiXinAuthorization from '../../../../utils/weixin-authorization';
+	import weiXinAuthorization from '@/utils/weixin-authorization';
 
 	export default {
 		data() {
@@ -226,8 +225,7 @@
             self.showMakeBtn = options.previewB === '1';
             self.uidx = options.uidx;
             // #ifdef MP-WEIXIN
-            let token = uni.getStorageSync('apiToken');
-            if (!token) {
+            if (!this.token) {
                 self.isShowAuth = true;
                 self.modalName = 1;
             } else {
@@ -290,18 +288,18 @@
 			clickShow() {
 				this.cardIs = !this.cardIs;
 				if (this.cardIs) {
-					this.isShowCard = '展开名片信息';
+					this.isShowCard = '收起名片信息';
 					this.cardTop = 'on';
 					this.isShowCardContent = true;
 				} else {
-					this.isShowCard = '收起名片信息';
+					this.isShowCard = '展开名片信息';
 					this.cardTop = '';
 					this.isShowCardContent = false;
 				}
-			},
+            },
 			/* 名片分享到朋友圈*/
             async generateCard(e) {
-                if (!Reflect.has(this.currentInfo, 'id')) return false;
+                if (!Reflect.has(this.currentInfo, 'uid')) return false;
                 uni.showLoading({
                     title: '生成中...',
                     mask: true
@@ -361,7 +359,6 @@
                     }
                 }
                 if (trouble) return false;
-                // 为画布设置宽高, 在点击取消的时候会清除
                 this.canvasWidth = this.canvasWd;
                 if (!this.isRepeatDraw) {
                     uni.hideLoading();
@@ -475,7 +472,7 @@
 			    let uidx = this.uidx;
                 if (this.personal === 1) {
                     this.getUserMsg();
-                } else if (Reflect.has(this.currentLoginUserInfo, 'id')) {// 在已经获取了就不要再去请求了
+                } else if (Reflect.has(this.currentLoginUserInfo, 'uid')) {// 在已经获取了就不要再去请求了
                     this.changeCurrentInfo(this.currentLoginUserInfo);
                 } else {
                     this.getUserMsg();
@@ -571,7 +568,7 @@
                     if (!r.avatar) r.avatar = this.defaultAvatar;
                     const data = Object.assign({}, {readNumber: res.readnumber}, {BrowseUser: res.Browseuser}, {house: houseArr}, r);
                     self[boo? 'changeCurrentUserInfo': 'changeCurrentLoginUserInfo'](data);
-                    if (!boo) self.hasCurrentId = Reflect.has(data, 'id');
+                    if (!boo) self.hasCurrentId = Reflect.has(data, 'uid');
                     this.relayOn = !this.relayOn;
                     if (!boo) this.setInterceptUId('');
                 }).catch(err => {
@@ -596,7 +593,7 @@
 		},
 		computed: {
 			...mapState('ucenter', ['currentUserInfo', 'downLoadImg', 'currentLoginUserInfo', 'currentInfo', 'uId', 'browseUser']),
-			...mapState(['userInfo', 'defaultAvatar']),
+			...mapState(['userInfo', 'defaultAvatar', 'token']),
 			...mapGetters('ucenter', ['imgSrcGetters'])
 		},
         onShow() {

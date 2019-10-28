@@ -18,26 +18,11 @@
 		
 		<!-- #ifndef H5 -->
 		<view class="text-xsl text-green text-center q-fixed" style="bottom: 160upx;top: auto">
-			<button open-type="getUserInfo" @getuserinfo="getUserInfo" class="cuIcon cuIcon-weixin border" style="background:#F1F1F1; border: 1px solid rgba(0, 0, 0, 0);color: #39B54A;" @tap="showLoading"></button>
+			<button open-type="getUserInfo" @getuserinfo="getUserInfo" class="cuIcon cuIcon-weixin border" style="background:#F1F1F1; border: 1px solid rgba(0, 0, 0, 0);color: #39B54A;" @tap="showLoading">
+                <view style="position: absolute; bottom: 20rpx;width: 92%;font-size: 14px; text-align: center;">微信登录</view>
+            </button>
 		</view>
 		<!-- #endif -->
-        <!-- #ifdef MP-WEIXIN-->
-        <view v-if="!isLogOut && showDialog" :class="['cu-modal', modalName === 1? 'show': '']">
-            <view class="cu-dialog">
-                <view class="cu-bar bg-white justify-end">
-                    <view class="content">使用微信登录</view>
-                    <view class="action" @tap="modalName = null">
-                        <text class="cuIcon-close text-red"></text>
-                    </view>
-                </view>
-                <view class="padding-xl">
-                    <button class="cu-btn bg-red margin-tb-sm lg button-hover" open-type="getUserInfo" @getuserinfo="getUserInfo"  @tap="showLoading">
-                        获取授权
-                    </button>
-                </view>
-            </view>
-        </view>
-        <!--#endif-->
 	</view>
 </template>
 
@@ -55,10 +40,15 @@
             modalName: 1,
             showDialog: true
 		}),
+        onUnload() {
+            if (!this.hasLogin) {
+		        uni.removeStorage({key: 'apiToken'});
+		        this.changeToken('');
+            }
+        },
 		methods: {
 			...mapMutations(['login', 'changeToken']),
             ...mapMutations('ucenter', ['setInterceptUId', 'setUId']),
-            ...mapMutations('message', ['setFirstTimes']),
 			handleLogin() {
 				this.$http('auth/login', this.formBean, 'post').then(r => {
 					// console.log(r);
@@ -68,7 +58,6 @@
 					// uni.setStorageSync('userInfo', r.user);
 					// 表示已经登录成功
 					// this.hasLogin = true;
-					this.setFirstTimes(false);
 					this.changeToken(r.access_token);
                     uni.setStorageSync('apiToken', r.access_token);
                     if (!res.avatar) {
@@ -188,7 +177,7 @@
 		},
 		computed: {
 			...mapState('ucenter', ['interceptUId']),
-            ...mapState(['defaultAvatar', 'isLogOut'])
+            ...mapState(['defaultAvatar', 'hasLogin'])
 		}
 	}
 </script>
