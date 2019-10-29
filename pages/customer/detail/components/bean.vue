@@ -114,11 +114,11 @@
 					</view>
 				</view>
 			</view>
-			<view class="cu-item" v-if="bean.release_time">
+			<view class="cu-item" v-if="bean.owned_at">
 				<view class="content padding-tb-sm flex align-center">
 					<view class="flex flex-direction flex-sub" style="align-items: flex-start;">
 						<view class="text-gray text-sm">认领时间</view>
-						<view class="text-black text-bold">{{bean.release_time}}</view>
+						<view class="text-black text-bold">{{bean.owned_at}}</view>
 					</view>
 				</view>
 			</view>
