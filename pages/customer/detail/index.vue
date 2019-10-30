@@ -76,6 +76,17 @@
             if (this.type === '分销') {
                 this.tabs.splice(3, 1, {text: '带看记录'})
             }
+			if (opt.need) {
+				uni.showModal({
+					title: '请注意',
+					content: '还未添加客户需求,去添加?',
+					success: res => {
+						if (res.confirm) {
+							this.selTab = 1
+						}
+					}
+				})
+			}
 		},
 		onShow() {
 			if(this.$refs[`list${this.selTab}`] && this.selTab != 0) {
