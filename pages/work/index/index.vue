@@ -290,22 +290,10 @@
                 },
 			};
 		},
-        watch: {
-		    userInfo: {
-		        handler(data) {
-                    uni.setNavigationBarTitle({
-                        title: data.company.software_name || '工作'
-                    });
-                },
-                deep: true
-            }
-        },
+        watch: {},
         onHide() {},
         onLoad() {
             this.getUserInfo(this.$http);
-            uni.setNavigationBarTitle({
-                title: this.userInfo.company.software_name || '工作'
-            });
         },
         onShow() {},
 		methods: {

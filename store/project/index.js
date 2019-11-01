@@ -1,7 +1,7 @@
 
 const state = {
 	listType: '',
-    shopId: null
+    shopId: ''
 };
 
 const getters = {};
