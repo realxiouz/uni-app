@@ -114,7 +114,7 @@
 					</view>
 				</view>
 			</view>
-			<view class="cu-item" v-if="bean.owned_at">
+			<view class="cu-item" v-if="bean.belongsto_type!='首录'&&bean.owned_at">
 				<view class="content padding-tb-sm flex align-center">
 					<view class="flex flex-direction flex-sub" style="align-items: flex-start;">
 						<view class="text-gray text-sm">认领时间</view>
