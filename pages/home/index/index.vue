@@ -1,7 +1,7 @@
 <template>
     <view :style="{height: windowHeight + 'px'}">
         <data-list :r-url="rUrl" :r-data="rData" @data="handlerList" ref="list">
-            <swiper class="" style="height: 200px;">
+            <swiper class="" style="height: 200px;" :duration="1000" :disable-touch="false" :vertical="false" :circular="true" :autoplay="true">
                 <swiper-item v-if="!bannerList.length">
                     <view style="display: flex;justify-content: center;align-items: center; width: 100vw;height: 400rpx;">
                         <image :src="projectDefaultImg" mode="" style="width: 50%;height: 70%;"></image>
@@ -11,7 +11,7 @@
                     <image :src="i.photo_url" mode="" style="width: 100%;height: 100%;"></image>
                 </swiper-item>
             </swiper>
-            <view class="tabs" v-if="tabs.length">
+            <view class="tabs" v-if="shopId.toString()">
                 <view v-for="(item, index) of tabs" :key="index" class="w20">
                     <view style="width: 100%;" @tap="jump(item.path, item.isLogin)" class="text-white text-center radius news-title bg-blue">{{item.text}}</view>
                 </view>
@@ -24,8 +24,10 @@
                     </swiper>
                 </view>
             </view>
-            <item v-for="(item, index) of list" :bean="item" :key="index"></item>
-            <view slot="isEnd"></view>
+            <view>
+                <item v-for="(item, index) of list" :bean="item" :key="index"></item>
+            </view>
+            <!--<view slot="isEnd"></view>-->
             <view slot="noData"></view>
             <view class="clear" v-if="shopId">
                 <image src="/static/images/tablist/home.png" @tap="clearShopId"></image>
@@ -43,7 +45,7 @@
 			return {
                 list: [],
                 rUrl: 'project/shop',
-                /*tabs: [
+                tabs: [
                     {
                         path: '/pages/project/list/index?type=shop',
                         text: '所有楼盘',
@@ -64,7 +66,7 @@
                         text: '客户',
                         isLogin: true
                     }
-                ],*/
+                ],
                 bannerList: [],
                 recommend: 1,
                 newsList: [],
@@ -77,8 +79,17 @@
             item
         },
         onLoad() {
+            // console.log('onload');
             const self = this;
             self.getData();
+            if (this.shopId.toString()) {
+                this.$http(`company/${this.shopId}`).then(r => {
+                    let res = r.data || r;
+                    uni.setNavigationBarTitle({
+                        title: res.software_name || '首页'
+                    });
+                }).catch(err => {})
+            }
             this.$nextTick(_ => {
                 uni.getSystemInfo({
                     success(e) {
@@ -117,6 +128,9 @@
 		        this.$refs.list.scrollTop = 1;
 		        this.setShopId('');
                 this.getData();
+                uni.setNavigationBarTitle({
+                    title: '首页'
+                });
                 this.rData = {};
             },
             getData() {
@@ -191,8 +205,9 @@
     }
     .clear {
         display: flex;
-        align-items: ceter;
+        align-items: center;
         justify-content: center;
+        padding: 10rpx 0 0 0;
         > image {
             width: 60rpx;
             height: 60rpx;
