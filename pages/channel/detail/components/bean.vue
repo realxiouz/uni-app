@@ -52,7 +52,7 @@
 							mode="date" start="2015-09-01" @change="dateChange">
 						    <view class="picker">续约</view>
 						</picker>
-						<button class="cu-btn bg-red radius small margin-right-xs" @click="cancel(bean.company_b_id)">解约</button>
+						<button class="cu-btn bg-red radius small margin-right-xs" @click="cancel()">解约</button>
 					</template>
 				</view>
 			</view>
@@ -132,14 +132,14 @@
 					})
 				})
 			},
-			cancel(company_id) {
+			cancel() {
 				uni.showModal({
 				    title: '请注意',
 				    content: '确定于此渠道解约么?',
 				    success: res => {
 				        if (res.confirm) {
 				            this.$http(`cooperation_log/cooperation_cancel`, {
-				            	company_id,
+				            	channel_id: this.cId,
 				            	cooperation_type: "channel"
 				            }, 'post').then(r => {
 				            	this.getData()
@@ -154,7 +154,7 @@
 			},
 			dateChange(e) {
 				this.$http(`cooperation_log/renewal`, {
-					company_id: this.bean.company_b_id,
+					channel_id: this.cId,
 					cooperation_type: "channel",
 					period: e.detail.value
 				}, 'post').then(r => {

@@ -39,7 +39,8 @@
 				top: uni.upx2px(90),
 				keywords: '',
 				data: {
-					user_id: ''
+					user_id: '',
+					is_master: true
 				},
 				
 				needSetDefault: false

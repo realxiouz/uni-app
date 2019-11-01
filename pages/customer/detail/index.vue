@@ -8,7 +8,7 @@
 		<swiper :style="[{position:'fixed',left:0,right:0,bottom:'0',top:top+'px',height:'auto'}]" @change="tabChange"
 		 :current="selTab">
 			<swiper-item>
-				<bean :c-id="id" ref="list0" />
+				<bean :c-id="id" ref="list0" @name="handleName"/>
 			</swiper-item>
 			<swiper-item>
 				<data-list ref="list1" @data="handleList3" r-url="customerDemand" :r-data="rData">
@@ -259,6 +259,11 @@
 					default:
 						break;
 				}
+			},
+			handleName(title) {
+				uni.setNavigationBarTitle({
+					title
+				})
 			}
 		},
 		components: {
