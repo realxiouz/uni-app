@@ -29,8 +29,8 @@
 						<single-picker :range="stars" v-model="formBean.star" />
 					</view>
 					<view class="cu-bar btn-group">
-						<button class="cu-btn bg-blue shadow-blur" @click="handleSearch">搜索</button>
 						<button class="cu-btn text-blue line-blue shadow" @click="handleReset">清空</button>
+						<button class="cu-btn bg-blue shadow-blur" @click="handleSearch">搜索</button>
 					</view>
 				</form>
 			</view>
