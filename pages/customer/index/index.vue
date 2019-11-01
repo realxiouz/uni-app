@@ -26,10 +26,6 @@
 			if (this.isH5) {
 				this.top = 44 + uni.upx2px(90)
 			}
-			this.$nextTick(_ => {
-				this.$refs.list.getData()
-			});
-			
 			this.type = opt.type;
 			
 			this.data = {
@@ -55,6 +51,11 @@
 			uni.setNavigationBarTitle({
 				title
 			})
+		},
+		onShow() {
+			this.$nextTick(_ => {
+				this.$refs.list.getData(true)
+			});
 		},
 		data() {
 			return {

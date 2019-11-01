@@ -25,7 +25,7 @@ const store = new Vuex.Store({
 		statusBarHeight: 0, //状态栏的高度，单位px
         defaultAvatar: 'https://st.fangxiaoke.com/common/person.png',
         projectDefaultImg: 'https://st.fangxiaoke.com/common/no-photo.png',
-        token: ''
+        token: '',
 	},
 	mutations: {
 		login(state, userInfo) {

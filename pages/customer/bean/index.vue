@@ -301,7 +301,7 @@
 					this.formLoading = true
 					this.$http('customer', data, 'post').then(r => {
 						uni.redirectTo({
-							url: `/pages/customer/detail/index?id=${r.data.id}&type=${r.data.type}`
+							url: `/pages/customer/detail/index?id=${r.data.id}&type=${r.data.type}&need=true`
 						});
 					}).finally(_ => {
 						this.formLoading = false

@@ -30,13 +30,18 @@
 	
 	export default {
 		onLoad(opt) {
-			this.$nextTick(_ => {
-				this.$refs.list0[0].getData()
-			})
+			// this.$nextTick(_ => {
+			// 	this.$refs.list0[0].getData()
+			// })
 			this.type = opt.type
 			this.tabs = this.tabs.map(i => {
 				i.data.type = this.type
 				return i
+			})
+		},
+		onShow() {
+			this.$nextTick(_ => {
+				this.$refs.list0[0].getData(true)
 			})
 		},
 		data() {
