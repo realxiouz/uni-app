@@ -21,7 +21,7 @@ export default {
         currentLoginUserInfo: {},// 登录用户的信息
         currentInfo: {},// 当前显示使用的信息(登录或被分享的)
         uId: '',
-        houseId: [],
+        recommendHouse: [],
         browseUser: [],
         interceptUId: ''
 	},
@@ -31,16 +31,21 @@ export default {
                 Vue.set(state.currentUserInfo, key, val);
             }
 		},
-		changeHouseId(state, data) {
-		    let houseId = state.houseId;
+		changeRecommendHouse(state, data) {
+		    let recommendHouse = state.recommendHouse;
 			if (data.isAdd) {
-                houseId.unshift(data.id);
+			    let index = recommendHouse.findIndex(item => item.id === data.id);
+			    if (index > -1) {
+                    recommendHouse.splice(index, 1, {id: data.id, img: data.img});
+                } else {
+                    recommendHouse.unshift({id: data.id, img: data.img});
+                }
 			} else if (data.allDel) {
-                houseId = [];
+                recommendHouse = [];
 			} else {
-                houseId.splice(data.index, 1);
+                recommendHouse.splice(data.index, 1);
             }
-			state.houseId = [...new Set(houseId)];
+			state.recommendHouse = recommendHouse;
 		},
         changeImg(state, obj) {
             Vue.set(state.downLoadImg, obj.key, obj.url);
@@ -55,7 +60,7 @@ export default {
         },
         clearEmpty(state) {
             state.currentLoginUserInfo = {};
-            state.houseId = [];
+            state.recommendHouse = [];
             state.browseUser = [];
             state.currentInfo = {};
             state.currentUserInfo = {};

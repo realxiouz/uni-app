@@ -1,8 +1,5 @@
 <template>
-    <view v-if="shopId">
-        <shop />
-    </view>
-	<view v-else>
+	<view>
 		<!-- #ifndef H5  -->
 		<template v-if="hasFeature(attendanceList.feature, attendanceList.perm)">
 			<view class="cu-bar bg-white solid-bottom margin-top">
@@ -116,8 +113,7 @@
 </template>
 
 <script>
-	import { mapState } from 'vuex';
-	import shop from '../shop/shop';
+	import { mapState, mapMutations, mapActions } from 'vuex';
 	export default {
 		data() {
 			return {
@@ -255,7 +251,18 @@
 				channel: {
                     text: '渠道管理',
                     feature: ["channel", "baobei in"],
-                    perm: ["Channel view", "Channel view sub", "Channel view personal", "Channel sign", "Channel sign sub", "Channel sign personal"],
+                    perm: [
+                        "Channel view",
+                        "Channel view sub",
+                        "Channel view personal",
+                        "Channel sign",
+                        "Channel sign sub",
+                        "Channel sign personal",
+                        "create project",
+                        "view baobei list",
+                        "view house deal logs",
+                        "create baobei phone"
+                    ],
 				    list: [
                         {
                             cuIcon: 'goods',
@@ -280,34 +287,30 @@
                             perm: ['view baobei list']
                         }
                     ]
-                }
+                },
 			};
 		},
-		onShow() {},
-        components: {
-		    shop
-        },
         watch: {
 		    userInfo: {
 		        handler(data) {
                     uni.setNavigationBarTitle({
-                        title: data.company.software_name || '首页'
+                        title: data.company.software_name || '工作'
                     });
                 },
                 deep: true
             }
         },
+        onHide() {},
         onLoad() {
+            this.getUserInfo(this.$http);
             uni.setNavigationBarTitle({
-                title: this.userInfo.company.software_name || '首页'
+                title: this.userInfo.company.software_name || '工作'
             });
-            if (!this.token && !this.shopId) {
-                uni.reLaunch({
-                    url: '/pages/public/login/index'
-                })
-            }
         },
+        onShow() {},
 		methods: {
+		    ...mapActions(['getUserInfo']),
+		    ...mapMutations(['login']),
 			handleNav(url) {
                 if (this.shopId && /type=cooperation/.test(url)) {
                     uni.navigateTo({
@@ -339,7 +342,7 @@
                     if (isTrue) break;
                 }
                 return isTrue;
-            }
+            },
 			/*hasFeature(f) {
 			    let boolean = false;
                 if (f instanceof Array) {
@@ -369,11 +372,11 @@
             }*/
 		},
 		computed: {
-			...mapState(['userInfo', 'haveLogin', 'token']),
-            ...mapState('project', ['shopId'])
+			...mapState(['userInfo', 'token', 'defaultAvatar'])
 		}
 	}
 </script>
 
 <style>
+
 </style>

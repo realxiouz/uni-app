@@ -30,6 +30,7 @@
 		},
 		onLaunch: function(e) {
             let shopId = e.query.shop_id;
+            console.log(e.query, 'app.vue');
             let token = uni.getStorageSync('apiToken');
             this.changeToken(token);
             // #ifdef H5
@@ -40,11 +41,7 @@
 					console.log(e)
 				}
 			});*/
-            if (!/(object|undefined)/.test(typeof shopId)) {
-			    this.setShopId(shopId);
-            } else {
-                this.setShopId('');
-            }
+            if (!/(object|undefined)/.test(typeof shopId)) this.setShopId(shopId);
             // this.getUserInfo(token, !shopId);
 			// uni.getLocation({
 			// 	type: 'gcj02',
@@ -59,12 +56,10 @@
 			// })
 		},
 		onShow(){
-            if (this.shopId) return false;
-            this.getUserInfo(this.token, !this.shopId);
+            /*if (this.shopId || this.interceptUId.toString()) return false;
+            this.getUserInfo(this.token, !this.shopId);*/
         },
-		onHide(){
-            this.setShopId('');
-        },
+		onHide(){},
         watch: {
 		    hasLogin(data) {
 		        // let e = this.socket();
@@ -155,7 +150,8 @@
 		computed: {
 			...mapState(['userInfo', 'hasLogin', 'defaultAvatar', 'token']),
 			...mapState('message', ['new', 'messageList', 'currentBothId']),
-            ...mapState('project', ['shopId'])
+            ...mapState('project', ['shopId']),
+            ...mapState('ucenter', ['interceptUId'])
 		},
         mounted() {}
 	}

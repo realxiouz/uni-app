@@ -40,7 +40,7 @@
 			this.$http('geren/recommend').then(res => {
 			    let data = res.data;
 			    for (let item of data) {
-			        this.changeHouseId({id: item.id, isAdd: true})
+			        this.changeRecommendHouse({id: item.id, img: item.img, isAdd: true})
                 }
 				self.selectedHouse = data;
             }).catch(err => {
@@ -51,7 +51,7 @@
         onUnload() {
             let arr = JSON.parse(JSON.stringify(this.selectedHouse));
             this.changeCurrentLoginUserInfo({house: arr});
-            this.changeHouseId({allDel: true});
+            this.changeRecommendHouse({allDel: true});
         },
         watch: {
             selectedHouse: {
@@ -64,7 +64,7 @@
             }
         },
         methods: {
-            ...mapMutations('ucenter', ['changeCurrentLoginUserInfo', 'changeHouseId']),
+            ...mapMutations('ucenter', ['changeCurrentLoginUserInfo', 'changeRecommendHouse']),
             handleLongPress(e) {
                 // 长按后350ms触发
                 let touchIndex = e.currentTarget.dataset.touchindex;
@@ -98,7 +98,7 @@
 					    duration: 1000,
 					    position: 'center'
 					});
-                    self.changeHouseId({id: deleteIndex, isAdd: false})
+                    self.changeRecommendHouse({id: deleteIndex, isAdd: false})
 				}).catch(err => {
 					uni.hideLoading();
 				})

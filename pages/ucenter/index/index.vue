@@ -28,7 +28,7 @@
 			<view class="menu">
                 <view class="list" @tap="show = !show" v-if="userInfo.company_id !== '' && userInfo.company_id !== null">
                     <view class="content">公司信息</view>
-                    <view :class="[show? 'down': 'pull-up',  'text-gray', 'icon', 'weight']"></view>
+                    <view :class="[show? 'pull-up': 'down',  'text-gray', 'icon', 'weight']"></view>
                 </view>
                 <view v-if="show" class="show">
                     <view>{{userInfo.company.name}}</view>
@@ -46,14 +46,14 @@
                 <view class="cu-item arrow icon"></view>
             </view>
             <view class="btn" @tap="btnSignOut">
-                <view class="content">{{token? '退出登录': '登录'}}</view>
+                <view class="content">退出登录</view>
             </view>
 		</view>
 	</view>
 </template>
 
 <script>
-    import { mapState, mapMutations } from 'vuex';
+    import { mapState, mapMutations, mapActions } from 'vuex';
     import getPhone from '../get-phone/get-phone';
 	export default {
 		data() {
@@ -65,20 +65,8 @@
 		},
         watch: {},
 		onLoad() {
-		    const self = this;
-            if (this.token && !Reflect.has(this.userInfo, 'id')) {
-                this.$http('auth/user').then(r => {
-                    let res = r;
-                    if (!res.avatar) {
-                        res.avatar = self.defaultAvatar;
-                    }
-                    this.login(res);
-                })
-            } else if (!this.token){
-                uni.navigateTo({
-                    url: '/pages/public/login/index'
-                })
-            }
+            const self = this;
+            self.getUserInfo(self.$http);
 			//#ifdef MP-WEIXIN
 			/*uni.startWifi({
 				success(res) {
@@ -108,16 +96,9 @@
                 })
             })
 		},
-		onShow() {
-            if (!this.token) {
-                uni.showToast({
-                    title: '您还未登录, 请登录...',
-                    icon: 'none',
-                    duration: 2500
-                });
-            }
-		},
+		onShow() {},
 		methods: {
+		    ...mapActions(['getUserInfo']),
 			...mapMutations(['logout', 'login']),
             ...mapMutations('ucenter', ['clearEmpty']),
 			handleNav(url) {
@@ -126,12 +107,6 @@
 				})
 			},
 			btnSignOut() {
-			    if (!this.token) {
-                    uni.navigateTo({
-                        url: '/pages/public/login/index'
-                    });
-                    return false;
-                }
 				let self = this;
                 uni.showModal({
 					title: '退出登录',
@@ -169,7 +144,8 @@
             }
 		},
 		computed: {
-			...mapState(['token', 'userInfo', 'defaultAvatar'])
+			...mapState(['token', 'userInfo', 'defaultAvatar']),
+            ...mapState('ucenter', ['interceptUId'])
 		},
 		mounted() {},
         components: {

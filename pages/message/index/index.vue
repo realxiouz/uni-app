@@ -10,28 +10,18 @@
 <script>
 	import DataList from '@/components/data-list'
 	import Item from './components/item'
-	import { mapState, mapMutations } from 'vuex'
+	import { mapState, mapMutations, mapActions } from 'vuex'
 	
 	export default {
 		onLoad(opt) {
-			this.rData.user_id = this.userInfo.id;
-			if (!this.token) {
-                uni.navigateTo({
-                    url: '/pages/public/login/index'
-                })
-            }
+            this.getUserInfo(this.$http);
+            this.rData.user_id = this.userInfo.id;
 		},
 		onShow() {
-		    if (!this.token) {
-                uni.showToast({
-                    title: '您还未登录, 请登录...',
-                    icon: 'none',
-                    duration: 2500
-                });
-            }
+		    if (!this.token) return false;
 			this.$nextTick(_ => {
 				this.$refs.list.getData(true)
-			})
+			});
 			uni.hideTabBarRedDot({
 				index: 1
 			});
@@ -53,6 +43,7 @@
 			...mapState('message', ['new'])
 		},
 		methods: {
+		    ...mapActions(['getUserInfo']),
 			...mapMutations('message', ['setChats']),
 			handleList(list) {
 				this.list = list

@@ -31,6 +31,16 @@
 	export default {
 		onLoad(opt) {
 			// this.wechatlogin()
+            this.shopId = opt.shop_id;
+            if (this.shopId) {
+                uni.switchTab({
+                    url: '/pages/home/index/index'
+                });
+                return true;
+            }
+            uni.setNavigationBarTitle({
+                title: '登录·注册'
+            })
         },
 		data: _ => ({
 			formBean: {
@@ -38,12 +48,13 @@
 				password: '',
 			},
             modalName: 1,
-            showDialog: true
+            showDialog: true,
+            shopId: ''
 		}),
         onUnload() {
-            if (!this.hasLogin) {
-		        uni.removeStorage({key: 'apiToken'});
-		        this.changeToken('');
+            if (!this.hasLogin && !this.shop_id) {
+                uni.removeStorage({key: 'apiToken'});
+                this.changeToken('');
             }
         },
 		methods: {
@@ -119,7 +130,8 @@
                                 };
                                 self.$http('wxapp/login', data, 'post').then(r => {
                                     self.login(r.user);
-                                    uni.setStorageSync('apiToken', r.access_token)
+                                    self.changeToken(r.access_token);
+                                    uni.setStorageSync('apiToken', r.access_token);
                                     if (!r.user.wxbinded) {
                                         uni.showModal({
                                             title: '该微信还未绑定用户,是否绑定?',
@@ -177,7 +189,10 @@
 		},
 		computed: {
 			...mapState('ucenter', ['interceptUId']),
-            ...mapState(['defaultAvatar', 'hasLogin'])
+            ...mapState(['defaultAvatar', 'hasLogin']),
+            ...mapState('project', {
+                shop_id: state => state.shopId
+            })
 		}
 	}
 </script>

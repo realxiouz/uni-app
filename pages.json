@@ -1,8 +1,15 @@
 {
-	"pages": [{
+	"pages": [
+      {
+        "path" : "pages/home/index/index",
+        "style" : {
+          "navigationBarTitleText": "首页"
+        }
+      },
+      {
 			"path": "pages/work/index/index",
 			"style": {
-				"navigationBarTitleText": "首页"
+				"navigationBarTitleText": "工作"
 			}
 		},
 		{
@@ -186,10 +193,7 @@
 			}
 		},
 		{
-			"path": "pages/public/login/index",
-			"style": {
-				"navigationBarTitleText": "登录·注册"
-			}
+			"path": "pages/public/login/index"
 		},
 		{
 			"path": "pages/public/bind/index",
@@ -364,10 +368,6 @@
 				"navigationBarTitleText": "带看单"
 			}
 		},
-      {
-        "path": "pages/work/shop/shop",
-        "style": {}
-      },
 		{
 			"path": "pages/baobei/reject/index",
 			"style": {
@@ -473,11 +473,18 @@
 		"selectedColor": "#2F85FC",
 		"backgroundColor": "#FFFFFF",
 		"borderStyle": "black",
-		"list": [{
+		"list": [
+			{
+				"pagePath": "pages/home/index/index",
+				"iconPath": "static/images/tablist/home.png",
+				"selectedIconPath": "static/images/tablist/home-active.png",
+				"text": "首页"
+			},
+			{
 				"pagePath": "pages/work/index/index",
 				"iconPath": "static/images/tablist/work.png",
 				"selectedIconPath": "static/images/tablist/work-active.png",
-				"text": "首页"
+				"text": "工作"
 			},
 			{
 				"pagePath": "pages/message/index/index",

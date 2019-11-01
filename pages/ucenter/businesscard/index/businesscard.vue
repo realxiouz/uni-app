@@ -272,7 +272,7 @@
             }
 		},
 		methods: {
-			...mapMutations(['login']),
+			...mapMutations(['login', 'changeToken']),
 			...mapMutations('ucenter', ['changeCurrentLoginUserInfo', 'changeImg', 'changeCurrentUserInfo', 'changeCurrentInfo', 'setUId', 'setBrowseUser', 'setInterceptUId']),
 			toDetail(id) {
 			    if (id === null || id === undefined) return false;
@@ -419,6 +419,7 @@
                                     };
                                     self.$http('wxapp/login', data, 'post').then(r => {
                                         self.login(r.user);
+                                        self.changeToken(r.access_token);
                                         uni.setStorageSync('apiToken', r.access_token);
                                         uni.showToast({
                                             title: '授权成功',

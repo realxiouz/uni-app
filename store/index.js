@@ -51,7 +51,22 @@ const store = new Vuex.Store({
 		}
 	},
 	actions: {
-	
+	    getUserInfo({commit, state}, $http) {
+            let token = state.token;
+            if (token && !Reflect.has(state.userInfo, 'id')) {
+                $http('auth/user').then(r => {
+                    let res = r;
+                    if (!res.avatar) {
+                        res.avatar = state.defaultAvatar;
+                    }
+                    commit('login', res);
+                })
+            } else if (!token) {
+                uni.reLaunch({
+                    url: '/pages/public/login/index'
+                })
+            }
+        }
 	}
 })
 

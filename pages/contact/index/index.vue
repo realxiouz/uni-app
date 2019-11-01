@@ -36,34 +36,22 @@
 
 <script>
 	import Ava from '@/components/avatar'
-	import { mapState } from 'vuex'
+	import { mapState, mapActions } from 'vuex'
 	export default {
 		onLoad() {
-            if (!this.token) {
-                uni.navigateTo({
-                    url: '/pages/public/login/index'
-                });
-                return false;
-            }
+		    this.getUserInfo(this.$http);
 			this.$http('common/contact').then(r => {
 				this.list = r.data
 			})
 		},
-        onShow() {
-            if (!this.token) {
-                uni.showToast({
-                    title: '您还未登录, 请登录...',
-                    icon: 'none',
-                    duration: 2500
-                });
-            }
-        },
+        onShow() {},
 		data() {
 			return {
 				list: []
 			}
 		},
 		methods: {
+		    ...mapActions(['getUserInfo']),
 			handleMessage(i) {
 				uni.navigateTo({
 					url: `/pages/message/chat/index?id=${i.id}&type=App\\User&send-name=${i.name}`
@@ -74,7 +62,7 @@
 			Ava
 		},
 		computed: {
-			...mapState(['userInfo', 'token'])
+			...mapState(['userInfo'])
 		},
         mounted() {}
 	}

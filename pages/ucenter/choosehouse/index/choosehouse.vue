@@ -10,9 +10,9 @@
                     </view>
                 </form>
             </view>
-            <view v-if="temArr.length" class="show-choose">
-                <view v-for="(item, i) of temArr" :key="i">
-                    <image :src="item" mode="aspectFit"></image>
+            <view v-if="recommendHouse.length" class="show-choose">
+                <view v-for="(item, i) of recommendHouse" :key="i">
+                    <image :src="item.img" mode="aspectFit"></image>
                 </view>
             </view>
 			<view v-else class="show-choose" style="font-size: 18px;">请选择楼盘...</view>
@@ -57,9 +57,7 @@
             return {
                 recommendHt: '',
                 houseList: [],
-                temArr: [],
 				keywords: '',
-                selectedHouse: [],
                 beforeSearchList: '',
                 rData: {},
                 height: '100vh',
@@ -93,14 +91,10 @@
             }
         },
         computed: {
-            ...mapState('ucenter', [
-                'houseArr',
-                'houseId',
-                'currentInfo'
-            ])
+            ...mapState('ucenter', ['recommendHouse'])
         },
         methods: {
-            ...mapMutations('ucenter', ['changeHouseId']),
+            ...mapMutations('ucenter', ['changeRecommendHouse']),
             handlerList(list) {
                 let self = this;
                 if (!self.keywords) {
@@ -110,7 +104,7 @@
                 }
                 let set = new Set(self.temArr);
                 list.forEach((ele, index) => {
-                    let i = self.houseId.findIndex(id => Number(id) === Number(ele.id));
+                    let i = self.recommendHouse.findIndex(id => Number(id.id) === Number(ele.id));
                     let boolean = i !== -1;
                     ele.isTrue = boolean;
                     boolean && set.add(ele.img);
@@ -132,11 +126,20 @@
                 });
                 const self = this;
 				let params = '';
-				let len = self.houseId.length-1;
+				let len = self.recommendHouse.length-1;
 				for (let i=0; i<=len; i++) {
 					let until = i === len? '': ',';
-					params += self.houseId[i] + until;
+					params += self.recommendHouse[i].id + until;
 				}
+				if (!params) {
+				    uni.showToast({
+                        title: '提交不能为空',
+                        duration: 2500,
+                        icon: 'none',
+                        mask: true
+                    });
+				    return false;
+                }
 				this.$http('geren/recommendHouse', {houseid: params}).then(res => {
 					if (res.code === 100) {
 					    uni.hideLoading();
@@ -165,7 +168,7 @@
 				const index = target.item;
                 const isTrue = this.houseList[index]['isTrue'];
                 const imgSrc = target.imgsrc;
-                if (this.temArr.length >= 10 && !isTrue) {
+                if (this.recommendHouse.length >= 10 && !isTrue) {
                     uni.showToast({
                         title: '最多只能选择10个楼盘！',
                         icon: 'none',
@@ -176,64 +179,18 @@
                 this.houseList[index]['isTrue'] = !isTrue;
                 if (!isTrue) {
                     const id = target.id;
-                    this.temArr.unshift(imgSrc);
-                    this.selectedHouse.push(this.houseList[index]);
-                    this.changeHouseId({
+                    this.changeRecommendHouse({
                         id: id,
+                        img: imgSrc,
                         isAdd: true
                     });
                 } else {
-                    let i = this.temArr.findIndex(val => val === imgSrc);
-                    this.temArr.splice(i, 1);
-                    this.selectedHouse.splice(i, 1);
-                    this.changeHouseId({
+                    let i = this.recommendHouse.findIndex(val => val.img === imgSrc);
+                    this.changeRecommendHouse({
                         index: i,
                         isAdd: false
                     });
                 }
-                /*this.houselist.forEach((ele, index) => {
-                    if (e.currentTarget.dataset.item == index) {
-                        self.houselist[index]['istrue'] = !ele.istrue;
-                        if (ele.istrue) {
-                            self.temarr.push(ele.id);
-                            self.temarr = self.unique(self.temarr);
-                        } else {
-                            this.temarr.remove(ele.id);
-                        }
-                        if (this.temarr.length > 0) {
-                            self.isshowtem = true;
-                        } else {
-                            self.isshowtem = false;
-                        }
-                        if (self.temarr.length > 10) {
-                            self.temarr.remove(ele.id);
-                            uni.showToast({
-                                title: '最多只能选择10个楼盘！',
-                                icon: 'none',
-                                duration: 2000
-                            });
-                            self.houselist[index]['istrue'] = false;
-                        }
-                    }
-                    this.temarr.sort();
-                    this.changeHouseId(this.temarr);
-                });*/
-			},
-			//去掉重复项
-			unique(array) {
-				let n = {}, r = [], Length = array.length, val, type;
-				for (let i = 0; i < array.length; i++) {
-					val = array[i];
-					type = typeof val;
-					if (!n[val]) {
-						n[val] = [type];
-						r.push(val);
-					} else if (n[val].indexOf(type) < 0) {
-						n[val].push(type);
-						r.push(val);
-					}
-				}
-				return r;
 			},
 			searchKeywords() {
                 this.$refs.list.hasLoaded = true;
