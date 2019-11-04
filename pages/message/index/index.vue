@@ -23,7 +23,7 @@
 				this.$refs.list.getData(true)
 			});
 			uni.hideTabBarRedDot({
-				index: 1
+				index: 2
 			});
 		},
 		onHide() {},
@@ -56,7 +56,7 @@
 		},
 		watch: {
 			new(val) {
-				if (val.id) {
+                if (!!val && val.id) {
 					this.$refs.list.getData(true)
 				}
 			}

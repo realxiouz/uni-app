@@ -54,9 +54,11 @@
 			</view>
 			<view class="flex justify-between">
 				<text class="text-cyan" style="flex: 1">{{i.baobei_remark || ''}}</text>
-				<button class="cu-btn radius bg-blue shadow" v-if="cooperation === 'cooperation'" @click.stop="handleBaobei(i, bean)">报备</button>
-				<button class="cu-btn radius bg-blue shadow" v-else-if="i.cooperationed" :disabled="true">已签约</button>
+				<button class="cu-btn radius bg-blue shadow" v-if="cooperation === 'cooperation'" @click.stop="handleBaobei(i, bean)">立即报备</button>
+                <!--:disabled="true"-->
+				<button class="cu-btn radius bg-blue shadow" v-else-if="i.cooperationed" @tap.stop="handleBaobei(i, bean)">立即报备</button>
 				<button class="cu-btn radius bg-green shadow" v-else-if="cooperation === 'public' && i.company.id !== userInfo.company.id" @click.stop="handleCooperation(i.company_id)">申请合作</button>
+				<button class="cu-btn radius bg-green shadow" v-else-if="cooperation === 'shop' || cooperation === ''" @click.stop="applyCooperation(i.company_id)">申请合作</button>
 			</view>
 		</navigator>
 
@@ -82,7 +84,8 @@
 <script>
 	import {
 		mapMutations,
-		mapState
+		mapState,
+        mapActions
 	} from 'vuex'
 	// v-if="!(listType === 'public' && i.company.id === userInfo.company.id)"
 	export default {
@@ -104,7 +107,7 @@
 		onLoad(opt) {
 			this.id = opt.id;
 			this.cooperation = opt.type;
-			let data = null;
+            let data = null;
 			// listType已被我换成cooperation
             if (/shop/.test(opt.type)) {
                 data = {
@@ -153,6 +156,7 @@
 		},
 		methods: {
 			...mapMutations('baobei', ['setDaikan', 'setSelProject', 'setSelCustomer']),
+            ...mapActions(['getUserInfo']),
 			handleBaobei(i, bean) {
 				this.setDaikan({
 					name: this.userInfo.name,
@@ -173,11 +177,31 @@
 			handleCooperation(company_id) {
 				let data = {
 					company_id,
-					invitation_id: this.userInfo.id
-				}
+					invitation_id: this.userInfo.id,
+                    is_master: 0
+				};
 				this.$http('cooperation_log', data, 'post').then(r => {
-
-				})
+                    if (r.status === 'success') {
+                        uni.showToast({
+                            title: r.message,
+                            duration: 2500,
+                            icon: 'none',
+                            mask: true
+                        })
+                    }
+                }).catch(err => {})
+			},
+            async applyCooperation(company_id) {
+			    const self = this;
+			    if (!Reflect.has(this.userInfo, 'id')) {
+                   this.getUserInfo(this.$http).then(data => {
+                       setTimeout(() => {
+                           self.handleCooperation(company_id)
+                       }, 1000)
+                   });
+                   return false;
+                }
+				self.handleCooperation(company_id);
 			},
 			toDetail() {
 				uni.navigateTo({

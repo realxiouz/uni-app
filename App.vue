@@ -19,7 +19,7 @@
 				let i = self.messageList.findIndex(item => Number(item.id) === Number(msg.payload));
 				let data = self.messageList[i];
 				uni.hideTabBarRedDot({
-					index: 1
+					index: 2
 				});
 				uni.navigateTo({
 					url: `/pages/message/chat/index?id=${data.both_id}&type=${data.both_type}&send-name=${data.name}`
@@ -102,7 +102,7 @@
                     let data = r.data;
                     this.setNew(data);
                     uni.showTabBarRedDot({
-                        index: 1
+                        index: 2
                     });
                     // #ifdef APP-PLUS
                     if (Number(this.currentBothId) === Number(data.both.id) ) return false;

@@ -76,6 +76,9 @@
             if (this.type === '分销') {
                 this.tabs.splice(3, 1, {text: '带看记录'})
             }
+			uni.setNavigationBarTitle({
+                title: '客户详情'
+            })
 			if (opt.need) {
 				uni.showModal({
 					title: '请注意',
