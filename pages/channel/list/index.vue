@@ -38,7 +38,9 @@
 				list: [],
 				top: uni.upx2px(90),
 				keywords: '',
-				data: null,
+				data: {
+					is_master: true
+				},
 				type: '',
 				
 				needSetDefault: false

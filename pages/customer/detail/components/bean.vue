@@ -218,6 +218,7 @@
 				this.$http(`customer/${this.cId}`).then(r => {
 					this.bean = r.data
 					this.hasLoaded = true
+					this.$emit('name', r.data.name)
 				}).finally(_ => {
 					uni.hideLoading()
 				})

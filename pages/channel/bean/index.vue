@@ -85,6 +85,7 @@
 					name: '',
 					phone: ''
 				},
+				is_master: true
 			},
 			types: [],
 			pcd: [],
