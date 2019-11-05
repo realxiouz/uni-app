@@ -142,7 +142,7 @@
 						this.bean = _data;
 						let hx = [];
 						for (let item of _data.house_types) {
-							hx.push(item.img);
+							if (item.img) hx.push(item.img);
 						}
 						let albums = [];
 						let img = _data.img;

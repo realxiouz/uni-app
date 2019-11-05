@@ -39,11 +39,15 @@
                     self.width = e.windowWidth;
                     self.height = e.windowHeight;
                 }
-            })
+            });
+            uni.setNavigationBarTitle({
+                title: opt.title
+            });
 		    /*this.$http('news/'+ opt.id).then(res => {
                 this.bean = res;
             })*/
         },
+        watch: {},
 		methods: {
             processTime(time) {
                 return moment(time).format('YYYY-MM-DD');

@@ -61,10 +61,12 @@ const store = new Vuex.Store({
                     }
                     commit('login', res);
                 })
+                return true;
             } else if (!token) {
                 uni.reLaunch({
                     url: '/pages/public/login/index'
                 })
+                return false;
             }
         }
 	}

@@ -1,6 +1,6 @@
 <template>
-	<view :style="{'height': height}">
-        <data-list r-url="news" @data="handlerList" ref="list">
+    <view :style="{'height': height}" class="wrap">
+        <data-list r-url="news" @data="handlerList" ref="list" :r-data="rData">
             <item v-for="(i, inx) of newsList" :key="inx" :bean="i" />
         </data-list>
     </view>
@@ -9,12 +9,14 @@
 <script>
     import dataList from '@/components/data-list';
     import item from '../components/item';
+    import {mapState} from 'vuex';
 	export default {
 		data() {
 			return {
 				newsList: [],
                 classArray: ['teal', 'cyan', 'light-blue'],
-                height: '100vh'
+                height: '100vh',
+                rData: {}
 			}
 		},
         components: {
@@ -29,6 +31,7 @@
                 }
             });
             self.$nextTick(_ => {
+                self.rData = Object.assign(self.rData, {shop_id: self.shopId});
                 self.$refs.list.getData(true);
             });
         },
@@ -42,60 +45,14 @@
                 })
             }
 		},
-        computed: {}
+        computed: {
+		    ...mapState('project', ['shopId'])
+        }
 	}
 </script>
 
 <style lang="scss" scoped>
-    .item-list {
-        display: flex;
-        align-items: center;
-        width: 100%;
-        padding: 10rpx 20rpx;
-        .news-img {
-            width: 100rpx;
-            height: 100rpx;
-            image {
-                width: 100%;
-                height: 100%;
-            }
-        }
-        .content {
-            flex: 1;
-            margin-left: 10rpx;
-            font-size: 14px;
-            text-align: left;
-            .title {
-                font-weight: bold;
-            }
-            .name-time {
-                display: inherit;
-                .cyan {
-                    color: cyan;
-                }
-                .light-blue {
-                    color: lightblue;
-                }
-                .teal {
-                    color: teal;
-                }
-                .name {
-                    text {
-                        color: #fff;
-                        padding:2px;
-                        margin-right:2px;
-                        border-radius:2px;
-                    }
-                }
-                .create-time {
-                    margin-left: 10rpx;
-                    color: grey;
-                    font-size: 12px;
-                }
-            }
-            .description {
-
-            }
-        }
+    view.wrap {
+        padding: 25rpx;
     }
 </style>

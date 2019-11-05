@@ -31,17 +31,17 @@
 		onLaunch: function(e) {
             let shopId = e.query.shop_id;
             console.log(e.query, 'app.vue');
+            if (!/(object|undefined)/.test(typeof shopId)) this.setShopId(shopId);
             let token = uni.getStorageSync('apiToken');
             this.changeToken(token);
             // #ifdef H5
 			this.setH5();
-			// #endif
-			/*uni.getSystemInfo({
-				success: e => {
-					console.log(e)
-				}
-			});*/
-            if (!/(object|undefined)/.test(typeof shopId)) this.setShopId(shopId);
+            // #endif
+            /*uni.getSystemInfo({
+                success: e => {
+                    console.log(e)
+                }
+            });*/
             // this.getUserInfo(token, !shopId);
 			// uni.getLocation({
 			// 	type: 'gcj02',
@@ -55,10 +55,7 @@
 			// 	}
 			// })
 		},
-		onShow(){
-            /*if (this.shopId || this.interceptUId.toString()) return false;
-            this.getUserInfo(this.token, !this.shopId);*/
-        },
+		onShow(){},
 		onHide(){},
         watch: {
 		    hasLogin(data) {
@@ -130,7 +127,7 @@
                     // #endif
                 })
             },
-            getUserInfo(token, isNeedLogin) {
+            getUserInfo(token) {
                 const self = this;
                 if (token) {
                     this.$http('auth/user').then(r => {
@@ -140,7 +137,7 @@
                         }
                         this.login(res);
                     })
-                } else if (isNeedLogin) {
+                } else{
                     uni.reLaunch({
                         url: '/pages/public/login/index'
                     })

@@ -126,6 +126,9 @@
 				this.bean = r.data;
 				let banners = [];
 				let hx = [];
+				uni.setNavigationBarTitle({
+                    title: r.data.name
+                });
 				for (let item of r.data.house_types) {
 					if (item.img) hx.push(item.img);
 				}
