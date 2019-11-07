@@ -293,7 +293,7 @@
         watch: {},
         onHide() {},
         onLoad() {
-            this.getUserInfo(this.$http);
+            this.getUserInfo();
         },
         onShow() {},
 		methods: {

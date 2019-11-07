@@ -66,7 +66,7 @@
         watch: {},
 		onLoad() {
             const self = this;
-            self.getUserInfo(self.$http);
+            self.getUserInfo();
 			//#ifdef MP-WEIXIN
 			/*uni.startWifi({
 				success(res) {

@@ -52,7 +52,7 @@
             shopId: ''
 		}),
         onUnload() {
-            if (!this.hasLogin && !this.shop_id) {
+            if (!this.hasLogin && !this.shopId) {
                 uni.removeStorage({key: 'apiToken'});
                 this.changeToken('');
             }

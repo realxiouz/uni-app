@@ -43,9 +43,6 @@
             uni.setNavigationBarTitle({
                 title: opt.title
             });
-		    /*this.$http('news/'+ opt.id).then(res => {
-                this.bean = res;
-            })*/
         },
         watch: {},
 		methods: {

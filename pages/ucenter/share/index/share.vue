@@ -100,10 +100,10 @@
         },
 		onLoad() {
 			// canvas
-			let screenwd = uni.getSystemInfoSync().windowWidth;
-			let screenht = uni.getSystemInfoSync().windowHeight;
-			this.canvasWd = this.canvasWidth = screenwd - 20 * 1.9;
-			this.canvasHt = this.canvasHeight = screenht * .23;
+			let screenWd = uni.getSystemInfoSync().windowWidth;
+			let screenHt = uni.getSystemInfoSync().windowHeight;
+			this.canvasWd = this.canvasWidth = screenWd - 20 * 1.9;
+			this.canvasHt = this.canvasHeight = screenHt * .23;
 			this.currentBgNum = this.currentInfo.template_id || 1;
 			// 为画布设置宽高
 			this.canvasWidth = this.canvasWd;

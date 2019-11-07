@@ -1,6 +1,6 @@
 <template>
-	<view style="position: relative;height:100vh;background: #fff;">
-        <view class="search" :style="{top: isH5?'44px':'0px'}">
+	<view :style="{height: height+'px'}">
+        <view class="search">
             <view>
                 <view class="area">
                     <pcd :level="3" v-model="pcd" :last="true" :clear-content="clearContent" :unlimited="true" :last-style="true"/>
@@ -14,8 +14,8 @@
                 </view>
             </view>
         </view>
-		<view :style="[{position: 'fixed', left: 0, right: 0, bottom: '0', top: top, height: isH5? '88vh': '93vh'}]">
-            <data-list ref="list" @data="handleList" :r-url="shopId? 'project/shop': 'project'" :r-data="rData">
+		<view :style="{height: height - 40 +'px'}">
+            <data-list ref="list" @data="handleList" :r-url="rUrl" :r-data="rData">
                 <project v-for="(i, inx) in list" :key="inx" :bean="i" :type="rData.route_type"/>
             </data-list>
         </view>
@@ -30,30 +30,33 @@
 	
 	export default {
 		onLoad(opt) {
-			let titleObj = {
+		    const self = this;
+            const isShop = opt.type === 'shop';
+            self.rUrl = isShop? 'project/shop': 'project';
+            let titleObj = {
 				cooperation: '报备楼盘',
 				public: '云端楼盘',
-                shop: '报备楼盘'
+                shop: '所有楼盘'
 			};
 			uni.setNavigationBarTitle({
-			    title: this.shopId? '所有楼盘': titleObj[opt.type]
+			    title: titleObj[opt.type]
 			});
-			this.setListType(opt.type);
-			if (this.shopId) {
-			    this.rData = {
-			        shop_id: this.shopId,
+            self.setListType(opt.type);
+            if (isShop) {
+                self.rData = {
+                    shop_id: self.shopId,
                     recommend: 0,
                 };
             }
-			this.rData.route_type = opt.type;
-            this.$nextTick(_ => {
-				this.$refs.list.init()
+            self.rData.route_type = opt.type;
+            self.$nextTick(_ => {
+                self.$refs.list.init();
+                uni.getSystemInfo({
+                    success(e) {
+                        self.height = e.windowHeight
+                    }
+                });
 			});
-            if (this.isH5) {
-                this.top = 44 + 114+ 'rpx';
-            } else {
-                this.top = 72 + 'rpx';
-            }
 		},
 		data() {
 			return {
@@ -64,10 +67,12 @@
                 keywords: '',
                 currentPage: '',
                 isEnd: false,
-                top: 0,
                 pcd: [],
                 clearContent: '选择地区',
-                isFirstSearch: true
+                isFirstSearch: true,
+                height: 0,
+                shop: '',
+                rUrl: ''
             }
 		},
 		methods: {
@@ -122,7 +127,7 @@
 		},
         watch: {
 		    pcd(val) {
-                this.clearContent = val.length > 0 ? '': '选择地区';
+                this.clearContent = val.length> 0? '': '选择地区';
             }
         }
 	}
@@ -130,59 +135,61 @@
 
 
 <style lang="scss" scoped>
-    .search {
-        position: fixed;
-        left: 0;
-        width: 100vw;
-        view:nth-child(1) {
-            display: flex;
-            align-items: flex-end;
-            padding: 10rpx 20rpx;
-            .area {
-                position: relative;
-                max-width: 164rpx;
-                min-width: 164rpx;
-                height: 58rpx;
-                padding: 6rpx 40rpx 6rpx 6rpx;
-                border: 1px solid #ccc;
-                margin-right: 10rpx;
-                line-height: 1.4;
-                overflow: hidden;
-            }
-            .area:after {
-                content: '';
-                position: absolute;
-                right: 12rpx;
-                top: 42%;
-                width: 0;
-                height: 0;
-                border: 12rpx solid;
-                border-color: #000 transparent transparent;
-            }
-            .input {
-                flex: 1;
-                display: inherit;
-                align-items: center;
-                height: 58rpx;
-                padding: 4rpx;
-                padding-right: 5rpx;
-                border: 1px solid #ccc;
-                input {
-                    flex: 1;
-                }
-                .placeholder {
-                    font-size: 14px;
-                }
-                text {
-                    height: 30rpx;
-                    background: #eee;
-                    border-radius: 50%;
-                    margin-right: 5rpx;
-                }
-            }
-            .btn {
-                view {
+    view {
+        .search {
+            position: relative;
+            width: 100vw;
+            view:nth-child(1) {
+                display: flex;
+                flex-direction: row;
+                align-items: flex-end;
+                padding: 10rpx 20rpx;
+                .area {
+                    position: relative;
+                    max-width: 164rpx;
+                    min-width: 164rpx;
                     height: 58rpx;
+                    padding: 6rpx 40rpx 6rpx 6rpx;
+                    border: 1px solid #ccc;
+                    margin-right: 10rpx;
+                    line-height: 1.4;
+                    overflow: hidden;
+                }
+                .area:after {
+                    content: '';
+                    position: absolute;
+                    right: 12rpx;
+                    top: 42%;
+                    width: 0;
+                    height: 0;
+                    border: 12rpx solid;
+                    border-color: #000 transparent transparent;
+                }
+                .input {
+                    flex: 1;
+                    display: inherit;
+                    align-items: center;
+                    height: 58rpx;
+                    padding: 4rpx;
+                    padding-right: 5rpx;
+                    border: 1px solid #ccc;
+                    input {
+                        flex: 1;
+                    }
+                    .placeholder {
+                        font-size: 14px;
+                    }
+                    text {
+                        height: 30rpx;
+                        background: #eee;
+                        border-radius: 50%;
+                        margin-right: 5rpx;
+                    }
+                }
+                .btn {
+                    view {
+                        height: 58rpx;
+                    }
                 }
             }
         }

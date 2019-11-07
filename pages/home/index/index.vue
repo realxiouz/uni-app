@@ -1,5 +1,5 @@
 <template>
-    <view :style="{height: windowHeight + 'px'}">
+    <view :style="{height:  height + 'px'}">
         <data-list :r-url="rUrl" :r-data="rData" @data="handlerList" ref="list">
             <swiper v-if="bannerList.length" style="height: 200px;" :duration="1000" :disable-touch="false" :vertical="false" :circular="true" :autoplay="true">
                 <swiper-item v-for="(i, inx) in bannerList" :key="inx">
@@ -70,8 +70,8 @@
                 ],
                 bannerList: [],
                 newsList: [],
-                windowHeight: 0,
-                rData: {}
+                rData: {},
+                height: 0
 			}
 		},
         components: {
@@ -88,17 +88,24 @@
                     });
                     self.getData();
                 }).catch(err => {});
-            } else if (!self.token || !Reflect.has(self.userInfo, 'id')) {
-                await self.getUserInfo(self.$http);
-                if (!self.token) return false;
+            } else {
+                await self.getUserInfo().then(data => {
+                    if (data.isLoad) {
+                        self.getData(data.data.company.type_name);
+                        uni.setNavigationBarTitle({
+                            title: self.userInfo.company.software_name || '首页'
+                        });
+                        self.$refs.list.scrollTop = 1;
+                    }
+                })
             }
             this.$nextTick(_ => {
+                this.$refs.list.getData(true);
                 uni.getSystemInfo({
                     success(e) {
-                        self.windowHeight = e.windowHeight;
+                        self.height = e.windowHeight;
                     }
-                });
-                if (this.shopId.toString()) this.$refs.list.init();
+                })
             });
         },
         computed: {
@@ -110,7 +117,6 @@
             ...mapActions(['getUserInfo']),
             handlerList(list) {
                 this.list = list;
-                this.$refs.list.hasLoaded = false;
             },
             jump(url, isLogin) {
                 if (!this.token && isLogin) {
@@ -130,18 +136,16 @@
             },
             clearShopId() {
                 this.setShopId('');
-		        if (!Reflect.has(this.userInfo, 'id') || !this.token) {
-		            this.getUserInfo(this.$http).then(data => {
-                        if (!data) return false;
-                        this.$refs.list.scrollTop = 1;
-                        this.getData();
-                        uni.setNavigationBarTitle({
-                            title: '首页'
-                        });
-                    }).catch(err => {})
-                }
+                this.getUserInfo().then(data => {
+                    if (!data.isLoad) return false;
+                    this.getData(data.data.company.type_name);
+                    this.$refs.list.scrollTop = 1;
+                    uni.setNavigationBarTitle({
+                        title: '首页'
+                    });
+                });
             },
-            getData() {
+            getData(typeName) {
                 let param = {};
                 if (this.shopId.toString()) {
                     this.rData = {
@@ -151,7 +155,7 @@
                     param = {
                         company_id: this.shopId
                     }
-                } else {this.requestParams();}
+                } else {this.requestParams(typeName);}
                 this.$http('carousels', Object.assign({per_page: 4}, param)).then(res => {
                     this.bannerList = res.data;
                 });
@@ -164,45 +168,15 @@
                     url: '/pages/news/index/index'
                 })
             },
-            requestParams() {
+            requestParams(typeName) {
                 this.rUrl = 'project';
-                switch (this.userInfo.company.type_name) {
-                    case '中介':
-                        this.rData = Object.assign({}, {
-                            type: 'all',
-                            route_type: 'cooperation'
-                        });
-                        break;
-                    case '开发商':
-                        this.rData = Object.assign({}, {
-                            type: 'all',
-                            route_type: 'my'
-                        });
-                        break;
-                    case '代理商':
-                        this.rData = Object.assign({}, {
-                            type: 'all',
-                            route_type: 'cooperation'
-                        });
-                        break;
-                }
+                this.rData = {
+                    type: 'all',
+                    route_type: typeName = '中介' || '代理商'? 'cooperation': 'my'
+                };
             }
 		},
-        watch: {
-		    'userInfo.company.type_name': {
-		        handler() {
-                    this.getData();
-                    setTimeout(() => {
-                        this.$refs.list.getData(true);
-                    }, 1000);
-                    const self = this;
-                    uni.setNavigationBarTitle({
-                        title: self.userInfo.company.software_name || '首页'
-                    });
-                    this.rUrl = 'project';
-                }
-            }
-        }
+        watch: {}
 	}
 </script>
 

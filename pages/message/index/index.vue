@@ -14,7 +14,7 @@
 	
 	export default {
 		onLoad(opt) {
-            this.getUserInfo(this.$http);
+            this.getUserInfo();
             this.rData.user_id = this.userInfo.id;
 		},
 		onShow() {

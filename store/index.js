@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import {http} from '../utils/request';
 import attendance from './attendance'
 import customer from './customer'
 import baobei from './baobei'
@@ -7,6 +8,7 @@ import message from './message'
 import project from './project'
 import ucenter from './ucenter'
 import company from './company'
+
 Vue.use(Vuex)
 
 const store = new Vuex.Store({
@@ -51,25 +53,33 @@ const store = new Vuex.Store({
 		}
 	},
 	actions: {
-	    getUserInfo({commit, state}, $http) {
-            let token = state.token;
-            if (token && !Reflect.has(state.userInfo, 'id')) {
-                $http('auth/user').then(r => {
-                    let res = r;
-                    if (!res.avatar) {
-                        res.avatar = state.defaultAvatar;
-                    }
-                    commit('login', res);
-                })
-                return true;
-            } else if (!token) {
-                uni.reLaunch({
-                    url: '/pages/public/login/index'
-                })
-                return false;
-            }
+	    getUserInfo({commit, state}) {
+            return new Promise(resolve => {
+                let token = state.token;
+                if (token && !Reflect.has(state.userInfo, 'id')) {
+                    http('auth/user').then(r => {
+                        let res = r;
+                        if (!res.avatar) res.avatar = state.defaultAvatar;
+                        commit('login', res);
+                        resolve({
+                            isLoad: true,
+                            data: res
+                        });
+                    });
+                } else if (!token) {
+                    uni.reLaunch({
+                        url: '/pages/public/login/index'
+                    });
+                    resolve({isLoad: false});
+                } else {
+                    resolve({
+                        isLoad: true,
+                        data: state.userInfo
+                    });
+                }
+            });
         }
 	}
-})
+});
 
 export default store
