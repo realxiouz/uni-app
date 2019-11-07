@@ -39,7 +39,8 @@
 	
 	export default {
 		onLoad(opt) {
-			this.type = opt.type
+            if (!Reflect.has(this.userInfo, 'id')) return false;
+			this.type = opt.type;
 			if (this.type == 2) {
 				this.rUrl ='common/contact'
 				this.rData = {

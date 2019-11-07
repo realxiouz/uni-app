@@ -39,10 +39,13 @@
 	import { mapState, mapActions } from 'vuex'
 	export default {
 		onLoad() {
-		    this.getUserInfo(this.$http);
-			this.$http('common/contact').then(r => {
-				this.list = r.data
-			})
+		    this.getUserInfo().then(data => {
+                if (data.isLoad) {
+                    this.$http('common/contact').then(r => {
+                        this.list = r.data
+                    })
+                }
+            })
 		},
         onShow() {},
 		data() {
