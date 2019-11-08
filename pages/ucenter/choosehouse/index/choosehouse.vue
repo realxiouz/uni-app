@@ -1,36 +1,38 @@
 <template>
     <view>
         <form @submit="submitHouse">
-            <view class='choose-search'>
-                <form>
-                    <view class="search">
-                        <text class="cuIcon-search"></text>
-                        <input type="text" placeholder="请输入楼盘编号" v-model="keywords" @blur="inputBlur" confirm-type="search" @confirm="searchKeywords">
-						<button type="primary" size="mini" v-if="!!keywords.toString()" @tap="searchKeywords">搜索</button>
-                    </view>
-                </form>
-            </view>
-            <view v-if="recommendHouse.length" class="show-choose">
-                <view v-for="(item, i) of recommendHouse" :key="i">
-                    <image :src="item.img" mode="aspectFit"></image>
-                </view>
-            </view>
-			<view v-else class="show-choose" style="font-size: 18px;">请选择楼盘...</view>
-            <view class="choose-house" :style="{'height': height}">
-                <data-list :r-data="rData" r-url="guestProjects" @data="handlerList" ref="list">
-                        <view @tap="pushToTem" class="item" v-for="(item, index) of houseList" :data-item="index" :key="index" :data-imgsrc="item.img" :data-id="item.id">
-                            <view class="select-box">
-                                <text class="no-select iconfont iconxuanze" v-if="!item.isTrue"></text>
-                                <text class="selected iconfont iconxianshi_xuanzetianchong" v-else style="color: #15a2e0"></text>
-                            </view>
-                            <view class="select-img">
-                                <image :src="item.img" mode="aspectFit"></image>
-                            </view>
-                            <view class="select-txt">
-                                <text>{{item.name}}</text>
-                            </view>
+            <view class="selected-wrap">
+                <view class='choose-search'>
+                    <form style="display:block;">
+                        <view class="search">
+                            <text class="cuIcon-search"></text>
+                            <input type="text" placeholder="请输入楼盘编号" v-model="keywords" confirm-type="search" @confirm="searchKeywords">
+                            <button type="primary" size="mini" v-if="!!keywords.toString()" @tap="searchKeywords">搜索</button>
                         </view>
-                    </data-list>
+                    </form>
+                </view>
+                <view v-if="recommendHouse.length" class="show-choose">
+                    <view v-for="(item, i) of recommendHouse" :key="i">
+                        <image :src="item.img" mode="aspectFit"></image>
+                    </view>
+                </view>
+                <view v-else class="show-choose" style="font-size: 18px;">请选择楼盘...</view>
+            </view>
+            <view style="padding: 180rpx 0 80rpx 0" class="choose-house">
+                <data-list :r-data="rData" r-url="guestProjects" @data="handlerList" ref="list" :is-search="isSearch">
+                    <view @tap="pushToTem" class="item" v-for="(item, index) of houseList" :data-item="index" :key="index" :data-imgsrc="item.img" :data-id="item.id">
+                        <view class="select-box">
+                            <text class="selected iconfont iconxianshi_xuanzetianchong" v-if="item.isTrue" style="color: #15a2e0"></text>
+                            <text class="no-select iconfont iconxuanze" v-else></text>
+                        </view>
+                        <view class="select-img">
+                            <image :src="item.img" mode="aspectFit"></image>
+                        </view>
+                        <view class="select-txt">
+                            <text>{{item.name}}</text>
+                        </view>
+                    </view>
+                </data-list>
             </view>
             <view class="choose-affirm">
                 <button form-type="submit">
@@ -43,26 +45,17 @@
 
 <script>
     import {mapState, mapMutations} from 'vuex';
-    import dataList from '@/components/data-list';
-    //操作数组
-    Array.prototype.remove = function (val) {
-        // this指向调用者数组;
-        let Index = this.indexOf(val);
-        if (Index > -1) {
-            this.splice(Index, 1);
-        }
-    };
+    import dataList from '@/components/load-more';
+
     export default {
         data() {
             return {
                 recommendHt: '',
                 houseList: [],
 				keywords: '',
-                beforeSearchList: '',
                 rData: {},
                 height: '100vh',
-                page: '',
-                isEnd: ''
+                isSearch: false
             }
         },
         onLoad() {
@@ -73,20 +66,16 @@
                 }
             });
             this.$nextTick(_ => {
-                this.$refs.list.init();
+                this.$refs.list.getData(true);
             })
         },
 		watch: {
             keywords(val) {
                 if (!val) {
-                    this.$refs.list.page = this.page;
-                    this.$refs.list.isEnd = this.isEnd;
-                    this.$refs.list.scrollTop = 0;
-                    let list = JSON.parse(this.beforeSearchList);
-                    this.$refs.list.list = list;
-                    this.$refs.list.hasLoaded = false;
                     Reflect.deleteProperty(this.rData, 'keywords');
-                    this.handlerList(list);
+                    setTimeout(() => {
+                        this.isSearch = false;
+                    }, 100)
                 }
             }
         },
@@ -193,35 +182,33 @@
                 }
 			},
 			searchKeywords() {
-                this.$refs.list.hasLoaded = true;
+                this.isSearch = true;
                 this.rData = {
 				    keywords: this.keywords
                 };
-                this.$refs.list.scrollTop = 1;
 			}
         },
         components: {
             dataList
+        },
+        onReachBottom() {
+            this.$refs.list.handlerUp();
         }
     }
 </script>
 
 <style lang="scss">
     @import "choosehouse";
-	.choose-search {
+	.selected-wrap {
+        position: fixed;
+        left: 0;
 		// #ifndef H5
-		top: 0,
+		top: 0;
 		// #endif
 		// #ifdef H5
 		top: 88rpx;
 		// #endif
-	}
-	.show-choose {
-		// #ifndef H5
-		top: 90rpx;
-		// #endif
-		// #ifdef H5
-		top: 179rpx;
-		// #endif
+        width: 100%;
+        z-index: 1000;
 	}
 </style>

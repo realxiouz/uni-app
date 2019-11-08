@@ -110,7 +110,7 @@
 				})
 			},
 			handleSend() {
-				if (!this.content) {
+				if (!this.content.trim()) {
 					uni.showToast({
 						title: '还没有输入内容',
 						icon: 'none'

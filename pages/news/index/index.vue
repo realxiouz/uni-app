@@ -7,14 +7,13 @@
 </template>
 
 <script>
-    import dataList from '@/components/data-list';
+    import dataList from '@/components/load-more';
     import item from '../components/item';
     import {mapState} from 'vuex';
 	export default {
 		data() {
 			return {
 				newsList: [],
-                classArray: ['teal', 'cyan', 'light-blue'],
                 height: '100vh',
                 rData: {}
 			}

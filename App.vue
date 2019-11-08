@@ -198,4 +198,10 @@
 	.padding-25 {
 	    padding: 25rpx;
 	}
+    ::-webkit-scrollbar {
+        display: none;
+        width: 0;
+        height: 0;
+        color: transparent;
+    }
 </style>

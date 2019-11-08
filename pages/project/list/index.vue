@@ -1,6 +1,6 @@
 <template>
-	<view :style="{height: height+'px'}">
-        <view class="search">
+	<view class="wrap" :style="{height: height  + 'px'}">
+        <view class="search" :style="{top: isH5? '44px': '0'}">
             <view>
                 <view class="area">
                     <pcd :level="3" v-model="pcd" :last="true" :clear-content="clearContent" :unlimited="true" :last-style="true"/>
@@ -14,11 +14,16 @@
                 </view>
             </view>
         </view>
-		<view :style="{height: height - 40 +'px'}">
+        <view :style="{'padding-top': 40 +'px'}">
+            <load-more ref="list" @data="handleList" :r-url="rUrl" :r-data="rData" :is-search="isSearch">
+                <project v-for="(i, inx) in list" :key="inx" :bean="i" :type="rData.route_type"/>
+            </load-more>
+        </view>
+		<!--<view :style="{height: height - 40 +'px'}">
             <data-list ref="list" @data="handleList" :r-url="rUrl" :r-data="rData">
                 <project v-for="(i, inx) in list" :key="inx" :bean="i" :type="rData.route_type"/>
             </data-list>
-        </view>
+        </view>-->
 	</view>
 </template>
 
@@ -27,6 +32,7 @@
 	import Project from './components/project'
 	import { mapMutations, mapState } from 'vuex';
 	import Pcd from '@/components/pcd';
+	import LoadMore from '@/components/load-more';
 	
 	export default {
 		onLoad(opt) {
@@ -50,7 +56,7 @@
             }
             self.rData.route_type = opt.type;
             self.$nextTick(_ => {
-                self.$refs.list.init();
+                self.$refs.list.getData(true);
                 uni.getSystemInfo({
                     success(e) {
                         self.height = e.windowHeight
@@ -58,6 +64,10 @@
                 });
 			});
 		},
+        onReachBottom() {
+            if (!this.list.length) return false;
+            this.$refs.list.handlerUp();
+        },
 		data() {
 			return {
 				list: [],
@@ -65,14 +75,12 @@
 					route_type: '',
 				},
                 keywords: '',
-                currentPage: '',
-                isEnd: false,
                 pcd: [],
                 clearContent: '选择地区',
-                isFirstSearch: true,
                 height: 0,
                 shop: '',
-                rUrl: ''
+                rUrl: '',
+                isSearch: false
             }
 		},
 		methods: {
@@ -88,12 +96,8 @@
                         district_id: (this.pcd[2] !== undefined) && this.pcd[2] >= 0? this.pcd[2]:  '',
                         keywords: this.keywords
                     });
+                    this.isSearch = true;
                     this.rData = JSON.parse(JSON.stringify(obj));
-                    if (this.isFirstSearch) this.searchBeforeList = JSON.parse(JSON.stringify(this.list));
-                    this.$refs.list.scrollTop = 1;
-                    this.currentPage = this.$refs.list.page;
-                    this.isEnd = this.$refs.list.isEnd;
-                    this.isFirstSearch = false;
                 } else {
                     uni.showToast({
                         title: '搜索关键词不可为空...',
@@ -106,16 +110,12 @@
                 Reflect.deleteProperty(this.rData, 'province_id');
                 Reflect.deleteProperty(this.rData, 'city_id');
                 Reflect.deleteProperty(this.rData, 'district_id');
+                Reflect.deleteProperty(this.rData, 'keywords');
                 this.pcd = [];
                 this.keywords = '';
-                Reflect.deleteProperty(this.rData, 'keywords');
-                this.$refs.list.scrollTop = 0;
-                this.list = this.searchBeforeList;
-                if (!this.isEnd) {
-                    this.$refs.list.list = this.list;
-                    this.$refs.list.isEnd = this.isEnd;
-                    this.$refs.list.page = this.currentPage;
-                }
+                setTimeout(() => {
+                    this.isSearch = false;
+                }, 100);
             }
 		},
         computed: {
@@ -123,7 +123,7 @@
             ...mapState(['isH5'])
         },
 		components: {
-			DataList, Project, Pcd
+			DataList, Project, Pcd, LoadMore
 		},
         watch: {
 		    pcd(val) {
@@ -136,9 +136,14 @@
 
 <style lang="scss" scoped>
     view {
+        position: relative;
         .search {
-            position: relative;
+            position: fixed;
+            top: 0;
+            left: 0;
             width: 100vw;
+            background: #F1F1F1;
+            z-index: 1000;
             view:nth-child(1) {
                 display: flex;
                 flex-direction: row;

@@ -90,13 +90,13 @@
 				</view>
 				<view class="house-types" style="justify-content: space-between;">
 					<view v-for="(item, index) of houseTypes" :key="index">
-						<image :src="item.img" class="img" mode="aspectFit"></image>
+						<image :src="item.img || projectDefaultImg" class="img" mode="aspectFit"></image>
 						<text>{{huose(item)}}</text>
 					</view>
 				</view>
 				<view v-if="houseTypesLast.length" :class="['house-types', houseTypesLast.length === 2? 'house-types-last': '']">
 					<view v-for="(item, index) of houseTypesLast" :key="index">
-						<image :src="item.img" class="img" mode="aspectFit"></image>
+						<image :src="item.img || projectDefaultImg" class="img" mode="aspectFit"></image>
 						<text>{{huose(item)}}</text>
 					</view>
 				</view>
@@ -119,9 +119,7 @@
 	} from 'vuex'
 
 	export default {
-		onNavigationBarButtonTap({
-			index
-		}) {
+		onNavigationBarButtonTap({index}) {
 			switch (index) {
 				case 0:
 					console.log('menu')
@@ -165,60 +163,60 @@
 						this.bean.c = [...c]
 					})
 				},
-				data() {
-					return {
-						id: '',
-						bean: {
-                            banners: []
-                        },
-						houseTypesLast: [],
-						houseTypes: []
-					}
-				},
-				methods: {
-					...mapMutations('baobei', ['setDaikan', 'setSelProject', 'setSelCustomer']),
-					handleBaobei(i, bean) {
-						this.setDaikan({
-							name: this.userInfo.name,
-							phone: this.userInfo.mobile
-						})
-						this.setSelCustomer([{
-							name: '',
-							phone: ''
-						}])
-						this.setSelProject([{
-							id: i.id,
-							text: `${bean.name}(${i.company.alias})`
-						}])
-						uni.navigateTo({
-							url: `/pages/baobei/bean/index`
-						})
-					},
-					handleCooperation(company_id) {
-						let data = {
-							company_id,
-							invitation_id: this.userInfo.id
-						}
-						this.$http('cooperation_log', data, 'post').then(r => {
+        data() {
+            return {
+                id: '',
+                bean: {
+                    banners: []
+                },
+                houseTypesLast: [],
+                houseTypes: []
+            }
+        },
+        methods: {
+            ...mapMutations('baobei', ['setDaikan', 'setSelProject', 'setSelCustomer']),
+            handleBaobei(i, bean) {
+                this.setDaikan({
+                    name: this.userInfo.name,
+                    phone: this.userInfo.mobile
+                })
+                this.setSelCustomer([{
+                    name: '',
+                    phone: ''
+                }])
+                this.setSelProject([{
+                    id: i.id,
+                    text: `${bean.name}(${i.company.alias})`
+                }])
+                uni.navigateTo({
+                    url: `/pages/baobei/bean/index`
+                })
+            },
+            handleCooperation(company_id) {
+                let data = {
+                    company_id,
+                    invitation_id: this.userInfo.id
+                }
+                this.$http('cooperation_log', data, 'post').then(r => {
 
-						})
-					}
-				},
-				computed: {
-					...mapState(['userInfo', 'projectDefaultImg']),
-					...mapState('project', ['listType']),
-					huose() {
-						return item => {
-							return (item.shi || '0') + '室' + (item.ting || '0') + '厅' + (item.wei || '0') + '卫' + (item.tai || '0') + '台' + (item.size || '0') + 'm²';
-						}
-					},
-					styleLast() {
-						if (this.houseTypesLast.length <= 1) return false;
-						
-					}
-				},
-				mounted() {}
-		}
+                })
+            }
+        },
+        computed: {
+            ...mapState(['userInfo', 'projectDefaultImg']),
+            ...mapState('project', ['listType']),
+            huose() {
+                return item => {
+                    return (item.shi || '0') + '室' + (item.ting || '0') + '厅' + (item.wei || '0') + '卫' + (item.tai || '0') + '台' + (item.size || '0') + 'm²';
+                }
+            },
+            styleLast() {
+                if (this.houseTypesLast.length <= 1) return false;
+
+            }
+        },
+        mounted() {}
+    }
 </script>
 
 <style lang="scss">

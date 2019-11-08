@@ -1,13 +1,9 @@
 $liht:95;
 .choose-search {
-    position: fixed;
-    left: 0;
-    right: 0;
     width: 100%;
     height: 90rpx;
     padding: 15rpx 26rpx;
     background: #EDEDED;
-    z-index: 100;
 }
 form {
 	display: block;
@@ -71,7 +67,6 @@ form {
 }
 
 .choose-house {
-    padding-top: 95rpx;
     .item {
         display: flex;
         align-items: center;
@@ -81,17 +76,15 @@ form {
             border-bottom: 1rpx solid #e3e3e3;
         }
         .select-box {
-            display: flex;
+            display: inherit;
             align-items: center;
             width: 50rpx;
             height: 100%;
             > text {
                 font-size: 25px;
-
                 &.no-select {
                     color: rgba(133, 133, 133, .4);
                 }
-
                 &.selected {
                     color: blue;
                 }

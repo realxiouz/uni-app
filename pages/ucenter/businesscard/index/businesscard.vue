@@ -471,10 +471,12 @@
 			},
             requestBefore() {
 			    let uidx = this.uidx;
-                if (this.personal === 1) {
-                    this.getUserMsg();
-                } else if (Reflect.has(this.currentLoginUserInfo, 'uid')) {// 在已经获取了就不要再去请求了
-                    this.changeCurrentInfo(this.currentLoginUserInfo);
+                if (Reflect.has(this.currentLoginUserInfo, 'uid')) {// 在已经获取了就不要再去请求了
+                    let isChangeAvatar = this.currentLoginUserInfo.avatar !== this.userInfo.avatar;
+                    let data = isChangeAvatar? Object.assign(this.currentLoginUserInfo, {avatar: this.userInfo.avatar}): this.currentLoginUserInfo;
+                    isChangeAvatar && this.changeImg({key: 'img_avatar', url: ''});
+                    this.changeCurrentInfo(data);
+                    this.hasCurrentId = true;
                 } else {
                     this.getUserMsg();
                 }

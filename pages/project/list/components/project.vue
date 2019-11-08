@@ -2,7 +2,7 @@
 	<view class="bg-white padding solid-bottom" @tap="toDetail(bean.id)">
 		<view class="flex">
 			<view style="display:flex;position:relative;justify-content:center; align-items:center;width:280upx;height:210upx;" class="margin-right-sm">
-				<image :src="bean.img" v-if="bean.img" mode="" style="width: 100%;height: 100%;"></image>
+				<image :src="bean.img" v-if="checkImgSrc(bean.img)" mode="" style="width: 100%;height: 100%;"></image>
 				<image :src="projectDefaultImg" v-else mode="" style="width: 50%;height: 50%;"></image>
 				<view class="cu-tag bg-blue radius" style="position:absolute;right:0;top:0;" v-if="bean.status_name">{{bean.status_name}}</view>
 				<view v-if="bean.type === 'normal'" class="cu-tag bg-blue radius" style="position:absolute;left:0;top:0;background: #FF0000;margin-left: 0;">备</view>
@@ -149,6 +149,9 @@
                     (type === 'normal'? '马上报备': '查看详情'):
                     (type === 'template'? '加载楼盘': '申请合作');
 			    return content;
+            },
+            checkImgSrc(src) {
+                return /(https?:\/\/)/.test(src);
             }
 		},
 		computed: {

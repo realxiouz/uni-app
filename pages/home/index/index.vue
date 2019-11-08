@@ -40,7 +40,7 @@
 <script>
     import { mapState, mapMutations, mapActions } from 'vuex';
     import item from '@/pages/project/list/components/project';
-    import dataList from '@/components/data-list';
+    import dataList from '@/components/load-more';
 	export default {
 		data() {
 			return {
@@ -176,8 +176,11 @@
                 };
             }
 		},
-        watch: {}
-	}
+        watch: {},
+        onReachBottom() {
+            this.$refs.list.handlerUp();
+        }
+    }
 </script>
 
 <style lang="scss" scoped>
