@@ -150,7 +150,9 @@
             ...mapState('project', ['shopId']),
             ...mapState('ucenter', ['interceptUId'])
 		},
-        mounted() {}
+        mounted() {
+			
+		}
 	}
 </script>
 
