@@ -112,9 +112,7 @@
                     }
                     self.arr[self.upOrDown? 'push': 'unshift'](...data);
                     self.$emit('data', self.arr);
-                    if (data.length < this.per_page) {
-                        self.isEnd = true;
-                    }
+                    self.isEnd = data.length < this.per_page;
                 })
                     .catch(err => {})
                     .finally(_ => {

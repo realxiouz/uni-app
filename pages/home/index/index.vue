@@ -81,12 +81,12 @@
         async onLoad() {
             const self = this;
             if (this.shopId.toString()) {
+                self.getData();
                 this.$http(`company/${this.shopId}`).then(r => {
                     let res = r.data || r;
                     uni.setNavigationBarTitle({
                         title: res.software_name || '首页'
                     });
-                    self.getData();
                 }).catch(err => {});
             } else {
                 await self.getUserInfo().then(data => {

@@ -164,7 +164,12 @@
 				.then(r => {
 				    let id = r[0].id;
 				    if (this.unlimited) r.unshift(unlimited);
-					this.range.splice(1, 1, r)
+                    this.range.splice(1, 1, r);
+				    if (this.unlimited) {
+                        this.level >= 3 && this.range.splice(2, 1, [unlimited]);
+                        this.level === 4 && this.range.splice(3, 1, [unlimited]);
+                        return false;
+                    }
 					if (this.level >= 3) {
 						return this.$http(`districts/${id}`)
 					}
@@ -175,13 +180,14 @@
                         let id = r[0].id;
                         if (this.unlimited) r.unshift(unlimited);
 						this.range.splice(2, 1, r);
-						if (this.level === 4) {
+                        if (this.level === 4) {
 							return this.$http(`areas/${id}`)
 						}
 					}
 				})
 				.then(r => {
 					if (r) {
+                        if (this.unlimited) r.unshift(unlimited);
 						this.range.splice(3, 1, r)
 					}
 				})
@@ -223,7 +229,10 @@
 					[]
 				],
 				title: '选择地区',
-				vAsync: [0, 0, 0, 0]
+				vAsync: [0, 0, 0, 0],
+                pTimer: 0,
+                cTimer: 0,
+                dTimer: 0
 			}
 		},
 		methods: {
@@ -235,14 +244,23 @@
 				switch (column) {
 					case 0:
 						this.vAsync = [value, 0, 0, 0]
-						this.pChange(this.range[0][value].id)
+                        this.pChange(this.range[0][value].id)
 						break
 					case 1:
-						this.vAsync = [this.vAsync[0], value, 0, 0]
+						this.vAsync = [this.vAsync[0], value, 0, 0];
+                        if (this.unlimited && this.range[1][value].id < 0) {
+                            this.level >= 3 && this.range.splice(2, 1, [unlimited]);
+                            this.level === 4 && this.range.splice(3, 1, [unlimited]);
+                            return false;
+                        }
 						this.cChange(this.range[1][value].id)
 						break
 					case 2:
 						this.vAsync = [this.vAsync[0], this.vAsync[1], value, 0]
+                        if (this.unlimited && this.range[1][value].id < 0) {
+                            this.level === 4 && this.range.splice(3, 1, [unlimited]);
+                            return false;
+                        }
 						this.dChange(this.range[2][value].id)
 						break
 				}
@@ -265,57 +283,79 @@
                 this.$emit('input', data)
 			},
 			pChange(pId) {
-				this.$http(`cities/${pId}`)
-					.then(r => {
-					    let id = r[0].id;
-					    if (this.unlimited) r.unshift(unlimited);
-						this.range.splice(1, 1, r)
-						if (this.level >= 3) {
-							return this.$http(`districts/${id}`)
-						}
-					})
-					.then(r => {
-						if (r) {
+				clearTimeout(this.pTimer);
+				this.pTimer = setTimeout(() => {
+                    this.$http(`cities/${pId}`)
+                        .then(r => {
                             let id = r[0].id;
                             if (this.unlimited) r.unshift(unlimited);
-							this.range.splice(2, 1, r)
-							if (this.level === 4) {
-								return this.$http(`areas/${id}`)
-							}
-						}
+                            this.range.splice(1, 1, r);
+                            if (this.unlimited) {
+                                this.level >= 3 && this.range.splice(2, 1, [unlimited]);
+                                this.level === 4 && this.range.splice(3, 1, [unlimited]);
+                                return false;
+                            }
+                            if (this.level >= 3) {
+                                return this.$http(`districts/${id}`)
+                            }
+                        })
+                        .then(r => {
+                            if (r) {
+                                let id = r[0].id;
+                                if (this.unlimited) r.unshift(unlimited);
+                                this.range.splice(2, 1, r);
+                                if (this.level === 4) {
+                                    return this.$http(`areas/${id}`)
+                                }
+                            }
 
-					})
-					.then(r => {
-						if (r) {
-							this.range.splice(3, 1, r)
-						}
-					})
+                        })
+                        .then(r => {
+                            if (r) {
+                                if (this.unlimited) r.unshift(unlimited);
+                                this.range.splice(3, 1, r)
+                            }
+                        })
+                }, 500);
 			},
 			cChange(cId) {
-				if (this.level >= 3) {
-					this.$http(`districts/${cId}`)
-						.then(r => {
-                            let id = r[0].id;
-                            if (this.unlimited) r.unshift(unlimited);
-							this.range.splice(2, 1, r)
-							if (this.level === 4) {
-								return this.$http(`areas/${id}`)
-							}
-						})
-						.then(r => {
-							if (r) {
-								this.range.splice(3, 1, r)
-							}
-						})
-				}
+				clearTimeout(this.cTimer);
+				this.cTimer = setTimeout(() => {
+                    if (this.level >= 3) {
+                        this.$http(`districts/${cId}`)
+                            .then(r => {
+                                let id = r[0].id;
+                                if (this.unlimited) r.unshift(unlimited);
+                                this.range.splice(2, 1, r);
+                                if (this.unlimited) {
+                                    this.level === 4 && this.range.splice(3, 1, [unlimited]);
+                                    return false;
+                                }
+                                if (this.level === 4) {
+                                    return this.$http(`areas/${id}`)
+                                }
+                            })
+                            .then(r => {
+                                if (r) {
+                                    if (this.unlimited) r.unshift(unlimited);
+                                    this.range.splice(3, 1, r)
+                                }
+                            })
+                    }
+                }, 500)
 			},
 			dChange(dId) {
-				if (this.level === 4) {
-					this.$http(`areas/${dId}`)
-						.then(r => {
-							this.range.splice(3, 1, r)
-						})
-				}
+				clearTimeout(this.dTimer);
+				this.dTimer = setTimeout(() => {
+				    if (dId < 0) return false;
+                    if (this.level === 4) {
+                        this.$http(`areas/${dId}`)
+                            .then(r => {
+                                if (this.unlimited) r.unshift(unlimited);
+                                this.range.splice(3, 1, r)
+                            })
+                    }
+                }, 500)
 			},
             pcdContent() {
 			    let content = '';
@@ -347,7 +387,6 @@
 								} else {
 									return this.$http(`districts/${_v}`)
 								}
-								
 							})
 							.then(r => {
 								if (r) {
