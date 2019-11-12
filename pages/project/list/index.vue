@@ -3,7 +3,7 @@
         <view class="search" :style="{top: isH5? '44px': '0'}">
             <view>
                 <view class="area">
-                    <pcd :level="4" v-model="pcd" :last="true" :clear-content="clearContent" :unlimited="true" :last-style="true"/>
+                    <pcd :level="3" v-model="pcd" :last="true" :clear-content="clearContent" :unlimited="true" :last-style="true"/>
                 </view>
                 <view class="input">
                     <input type="text" placeholder="输入地址/楼盘名称" v-model="keywords" placeholder-class="placeholder">

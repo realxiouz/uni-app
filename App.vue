@@ -151,7 +151,7 @@
             ...mapState('ucenter', ['interceptUId'])
 		},
         mounted() {
-			
+
 		}
 	}
 </script>
