@@ -73,11 +73,17 @@
 				</view>
 				聊天
 			</view>
-			<view class="bg-blue submit">
-				<view class="margin-right-xs text-xxl" @click="phone">
+			<view class="bg-blue submit" @click="phone">
+				<view class="margin-right-xs text-xxl">
 					<view class="cuIcon cuIcon-phone"></view>
 				</view>
 				电话
+			</view>
+			<view class="bg-yellow submit" @click="showMenus">
+				<view class="margin-right-xs text-xxl"> 
+					<view class="cuIcon cuIcon-magic"></view>
+				</view>
+				管理
 			</view>
 		</view>
 	</view>
@@ -115,6 +121,14 @@
 			},
 			phone() {
 				
+			},
+			showMenus() {
+				uni.showActionSheet({
+					itemList:['填写首堪', '上传照片', '添加钥匙', '预约自看', '预约带看'],
+					success: (res) => {
+						
+					}
+				})
 			}
 		},
 		computed: {

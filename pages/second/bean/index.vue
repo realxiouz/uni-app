@@ -3,9 +3,27 @@
 		<form>
 			<view class="cu-form-group">
 				<view class="title">
+					需求省市
+				</view>
+				<pcd :level="2" v-model="pcd" />
+			</view>
+			<view class="cu-form-group">
+				<view class="title">
+					楼盘字典
+				</view>
+				<single-picker :range="zidians" v-model="formBean.zidian"/>
+			</view>
+			<view class="cu-form-group">
+				<view class="title">
+					楼栋单元
+				</view>
+				<single-picker :range="danyuans" v-model="formBean.danyuan"/>
+			</view>
+			<view class="cu-form-group">
+				<view class="title">
 					房号
 				</view>
-				<input placeholder="填写房号" v-model="formBean.room" />
+				<single-picker :range="rooms" v-model="formBean.room" rangeKey='room_id'/>
 			</view>
 			<view class="cu-form-group">
 				<view class="title">
@@ -125,19 +143,19 @@
 				<input placeholder="填写建房年代" v-model="formBean.year" />
 			</view>
 
-			<view class="cu-form-group">
+			<!-- <view class="cu-form-group">
 				<view class="title">需求省市</view>
 				<pcd v-model="pcd" />
-			</view>
+			</view> -->
 
 			<view class="cu-form-group">
 				<view class="title">{{showStar('transaction')}}看房</view>
 				<single-picker :range="kanfangs" v-model="formBean.kanfang" />
 			</view>
-			<view class="cu-form-group">
+			<!-- <view class="cu-form-group">
 				<view class="title">{{showStar('transaction')}}钥匙</view>
 				<single-picker :range="yaoshis" v-model="formBean.yaoshi" />
-			</view>
+			</view> -->
 			<view class="cu-form-group">
 				<view class="title">
 					钥匙说明
@@ -284,7 +302,9 @@
 			formLoading: false,
 			id: '',
 			type: '',
-
+			zidians: [],
+			danyuans: [],
+			rooms: [],
 			rules: [],
 			multiTypes: [
 				[{
@@ -1078,6 +1098,44 @@
 			SinglePicker,
 			Pcd,
 			Ava
+		},
+		watch: {
+			'pcd': {
+				handler(v) {
+					if(v[1]) {
+						this.$http('second-project', {
+							'data_type': 'get',
+							'city_id': v[1]
+						}).then(r => {
+							this.zidians = r.data
+						})
+					}
+				}
+			},
+			'formBean.zidian': {
+				handler(v) {
+					if(v) {
+						this.$http('secondHouse/secondBuilding', {
+							'data_type': 'get',
+							'second_project_id': v,
+							'type': '栋'
+						}).then(r => {
+							this.danyuans = r.data
+						})
+					}
+				}
+			},
+			'formBean.danyuan': {
+				handler(v) {
+					if(v) {
+						this.$http('secondHouse/secondHouseDictionary', {
+							'building_id': v,
+						}).then(r => {
+							this.rooms = r.data
+						})
+					}
+				}
+			}
 		}
 	}
 </script>

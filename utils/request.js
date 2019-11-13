@@ -23,6 +23,7 @@ export const http = (url, data, method = 'GET') => {
 			if (err) {
 				console.log('出错了...')
 				reject(err)
+				return
 			}
 			let status = data.statusCode
 			switch (status) {
