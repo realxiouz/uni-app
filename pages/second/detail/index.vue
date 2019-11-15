@@ -126,7 +126,10 @@
 				uni.showActionSheet({
 					itemList:['填写首堪', '上传照片', '添加钥匙', '预约自看', '预约带看'],
 					success: (res) => {
-						
+						let paths = ['/pages/second/action/shoukan', '/pages/second/action/zhaopian','/pages/second/action/yaoshi','/pages/second/action/zikan','/pages/second/action/daikan']
+						uni.navigateTo({
+							url: paths[res.tapIndex]
+						})
 					}
 				})
 			}
